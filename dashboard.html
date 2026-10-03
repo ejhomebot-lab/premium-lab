@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My clients · Premium Lab</title>
+<meta name="description" content="Every client and case an agent has saved in Premium Lab, with the headline numbers.">
+<meta name="theme-color" content="#ffffff">
+<script>(function(){try{var d=document.documentElement,m=JSON.parse(localStorage.getItem('pl-theme')),g=JSON.parse(localStorage.getItem('pl-lang'));if(m==='dark'||m==='light')d.dataset.theme=m;if(g)d.lang=g}catch(e){}})()</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css?v=9">
+<style>
+main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
+.d-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+h1{font-size:clamp(32px,3.6vw,50px);line-height:1.08;letter-spacing:-.015em}
+.d-top p{color:var(--muted);margin-top:12px;max-width:40em;font-size:16.5px}
+.d-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;margin:32px 0 28px}
+.d-kpis>div{border-top:2px solid var(--c,var(--line-strong));padding-top:12px}
+.d-kpis span{display:block;font-size:12.5px;color:var(--muted)}
+.d-kpis strong{display:block;font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.3;color:var(--ink);font-variant-numeric:tabular-nums}
+.d-kpis em{font-style:normal;font-size:12.5px;color:var(--faint)}
+.d-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.d-bar .inp{height:40px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);border-radius:2px;padding:0 12px;font-size:15px}
+.d-bar input{flex:1;min-width:220px}
+.d-bar label{font-size:13px;color:var(--muted)}
+.d-count{margin-left:auto;font-size:13px;color:var(--faint)}
+.client{border:1px solid var(--line);background:var(--surface);border-radius:4px;margin-top:18px;box-shadow:var(--shadow);overflow:hidden}
+.client-h{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;background:var(--sunk);border-bottom:1px solid var(--line)}
+.client-h h2{font-size:22px}
+.client-h p{font-size:13px;color:var(--muted);margin-top:2px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{white-space:normal;vertical-align:bottom;line-height:1.3}
+td:nth-child(2){white-space:normal;min-width:150px;max-width:220px}
+td:first-child{white-space:normal;min-width:150px}
+th{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--surface)}
+:lang(zh-Hant) th,:lang(zh-Hans) th{letter-spacing:0}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+td:first-child a{font-weight:600;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+td:first-child a:hover{text-decoration-color:var(--accent)}
+td small{display:block;font-size:12px;color:var(--faint);font-weight:400}
+td.pos{color:var(--pos);font-weight:600}td.neg{color:var(--neg);font-weight:600}
+.tag{display:inline-block;font-size:11px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.act{display:flex;gap:6px;justify-content:flex-end}
+.act a,.act button{font-size:13px}
+.x{border:0;background:none;color:var(--faint);font-size:18px;line-height:1;padding:4px 6px}.x:hover{color:var(--neg)}
+.d-state{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:clamp(28px,5vw,56px);margin-top:28px;text-align:center}
+.d-state h2{font-size:28px}
+.d-state p{color:var(--muted);max-width:34em;margin:10px auto 22px}
+.d-state .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.skel{height:120px;border-radius:4px;margin-top:18px;background:linear-gradient(90deg,var(--sunk),var(--line),var(--sunk));background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);border-radius:2px;padding:10px 18px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:60}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1000px){.d-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:700px){
+  .client table,.client tbody,.client td{display:block}.client thead{display:none}
+  .client tr{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .client tbody tr:last-child{border-bottom:0}
+  .client td{border:0;padding:0;text-align:left;white-space:normal;min-width:0;max-width:none}
+  .client td::before{content:attr(data-l);display:block;font-size:11.5px;color:var(--faint);font-weight:400;margin-bottom:1px}
+  .client td:first-child,.client td.td-act{grid-column:1/-1}.client td:first-child::before,.client td.td-act::before{display:none}
+  .client td small{display:inline;margin-left:6px}.client td:first-child small{display:block;margin:2px 0 0}
+  .act{justify-content:flex-start}
+}
+@media (max-width:600px){.d-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.d-kpis strong{font-size:22px}.client-h{padding:14px 16px}.d-bar input{min-width:0;flex-basis:100%}.d-count{margin-left:0}}
+@media print{.d-bar,.act,.client-h .btn{display:none!important}.client{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="gh"><div class="gh-in">
+  <a class="gh-brand" href="index.html"><span class="mk">P</span><span class="wm">Premium Lab</span></a>
+  <nav class="gh-nav" aria-label="Main">
+    <a href="index.html#top" data-st="home">Overview</a>
+    <a href="index.html#learn" data-st="learn">The essentials</a>
+    <a href="index.html#explore" data-st="lab">Your case</a>
+    <a href="index.html#risks" data-st="risks">The trade-offs</a>
+    <a href="dashboard.html" data-st="dash" aria-current="page">My clients</a>
+    <a href="studio.html" data-st="studio">Studio</a>
+    <a class="gh-cta" href="calculator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span data-st="calc">P-Fin calculator</span></a>
+  </nav>
+  <div class="gh-util">
+    <div class="gh-lang" role="group" aria-label="Language" data-st-label="lang"><button type="button" data-lang="en" lang="en">EN</button><button type="button" data-lang="zh-Hant" lang="zh-Hant">繁</button><button type="button" data-lang="zh-Hans" lang="zh-Hans">简</button></div>
+    <button class="gh-icon" type="button" data-theme-toggle aria-label="Switch light or dark theme" data-st-label="theme"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg></button>
+    <button class="gh-icon gh-menu" type="button" aria-expanded="false" aria-controls="ghPanel" aria-label="Menu" data-st-label="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+  <div class="gh-panel" id="ghPanel">
+    <a href="index.html#top" data-st="home">Overview</a><a href="index.html#learn" data-st="learn">The essentials</a><a href="index.html#explore" data-st="lab">Your case</a><a href="index.html#risks" data-st="risks">The trade-offs</a>
+    <a href="dashboard.html" data-st="dash" aria-current="page">My clients</a>
+    <a href="studio.html" data-st="studio">Studio</a>
+    <a class="btn gh-cta" href="calculator.html" data-st="calc">P-Fin calculator</a>
+      <div class="gh-lang gh-lang-m" role="group" aria-label="Language" data-st-label="lang"><button type="button" data-lang="en" lang="en">EN</button><button type="button" data-lang="zh-Hant" lang="zh-Hant">繁</button><button type="button" data-lang="zh-Hans" lang="zh-Hans">简</button></div>
+  </div>
+</div></header>
+
+<main class="wrap" id="main">
+  <div class="d-top">
+    <div><h1 data-d="title">Your clients</h1><p data-d="lede">Every case saved in this browser, grouped by client, with the headline numbers. Cases stay on this device only.</p></div>
+    <a class="btn solid" href="calculator.html"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-d="new_case">New case</span></a>
+  </div>
+  <div id="view"><div class="skel"></div><div class="skel"></div></div>
+</main>
+
+<footer class="gf">
+  <div class="gf-in">
+    <div><div class="gf-brand">Premium Lab</div><p data-st="f_about">An independent guide to insurance premium financing, with a calculator for licensed agents.</p></div>
+    <div><h4 data-st="f_learn">Learn</h4><a href="index.html#learn" data-st="learn">The essentials</a><a href="index.html#explore" data-st="lab">Your case</a><a href="index.html#risks" data-st="risks">The trade-offs</a></div>
+    <div><h4 data-st="f_tools">For agents</h4><a href="calculator.html" data-st="calc">P-Fin calculator</a><h4 data-st="f_src" style="margin-top:20px">Sources</h4><a href="https://www.ia.org.hk/en/legislative_framework/Conduct_in_Focus_Issue_05_03.html" target="_blank" rel="noopener noreferrer" data-st="f_ia1">Insurance Authority: risks &amp; complexities</a><a href="https://www.ia.org.hk/en/premium_financing/smart_tips.html" target="_blank" rel="noopener noreferrer" data-st="f_ia2">Insurance Authority: smart tips</a></div>
+  </div>
+  <div class="gf-base" data-st="f_base">For education only. Illustrations are not guarantees or financial advice.</div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="site.js?v=5"></script>
+<script src="engine.js?v=9"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id), E = window.PLE;
+const D = {"en": {"doc_title": "My clients · Premium Lab", "title": "Your clients", "lede": "Every case saved in this browser, grouped by client, with the headline numbers. Cases stay on this device only.", "new_case": "New case", "new_for": "New case for this client", "empty_h": "No clients yet", "empty_p": "Open the calculator, fill in a case, add the client name and press Save case.", "k_clients": "Clients", "k_cases": "{n} cases saved", "k_premium": "Premium illustrated", "k_premium_sub": "across all cases", "k_loan": "Bank loans", "k_loan_sub": "at each case's chosen bank", "k_own": "Clients' own cash", "k_own_sub": "premium − loan − discount", "k_week": "Updated this week", "k_week_sub": "cases changed in 7 days", "search": "Search clients, cases, plans or banks", "sort": "Sort", "s_recent": "Recently updated", "s_client": "Client A–Z", "s_irr": "Highest IRR", "showing": "{n} cases · {c} clients", "h_case": "Case", "h_plan": "Plan · bank", "h_premium": "Premium", "h_loan": "Loan", "h_own": "Own cash", "h_month": "Monthly interest", "h_roc": "Net return %", "h_irr": "IRR", "h_be": "Profitable from", "year_n": "Year {n}", "open": "Open", "delete": "Delete", "untitled": "Untitled case", "updated": "Updated {d}", "last": "last updated {d}", "n_cases": "{n} cases", "one_case": "1 case", "n_compared": "{n} compared", "n_options": "{p} plans × {b} banks", "none": "Nothing matches that search.", "confirm_del": "Delete {c}? This cannot be undone.", "deleted": "Case deleted", "no_client": "No client name"}, "zh-Hant": {"doc_title": "我的客戶 · Premium Lab", "title": "你的客戶", "lede": "此瀏覽器內已儲存的所有個案，按客戶分組並列出主要數字。個案只會儲存在此裝置。", "new_case": "新增個案", "new_for": "為此客戶新增個案", "empty_h": "尚未有客戶", "empty_p": "開啟計算機，填好個案及客戶名稱，再按「儲存個案」。", "k_clients": "客戶", "k_cases": "已儲存 {n} 個個案", "k_premium": "說明保費總額", "k_premium_sub": "所有個案合計", "k_loan": "銀行貸款", "k_loan_sub": "按各個案所選銀行計算", "k_own": "客戶本金", "k_own_sub": "保費 − 貸款 − 首年優惠", "k_week": "本週更新", "k_week_sub": "過去 7 日修改的個案", "search": "搜尋客戶、個案、計劃或銀行", "sort": "排序", "s_recent": "最近更新", "s_client": "客戶名稱", "s_irr": "最高 IRR", "showing": "{n} 個個案 · {c} 位客戶", "h_case": "個案", "h_plan": "計劃 · 銀行", "h_premium": "保費", "h_loan": "貸款", "h_own": "本金", "h_month": "每月利息", "h_roc": "淨回報 %", "h_irr": "IRR", "h_be": "由此年開始獲利", "year_n": "第 {n} 年", "open": "開啟", "delete": "刪除", "untitled": "未命名個案", "updated": "更新於 {d}", "last": "最後更新 {d}", "n_cases": "{n} 個個案", "one_case": "1 個個案", "n_compared": "比較 {n} 個", "n_options": "{p} 個計劃 × {b} 間銀行", "none": "沒有符合的結果。", "confirm_del": "刪除「{c}」？刪除後無法復原。", "deleted": "個案已刪除", "no_client": "未填客戶名稱"}, "zh-Hans": {"doc_title": "我的客户 · Premium Lab", "title": "你的客户", "lede": "此浏览器内已保存的所有个案，按客户分组并列出主要数字。个案只会保存在此设备。", "new_case": "新增个案", "new_for": "为此客户新增个案", "empty_h": "尚未有客户", "empty_p": "开启计算器，填好个案及客户名称，再按「保存个案」。", "k_clients": "客户", "k_cases": "已储存 {n} 个个案", "k_premium": "说明保费总额", "k_premium_sub": "所有个案合计", "k_loan": "银行贷款", "k_loan_sub": "按各个案所选银行计算", "k_own": "客户本金", "k_own_sub": "保费 − 贷款 − 首年优惠", "k_week": "本周更新", "k_week_sub": "过去 7 日修改的个案", "search": "搜寻客户、个案、计划或银行", "sort": "排序", "s_recent": "最近更新", "s_client": "客户名称", "s_irr": "最高 IRR", "showing": "{n} 个个案 · {c} 位客户", "h_case": "个案", "h_plan": "计划 · 银行", "h_premium": "保费", "h_loan": "贷款", "h_own": "本金", "h_month": "每月利息", "h_roc": "净回报 %", "h_irr": "IRR", "h_be": "由此年开始获利", "year_n": "第 {n} 年", "open": "开启", "delete": "删除", "untitled": "未命名个案", "updated": "更新于 {d}", "last": "最后更新 {d}", "n_cases": "{n} 个个案", "one_case": "1 个个案", "n_compared": "比较 {n} 个", "n_options": "{p} 个计划 × {b} 间银行", "none": "没有符合的结果。", "confirm_del": "删除「{c}」？删除后无法复原。", "deleted": "个案已删除", "no_client": "未填客户名称"}};
+let lang = window.PL ? PL.lang : 'en', rows = [], q = '', sort = 'recent', loaded = false;
+const t = (k, v) => { let s = (D[lang] && D[lang][k]) ?? D.en[k] ?? k; if (v) for (const [a, b] of Object.entries(v)) s = s.split('{' + a + '}').join(b); return s; };
+const esc = E.esc;
+const fmtDate = v => !v ? '–' : new Date(v).toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { day: 'numeric', month: 'short', year: 'numeric' });
+function toast(m) { const e = $('toast'); e.textContent = m; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2600); }
+
+// cases saved by the calculator in this browser (localStorage 'pl-cases')
+const saved = () => PL.store.get('pl-cases', []);
+// the same maths the calculator uses: selected plan × selected bank, at the last illustrated year
+function figures(row) {
+  const S = E.migrate(row.data); if (!S) return null;
+  const p = E.plan(S, S.sel.plan), b = E.bank(S, S.sel.bank), pi = S.plans.indexOf(p), bi = S.banks.indexOf(b);
+  const r = E.hasYears(p) ? E.compute(p, b, { fulfil: S.fulfil }) : null, last = r && r.rows[r.rows.length - 1], be = r && r.rows.find(x => x.gain > 0);
+  return { cur: S.currency, plan: p.name || 'Plan ' + String.fromCharCode(65 + pi), bank: b.bank || 'Bank ' + String.fromCharCode(65 + bi), rate: E.offerRate(b),
+    premium: p.premium, loan: r ? r.L : E.loanOf(p, b), own: r ? r.own : NaN, monthly: r ? r.monthly : NaN, last, be: be ? be.y : null, picks: S.picks.length, plans: S.plans.length, banks: S.banks.length };
+}
+const sumBy = (list, key) => { const m = new Map(); list.forEach(x => { if (x.f && Number.isFinite(x.f[key])) m.set(x.f.cur, (m.get(x.f.cur) || 0) + x.f[key]); });
+  return [...m].map(([c, v]) => E.money(v, c)).join(' + ') || '–'; };
+
+function render() {
+  if (!loaded) { $('view').innerHTML = '<div class="skel"></div><div class="skel"></div>'; return; }
+  if (!rows.length) { $('view').innerHTML = `<div class="d-state"><h2>${t('empty_h')}</h2><p>${t('empty_p')}</p><div class="row"><a class="btn solid" href="calculator.html">${t('new_case')}</a></div></div>`; return; }
+  const all = rows, clients = new Set(all.map(r => r.client)), week = Date.now() - 7 * 864e5;
+  const ql = q.trim().toLowerCase();
+  const shown = all.filter(r => !ql || (r.client + ' ' + r.title + ' ' + (r.f ? r.f.plan + ' ' + r.f.bank : '')).toLowerCase().includes(ql));
+  const groups = new Map(); shown.forEach(r => { if (!groups.has(r.client)) groups.set(r.client, []); groups.get(r.client).push(r); });
+  const latest = list => Math.max(...list.map(r => (r.updated_at || 0)));
+  const bestIrr = list => Math.max(...list.map(r => r.f && r.f.last && Number.isFinite(r.f.last.irr) ? r.f.last.irr : -Infinity));
+  let order = [...groups];
+  if (sort === 'client') order.sort((a, z) => a[0].localeCompare(z[0], lang));
+  else if (sort === 'irr') order.sort((a, z) => bestIrr(z[1]) - bestIrr(a[1]));
+  else order.sort((a, z) => latest(z[1]) - latest(a[1]));
+  const cell = (v, fmt) => Number.isFinite(v) ? fmt(v) : '–';
+  const rowHtml = r => { const f = r.f, l = f && f.last;
+    return `<tr><td data-l="${esc(t('h_case'))}"><a href="calculator.html#local=${r.id}">${esc(r.title || t('untitled'))}</a>${f && f.picks > 1 ? `<span class="tag">${t('n_compared', { n: f.picks })}</span>` : ''}<small>${t('updated', { d: fmtDate(r.updated_at) })}</small></td>
+      <td data-l="${esc(t('h_plan'))}">${f ? esc(f.plan) + ' · ' + esc(f.bank) + `<small>${f.rate.toFixed(2)}%${f.plans > 1 || f.banks > 1 ? ' · ' + (lang === 'en' ? `${f.plans} plan${f.plans > 1 ? 's' : ''} × ${f.banks} bank${f.banks > 1 ? 's' : ''}` : t('n_options', { p: f.plans, b: f.banks })) : ''}</small>` : '–'}</td>
+      <td data-l="${esc(t('h_premium'))}">${f ? E.money(f.premium, f.cur) : '–'}</td><td data-l="${esc(t('h_loan'))}">${f ? E.money(f.loan, f.cur) : '–'}</td><td data-l="${esc(t('h_own'))}">${f ? cell(f.own, v => E.money(v, f.cur)) : '–'}</td><td data-l="${esc(t('h_month'))}">${f ? cell(f.monthly, v => E.money(v, f.cur)) : '–'}</td>
+      <td data-l="${esc(t('h_roc'))}" class="${l ? (l.roc >= 0 ? 'pos' : 'neg') : ''}">${l ? E.pctS(l.roc) + `<small>${t('year_n', { n: l.y })}</small>` : '–'}</td>
+      <td data-l="${esc(t('h_irr'))}">${l ? E.pct(l.irr) : '–'}</td><td data-l="${esc(t('h_be'))}">${f && f.be ? t('year_n', { n: f.be }) : '–'}</td>
+      <td class="td-act"><div class="act"><a class="btn" href="calculator.html#local=${r.id}">${t('open')}</a><button class="x" type="button" data-del="${r.id}" aria-label="${esc(t('delete') + ': ' + (r.title || t('untitled')))}">×</button></div></td></tr>`; };
+  const head = `<thead><tr><th>${t('h_case')}</th><th>${t('h_plan')}</th><th>${t('h_premium')}</th><th>${t('h_loan')}</th><th>${t('h_own')}</th><th>${t('h_month')}</th><th>${t('h_roc')}</th><th>${t('h_irr')}</th><th>${t('h_be')}</th><th></th></tr></thead>`;
+  $('view').innerHTML = `
+    <div class="d-kpis">
+      <div style="--c:var(--c-cap)"><span>${t('k_clients')}</span><strong>${clients.size}</strong><em>${t('k_cases', { n: all.length })}</em></div>
+      <div style="--c:var(--c-loan)"><span>${t('k_premium')}</span><strong>${sumBy(all, 'premium')}</strong><em>${t('k_premium_sub')}</em></div>
+      <div style="--c:var(--c-cost)"><span>${t('k_loan')}</span><strong>${sumBy(all, 'loan')}</strong><em>${t('k_loan_sub')}</em></div>
+      <div style="--c:var(--c-gain)"><span>${t('k_own')}</span><strong>${sumBy(all, 'own')}</strong><em>${t('k_own_sub')}</em></div>
+      <div style="--c:var(--accent)"><span>${t('k_week')}</span><strong>${all.filter(r => (r.updated_at || 0) > week).length}</strong><em>${t('k_week_sub')}</em></div>
+    </div>
+    <div class="d-bar"><input class="inp" type="search" id="dq" placeholder="${esc(t('search'))}" aria-label="${esc(t('search'))}" value="${esc(q)}">
+      <label for="dsort">${t('sort')}</label><select class="inp" id="dsort"><option value="recent">${t('s_recent')}</option><option value="client">${t('s_client')}</option><option value="irr">${t('s_irr')}</option></select>
+      <span class="d-count">${t('showing', { n: shown.length, c: groups.size })}</span></div>
+    ${order.length ? order.map(([client, list]) => `<section class="client"><div class="client-h"><div><h2>${esc(client)}</h2><p>${t(list.length === 1 ? 'one_case' : 'n_cases', { n: list.length })} · ${t('last', { d: fmtDate(latest(list)) })}</p></div>
+      <a class="btn" href="calculator.html#new=${encodeURIComponent(client)}">${t('new_for')}</a></div><div class="tw"><table>${head}<tbody>${list.map(rowHtml).join('')}</tbody></table></div></section>`).join('')
+      : `<div class="d-state"><p>${t('none')}</p></div>`}`;
+  const dq = $('dq'); dq.oninput = () => { q = dq.value; const pos = dq.selectionStart; render(); const n = $('dq'); n.focus(); n.setSelectionRange(pos, pos); };
+  $('dsort').value = sort; $('dsort').onchange = e => { sort = e.target.value; render(); };
+}
+function load() {
+  rows = saved().map((c, i) => ({ id: i, client: (c.client || '').trim() || t('no_client'), title: c.name || '', updated_at: c.savedAt || 0, data: c }))
+    .map(r => ({ ...r, f: figures(r) }));
+  loaded = true; render();
+}
+$('view').addEventListener('click', async e => {
+  const del = e.target.closest('[data-del]'); if (!del) return;
+  const r = rows.find(x => x.id === +del.dataset.del);
+  if (!confirm(t('confirm_del', { c: r ? (r.title || t('untitled')) + ' · ' + r.client : '' }))) return;
+  const l = saved(); l.splice(+del.dataset.del, 1); PL.store.set('pl-cases', l); load(); toast(t('deleted'));
+});
+function applyLang(l) { lang = D[l] ? l : 'en'; document.title = t('doc_title'); document.querySelectorAll('[data-d]').forEach(e => e.textContent = t(e.dataset.d)); load(); }
+document.addEventListener('pl:lang', e => applyLang(e.detail));
+addEventListener('storage', e => { if (e.key === 'pl-cases') load(); });   // saved in another tab
+addEventListener('pageshow', e => { if (e.persisted) load(); });
+applyLang(lang);
+</script>
+</body>
+</html>

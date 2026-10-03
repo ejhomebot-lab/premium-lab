@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P-Fin calculator · Premium Lab</title>
+<meta name="description" content="Build a premium financing illustration with a client in a minute: leverage, interest, returns, IRR, rate stress, bank offer comparison and a client-ready PDF.">
+<meta name="theme-color" content="#ffffff">
+<script>(function(){try{var d=document.documentElement,m=JSON.parse(localStorage.getItem('pl-theme')),g=JSON.parse(localStorage.getItem('pl-lang'));if(m==='dark'||m==='light')d.dataset.theme=m;if(g)d.lang=g}catch(e){}})()</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css?v=9">
+<style>
+main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
+h1{font-size:clamp(32px,3.6vw,50px);line-height:1.08;letter-spacing:-.015em}
+h1 em{font-style:italic;color:var(--accent)}
+.lede{color:var(--muted);max-width:40em;margin-top:14px;font-size:16.5px}
+.aud{margin-top:12px;color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.actions .agent strong{font-weight:600}
+
+.casebar{display:flex;align-items:center;gap:12px;margin:28px 0 18px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line)}
+.case-name{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);border-radius:2px;height:38px;padding:0 12px;min-width:240px;font-weight:600}
+.case-name:focus{outline:none;border-color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);background:var(--surface);border-radius:2px;padding:2px 2px 2px 10px;font-size:13px}
+.chip[aria-current=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.chip button{border:0;background:transparent;padding:3px 8px;font-size:13px;color:var(--ink)}
+.chip .x{color:var(--faint)}.chip .x:hover{color:var(--neg)}
+
+.lab{border:1px solid var(--line);background:var(--surface);border-radius:4px;box-shadow:var(--shadow);overflow:hidden}
+.workspace{display:grid;grid-template-columns:330px minmax(0,1fr)}
+.settings{padding:24px;background:var(--sunk);border-right:1px solid var(--line)}
+.grp{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.grp:last-child{border-bottom:0;padding-bottom:0}
+.grp-title{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin:0 0 14px}
+:lang(zh-Hant) .grp-title,:lang(zh-Hans) .grp-title{letter-spacing:.04em}
+.field{margin-bottom:12px}
+.field>label,.field>.lbl{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;color:var(--muted);margin-bottom:6px}
+.field small{color:var(--faint)}
+.inp{width:100%;height:40px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);border-radius:2px;padding:0 11px;font-size:15px;min-width:0;font-variant-numeric:tabular-nums}
+.inp:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 20%,transparent)}
+.inp[aria-invalid=true]{border-color:var(--neg)}
+select.inp{padding-right:6px}
+.money{position:relative}.money span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:13px;pointer-events:none}.money .inp{padding-left:46px}
+.pct{position:relative}.pct span{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:13px;pointer-events:none}.pct .inp{padding-right:30px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.derived{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:12px;margin-top:6px;font-size:13.5px;color:var(--muted)}
+.derived strong{font-family:var(--serif);font-weight:400;font-size:24px;color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:2px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--surface);color:var(--muted);padding:8px 4px;font-size:13px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);font-weight:600}
+.offer-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.offer-tabs:empty{display:none}
+.offer-tabs button{border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);border-radius:2px;padding:5px 12px;font-size:13px}
+.offer-tabs button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.mini{border:1px solid var(--line-strong);background:transparent;color:var(--ink);border-radius:2px;padding:4px 10px;font-size:12px;font-weight:600;letter-spacing:0;text-transform:none}
+.mini:hover{border-color:var(--ink)}
+.mini.danger{color:var(--neg);border-color:color-mix(in srgb,var(--neg) 45%,transparent)}
+.cv-table{width:100%;border-collapse:collapse;font-size:13px}
+.cv-table th{font-weight:400;color:var(--faint);text-align:left;padding:0 4px 6px;font-size:12px;background:none;border:0;text-transform:none;letter-spacing:0}
+.cv-table td{padding:3px 2px;border:0}
+.cv-table .inp{height:36px;padding:0 8px;font-size:14px}
+.cv-table td:first-child{width:62px}
+.cv-table button{border:0;background:transparent;color:var(--faint);font-size:18px;line-height:1;padding:4px 6px}
+.cv-table button:hover{color:var(--neg)}
+.note{font-size:12.5px;color:var(--faint);line-height:1.6;margin:8px 0 0}
+details.more{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+details.more summary{cursor:pointer;font-size:13.5px;color:var(--ink);list-style:none;display:flex;justify-content:space-between}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary:after{content:'+';color:var(--muted)}details.more[open] summary:after{content:'−'}
+details.more .field{margin-top:10px}
+
+.results{padding:26px 30px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.kpi{border-top:2px solid var(--c,var(--line-strong));padding-top:12px}
+.kpi:nth-child(1){--c:var(--c-cap)}.kpi:nth-child(2){--c:var(--c-cost)}.kpi:nth-child(3){--c:var(--c-loan)}.kpi:nth-child(4){--c:var(--c-gain)}
+.kpi span{display:block;font-size:12.5px;color:var(--muted)}
+.kpi strong{display:block;font-family:var(--serif);font-size:27px;font-weight:400;letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.3;color:var(--ink)}
+.kpi em{font-style:normal;font-size:12.5px;color:var(--faint)}
+.card{border:1px solid var(--line);border-radius:2px;padding:22px;margin-top:22px;background:var(--surface)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.card-head h2{font-size:22px}
+.card-head p{font-size:13.5px;color:var(--muted);margin:5px 0 0;max-width:46em}
+.toggle{display:flex;border:1px solid var(--line-strong);border-radius:2px;overflow:hidden}
+.toggle button{border:0;background:transparent;padding:7px 12px;font-size:13px;color:var(--muted);white-space:nowrap}
+.toggle button+button{border-left:1px solid var(--line)}
+.toggle button[aria-pressed=true]{background:var(--ink);color:var(--bg);font-weight:600}
+.chart{margin-top:12px;position:relative}
+.chart svg{display:block;width:100%;height:auto}
+.chart svg text{font-family:var(--sans)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:10px}
+.legend span{display:flex;align-items:center;gap:7px}.legend i{width:11px;height:11px;border-radius:1px;background:var(--c);box-sizing:border-box;border:5.5px solid var(--c);flex:none}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:2px;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{background:var(--sunk);color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+:lang(zh-Hant) th,:lang(zh-Hans) th{letter-spacing:0}
+th:first-child,td:first-child{text-align:left}
+td{color:var(--text)}
+tr:last-child td{border-bottom:0}
+td.pos{color:var(--pos);font-weight:600}td.neg{color:var(--neg);font-weight:600}
+td.warn{color:var(--neg)}
+tr.hl{background:var(--accent-soft)}
+.pill-r{display:inline-block;border-radius:2px;padding:1px 8px;font-size:12.5px;font-weight:600}
+.pill-r.pos{background:var(--pos-bg);color:var(--pos)}.pill-r.neg{background:var(--neg-bg);color:var(--neg)}
+.talk{display:grid;gap:0;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
+.talk li{list-style:none;display:flex;gap:14px;padding:14px 2px;border-bottom:1px solid var(--line);font-size:14.5px;color:var(--text)}
+.talk li b.ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;border:1px solid var(--pos);color:var(--pos);margin-top:1px}
+.talk li.risk b.ic{border-color:var(--neg);color:var(--neg)}
+.alert{display:flex;gap:10px;border:1px solid color-mix(in srgb,var(--neg) 35%,transparent);background:var(--neg-bg);color:var(--neg);border-radius:2px;padding:12px 14px;font-size:14px;margin-top:16px}
+.alert[hidden]{display:none}
+.fine{font-size:12.5px;color:var(--faint);line-height:1.7;margin-top:20px}
+.fine a{text-decoration:underline;text-underline-offset:2px}
+.print-head,.print-foot{display:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);border-radius:2px;padding:10px 18px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:60}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+dialog{border:1px solid var(--line);background:var(--raised);color:var(--text);border-radius:4px;padding:28px;max-width:440px;width:92vw;box-shadow:var(--shadow)}
+dialog::backdrop{background:#0b1f3580}
+dialog h2{margin:0 0 6px;font-size:24px}
+dialog p{color:var(--muted);font-size:14px;margin:0 0 18px}
+dialog .f{display:block;margin-bottom:12px;font-size:13.5px;color:var(--muted)}
+dialog .f input{display:block;width:100%;margin-top:5px;border:1px solid var(--line-strong);background:var(--surface);border-radius:2px;height:40px;padding:0 12px;color:var(--ink)}
+dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+
+/* sliders + stacked chart */
+.sliders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:18px;padding:14px 0 6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sl-top label{font-size:13px;color:var(--muted)}
+.sl-top output{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);padding:1px 6px;border-radius:2px;transition:background .3s}
+.sl-top output.bump{background:var(--accent-soft)}
+.sl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:4px 0 0;cursor:pointer;--p:50%}
+.sl input[type=range]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(to right,var(--ink) var(--p),var(--line-strong) var(--p))}
+.sl input[type=range]::-moz-range-track{height:3px;background:linear-gradient(to right,var(--ink) var(--p),var(--line-strong) var(--p))}
+.sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-7.5px;border-radius:50%;background:var(--surface);border:2px solid var(--ink);box-shadow:0 2px 6px #0b1f3530;transition:transform .15s}
+.sl input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--surface);border:2px solid var(--ink)}
+.sl input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+.sl input[type=range]:disabled{opacity:.4;cursor:not-allowed}
+.sl-ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint)}
+.chart .bar{cursor:pointer;outline:none;transition:opacity .2s}
+.chart svg.hovering .bar:not(.on){opacity:.4}
+.chart .bar:focus-visible .frame{stroke:var(--focus);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--raised);color:var(--text);border:1px solid var(--line-strong);border-radius:2px;padding:11px 13px;font-size:12.5px;line-height:1.75;min-width:220px;box-shadow:var(--shadow);z-index:5;transform:translate(-50%,-100%);transition:left .12s,top .12s}
+.tip[hidden]{display:none}
+.tip strong{display:block;font-size:13.5px;margin-bottom:3px;color:var(--ink)}
+.tip .r{display:flex;justify-content:space-between;gap:18px;font-variant-numeric:tabular-nums}
+.tip .r i{display:inline-block;width:9px;height:9px;border-radius:1px;margin-right:7px;background:var(--c)}
+.tip .r.tot{border-top:1px solid var(--line);margin-top:4px;padding-top:4px;font-weight:600;color:var(--ink)}
+.tip .r.res{color:var(--pos);font-weight:600}.tip .r.res.neg{color:var(--neg)}
+
+@media (max-width:1180px){.workspace{grid-template-columns:300px minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:18px}.results{padding:22px}}
+@media (max-width:960px){.top{grid-template-columns:1fr}.actions{justify-content:flex-start}.workspace{grid-template-columns:1fr}.settings{border-right:0;border-bottom:1px solid var(--line)}}
+@media (max-width:760px){.sliders{grid-template-columns:1fr;gap:8px}}
+@media (max-width:600px){.actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.actions .agent{grid-column:1/-1}.lab{margin:0 calc(var(--gutter) * -.5)}.settings{padding:20px}.results{padding:20px 16px}.kpi strong{font-size:22px}.case-name{min-width:0;flex:1}.card{padding:16px}}
+
+
+/* view tabs */
+.vtabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:4px 0 18px}
+.vtabs button{border:0;background:transparent;padding:12px 2px;margin-right:28px;font-size:15px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center;gap:8px}
+.vtabs button[aria-selected=true]{color:var(--ink);font-weight:600;border-color:var(--accent)}
+.vtabs .badge{font-size:11.5px;font-weight:600;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:inline-grid;place-items:center}
+.vtabs .badge:empty{display:none}
+.vt-link{margin-left:auto;align-self:center;font-size:14px;font-weight:600;color:var(--accent);padding:10px 0}
+.gt-r{display:flex;align-items:center;gap:6px}
+/* compare */
+.cmp{padding:26px 30px}
+.cmp-top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.cmp-top h2{font-size:26px}.cmp-top p{color:var(--muted);font-size:14px;margin-top:6px;max-width:44em}
+.quick{display:flex;gap:6px}
+.mix-wrap{margin-top:18px}
+.mix th,.mix td{text-align:center;padding:8px;vertical-align:middle}
+.mix thead th{text-transform:none;letter-spacing:0;font-size:13px}
+.mix tbody th{text-align:left;background:var(--sunk);font-size:13px;text-transform:none;letter-spacing:0}
+.mix small{display:block;font-size:11.5px;font-weight:400;color:var(--faint)}
+.mix .nm{border:0;background:none;padding:0;font-weight:600;color:var(--ink);font-size:13.5px;text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+.mix .nm:hover{text-decoration-color:var(--accent)}
+.cell{width:100%;min-width:118px;border:1px dashed var(--line-strong);background:transparent;border-radius:2px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:0 8px;text-align:left;color:var(--muted);transition:background-color .2s,border-color .2s}
+.cell i{grid-row:span 2;width:12px;height:12px;border-radius:50%;border:2px solid var(--kc);background:transparent;transition:background-color .2s}
+.cell span{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.cell small{grid-column:2}
+.cell:hover{border-color:var(--kc)}
+.cell[aria-pressed=true]{border-style:solid;border-color:var(--kc);background:color-mix(in srgb,var(--kc) 9%,transparent)}
+.cell[aria-pressed=true] i{background:var(--kc)}
+.cmp-ctrl{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:18px}
+.cmp-ctrl .sliders{flex:1;min-width:300px;margin:0;border:0;padding:0}
+.sliders.two{grid-template-columns:1fr 1fr}
+.cmp-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;margin-top:20px;align-items:start}
+.cmp-chart .chart{margin:0;min-height:280px}
+.rank{border:1px solid var(--line);border-radius:2px;position:sticky;top:calc(var(--hdr) + 16px)}
+.rank-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--sunk)}
+.rank-h b{font-size:13px;color:var(--ink)}
+.rk-row{width:100%;display:grid;grid-template-columns:20px 1fr;gap:2px 8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:11px 14px;color:var(--text);transition:background-color .2s}
+.rk-row:last-child{border-bottom:0}
+.rk-row:hover,.rk-row.on{background:color-mix(in srgb,var(--kc) 8%,transparent)}
+.rk-row .n{grid-row:span 3;font-family:var(--serif);font-size:18px;color:var(--faint)}
+.rk-row .who,.who{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink)}
+.who i{width:9px;height:9px;border-radius:50%;background:var(--kc);flex:none}
+.rk-row em{font-style:normal;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:0 5px;margin-left:auto}
+.rk-row strong{font-family:var(--serif);font-weight:400;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.rk-row strong.neg{color:var(--neg)}.rk-row strong.na{font-family:var(--sans);font-size:13px;color:var(--faint)}
+.rk-row small{font-size:11.5px;color:var(--faint)}
+#cmpTbl td.best{box-shadow:inset 0 -2px 0 var(--accent);font-weight:700}
+@media (max-width:1100px){.cmp-body{grid-template-columns:1fr}.rank{position:static}}
+@media (max-width:600px){.cmp{padding:20px 14px}.sliders.two{grid-template-columns:1fr}.cmp-ctrl .toggle{width:100%;overflow-x:auto}.cmp-ctrl .sliders{min-width:0}}
+@media print{.cmp-top{display:none!important}body.print-cmp #singleView{display:none!important}body.print-cmp #cmpView{display:block!important;border:0;box-shadow:none;padding:0}body:not(.print-cmp) #cmpView{display:none!important}.rank{position:static;break-inside:avoid}.cmp-body{grid-template-columns:1fr}}
+.bo{margin-top:16px;border:1px solid var(--line);border-radius:2px}
+.bo summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:12px 14px;background:var(--sunk);font-weight:600;color:var(--ink)}
+.bo summary::-webkit-details-marker{display:none}
+.bo summary:after{content:'−';margin-left:auto;color:var(--muted);font-weight:400}.bo:not([open]) summary:after{content:'+'}
+.bo summary small{font-weight:400;font-size:13px;color:var(--muted)}
+.bo .tw{margin:0;border:0;border-top:1px solid var(--line);border-radius:0}
+.bo-t th,.bo-t td{padding:6px 8px;text-align:left;vertical-align:middle;white-space:nowrap}
+.bo-t thead th{font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.bo-t tbody th{background:var(--sunk);font-size:12.5px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);width:1%}
+.bo-t td{min-width:150px}
+.bo-t .inp{height:34px;font-size:14px}
+.bo-t td.na{color:var(--faint);text-align:center}
+.bo-t .bo-eff td{font-size:12px;color:var(--muted);white-space:normal}
+.bo-t .bo-eff b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;color:var(--ink)}
+.bo-t .bo-eff small{display:block}
+.bo-x{border:0;background:none;color:var(--faint);font-size:16px;padding:0 4px;margin-left:4px}.bo-x:hover{color:var(--neg)}
+.bo-add{vertical-align:top!important;background:var(--surface)!important;border-left:1px dashed var(--line-strong)}
+/* my clients */
+.client-name{min-width:180px}
+@media (max-width:600px){.casebar{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 12px}.casebar .case-name,.client-name{min-width:0;width:100%}.casebar .chips{grid-column:1/-1}}
+.rate-eff{font-size:13px;color:var(--muted);margin:-4px 0 14px;font-variant-numeric:tabular-nums}
+.pdf-status{font-size:13px;margin:8px 0 0;padding:8px 10px;border-radius:2px;background:var(--sunk);color:var(--muted);line-height:1.45}
+.pdf-status.ok{background:var(--pos-bg);color:var(--pos)}.pdf-status.bad{background:var(--neg-bg);color:var(--neg)}
+.avg-strip{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.avg-strip:empty{display:none}
+.avg-strip strong{color:var(--ink);font-weight:600;margin-right:4px}
+.avg-strip b{font-variant-numeric:tabular-nums;font-weight:700}.avg-strip b.pos{color:var(--pos)}.avg-strip b.neg{color:var(--neg)}
+.avg-note{margin-top:6px}
+.rh{margin:0 0 26px}.rh:last-child{margin-bottom:0}
+.rh h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);margin:4px 0 8px}
+.rh-chart svg{display:block;width:100%;height:auto}
+.rh-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px;margin-top:10px}
+.rh-stats div{border-top:2px solid var(--c,var(--line-strong));padding-top:8px}
+.rh-stats span{display:block;font-size:12px;color:var(--muted)}
+.rh-stats strong{display:block;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.25;color:var(--ink);font-variant-numeric:tabular-nums}
+.rh-stats em{display:block;font-style:normal;font-size:12px;color:var(--faint);line-height:1.4}
+.rh-src{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.5}
+.rh-src a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+@media (max-width:600px){.rh-stats{grid-template-columns:1fr}.rh-stats strong{font-size:20px}}
+@media print{.rh-card{break-before:page}.rh{break-inside:avoid}.rh-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* client-ready print / PDF */
+@media print{
+  *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+  @page{size:A4;margin:14mm}
+  body{font-size:12px}
+  .actions,.casebar,.settings,.toggle,.no-print,.toast,.top{display:none!important}
+  .workspace{display:block}
+  main{padding:0;max-width:none}
+  .lab{border:0;box-shadow:none;border-radius:0}
+  .results{padding:0}
+  .print-head{display:block;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:14px}
+  .print-head h2{margin:0;font-size:20px;font-weight:600}
+  .print-head .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:11px;color:var(--text)}
+  .print-head .meta b{display:block;font-size:13px}
+  .print-foot{display:block;margin-top:14px;border-top:1px solid #ccd;padding-top:8px;font-size:10.5px;color:#444}
+  #fine{display:none!important}
+  .tw{overflow:visible;border-color:#ccd}
+  table{font-size:8.6px}
+  th,td{white-space:normal;padding:4px 4px!important}
+  .pill-r{padding:0 4px}
+  .card{break-inside:avoid;padding:12px;margin-top:12px}
+}
+</style>
+</head>
+<body>
+<header class="gh"><div class="gh-in">
+  <a class="gh-brand" href="index.html"><span class="mk">P</span><span class="wm">Premium Lab</span></a>
+  <nav class="gh-nav" aria-label="Main">
+    <a href="index.html#top" data-st="home">Overview</a>
+    <a href="index.html#learn" data-st="learn">The essentials</a>
+    <a href="index.html#explore" data-st="lab">Your case</a>
+    <a href="index.html#risks" data-st="risks">The trade-offs</a>
+    <a href="dashboard.html" data-st="dash">My clients</a>
+    <a href="studio.html" data-st="studio">Studio</a>
+    <a class="gh-cta" href="calculator.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span data-st="calc">P-Fin calculator</span></a>
+  </nav>
+  <div class="gh-util">
+    <div class="gh-lang" role="group" aria-label="Language" data-st-label="lang"><button type="button" data-lang="en" lang="en">EN</button><button type="button" data-lang="zh-Hant" lang="zh-Hant">繁</button><button type="button" data-lang="zh-Hans" lang="zh-Hans">简</button></div>
+    <button class="gh-icon" type="button" data-theme-toggle aria-label="Switch light or dark theme" data-st-label="theme"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg></button>
+    <button class="gh-icon gh-menu" type="button" aria-expanded="false" aria-controls="ghPanel" aria-label="Menu" data-st-label="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+  <div class="gh-panel" id="ghPanel">
+    <a href="index.html#top" data-st="home">Overview</a><a href="index.html#learn" data-st="learn">The essentials</a><a href="index.html#explore" data-st="lab">Your case</a><a href="index.html#risks" data-st="risks">The trade-offs</a>
+    <a href="dashboard.html" data-st="dash">My clients</a>
+    <a href="studio.html" data-st="studio">Studio</a>
+    <a class="btn gh-cta" href="calculator.html" data-st="calc" aria-current="page">P-Fin calculator</a>
+      <div class="gh-lang gh-lang-m" role="group" aria-label="Language" data-st-label="lang"><button type="button" data-lang="en" lang="en">EN</button><button type="button" data-lang="zh-Hant" lang="zh-Hant">繁</button><button type="button" data-lang="zh-Hans" lang="zh-Hans">简</button></div>
+  </div>
+</div></header>
+
+<main id="main" class="wrap">
+    <div class="top">
+      <div>
+        <h1 data-t-html="title">Premium financing, <em>side by side</em> with your client.</h1>
+        <p class="lede" data-t="lede">Enter the policy, the bank's loan offer and the cash values from the insurer's illustration. The returns, the interest cost, the rate the plan can survive and a client-ready PDF follow instantly.</p>
+        <p class="aud label" data-t="eyebrow">For licensed agents · illustrative</p>
+      </div>
+      <div class="actions">
+        <button class="btn agent" type="button" id="agentBtn"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg><span id="agentShow">Add your details</span></button>
+        <button class="btn" type="button" id="newBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-t="new">New</span></button>
+        <button class="btn" type="button" id="saveBtn"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg><span data-t="save">Save case</span></button>
+        <button class="btn" type="button" id="shareBtn"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/></svg><span data-t="share">Copy link</span></button>
+        <button class="btn solid" type="button" id="printBtn"><svg viewBox="0 0 24 24"><path d="M7 9V4h10v5M7 17H5a1 1 0 01-1-1v-5a2 2 0 012-2h12a2 2 0 012 2v5a1 1 0 01-1 1h-2"/><path d="M7 14h10v6H7z"/></svg><span data-t="print">Client PDF</span></button>
+      </div>
+    </div>
+
+    <div class="casebar">
+      <label for="clientName" data-t="client">Client</label>
+      <input class="case-name client-name" id="clientName" maxlength="80" placeholder="e.g. Mr Chan" data-t-ph="client_ph">
+      <label for="caseName" data-t="case">Case</label>
+      <input class="case-name" id="caseName" maxlength="60" placeholder="e.g. FWD savings 2026" data-t-ph="case_ph">
+      <div class="chips" id="chips" aria-label="Saved cases"></div>
+    </div>
+
+    <div class="vtabs no-print" role="tablist" aria-label="View">
+      <button type="button" role="tab" id="tabSingle" aria-selected="true" aria-controls="singleView" data-view="single" data-t="tab_single">Single case</button>
+      <button type="button" role="tab" id="tabCmp" aria-selected="false" aria-controls="cmpView" data-view="cmp"><span data-t="tab_cmp">Compare plans &amp; banks</span><b class="badge" id="pickCount"></b></button>
+      <a class="vt-link" href="studio.html" data-t="to_studio">Present on iPad →</a>
+    </div>
+
+    <div class="lab" id="singleView" role="tabpanel" aria-labelledby="tabSingle">
+      <div class="workspace">
+        <!-- inputs -->
+        <form class="settings" id="form" autocomplete="off" onsubmit="return false">
+          <div class="grp">
+            <div class="grp-title"><span data-t="g_policy">Policy</span><span class="gt-r"><select class="inp" id="currency" style="width:auto;height:30px;padding:0 6px;font-size:12px" aria-label="Currency"><option>HKD</option><option>USD</option><option>CNY</option><option>SGD</option></select><button class="mini" type="button" id="addPlan" data-t="add_plan">+ Add plan</button></span></div>
+            <div class="offer-tabs" id="planTabs" role="group" aria-label="Plans"></div>
+            <div class="field"><label for="planName" data-t="plan_name">Plan / insurer</label><input class="inp" id="planName" maxlength="40"></div>
+            <div class="field"><label for="premium"><span data-t="premium">Total premium</span><small data-t="premium_h">single / prepaid</small></label>
+              <div class="money"><span class="cur">HKD</span><input class="inp num" id="premium" inputmode="decimal"></div></div>
+            <div class="field"><label for="discount"><span data-t="discount">First-year discount</span><small data-t="discount_h">prepayment bonus</small></label>
+              <div class="money"><span class="cur">HKD</span><input class="inp num" id="discount" inputmode="decimal"></div></div>
+            <button class="mini danger" type="button" id="delPlan" data-t="del_plan" hidden>Remove this plan</button>
+          </div>
+
+          <div class="grp">
+            <div class="grp-title"><span data-t="g_offer">Bank loan offer</span><button class="mini" type="button" id="addOffer" data-t="add_offer">+ Compare bank</button></div>
+            <div class="offer-tabs" id="offerTabs" role="group" aria-label="Loan offers"></div>
+            <div class="field"><label for="bank" data-t="bank">Bank / lender</label><input class="inp" id="bank" maxlength="40"></div>
+            <div class="row2">
+              <div class="field"><label for="ratio" data-t="ratio">Loan ratio</label><div class="pct"><input class="inp num" id="ratio" inputmode="decimal"><span>%</span></div></div>
+              <div class="field"><label for="loan" data-t="loan">Loan amount</label><input class="inp num" id="loan" inputmode="decimal"></div>
+            </div>
+            <div class="field"><div class="lbl" data-t="rate_type">Interest rate</div>
+              <div class="seg" role="group" aria-label="Rate type"><button type="button" data-rt="fixed" aria-pressed="true" data-t="fixed">P − spread</button><button type="button" data-rt="hibor" aria-pressed="false" data-t="hibor">HIBOR + spread</button></div></div>
+            <div class="row2" id="fixedRow">
+              <div class="field"><label for="prime" data-t="prime">P (bank prime rate)</label><div class="pct"><input class="inp num" id="prime" inputmode="decimal"><span>%</span></div></div>
+              <div class="field"><label for="pspread" data-t="pspread">Spread</label><div class="pct"><input class="inp num" id="pspread" inputmode="decimal"><span>%</span></div></div>
+            </div>
+            <div class="row2" id="hiborRow" hidden>
+              <div class="field"><label for="hibor" data-t="hibor_rate">HIBOR assumed</label><div class="pct"><input class="inp num" id="hibor" inputmode="decimal"><span>%</span></div></div>
+              <div class="field"><label for="spread" data-t="spread">Spread</label><div class="pct"><input class="inp num" id="spread" inputmode="decimal"><span>%</span></div></div>
+            </div>
+            <p class="rate-eff" id="monthlyHint"></p>
+            <details class="more"><summary data-t="fees">Fees (optional)</summary>
+              <div class="row2">
+                <div class="field"><label for="upfront" data-t="upfront">Other upfront fee</label><input class="inp num" id="upfront" inputmode="decimal"></div>
+                <div class="field"><label for="annualFee" data-t="annual_fee">Annual fee</label><input class="inp num" id="annualFee" inputmode="decimal"></div>
+              </div>
+              <div class="row2">
+                <div class="field"><label for="feePct" data-t="fee_pct">Handling fee (% of loan)</label><div class="pct"><input class="inp num" id="feePct" inputmode="decimal"><span>%</span></div></div>
+                <div class="field"><label for="rebate" data-t="rebate">Cash rebate</label><input class="inp num" id="rebate" inputmode="decimal"></div>
+              </div>
+              <div class="row2">
+                <div class="field"><label for="penPct" data-t="pen_pct">Prepayment penalty (% of loan)</label><div class="pct"><input class="inp num" id="penPct" inputmode="decimal"><span>%</span></div></div>
+                <div class="field"><label for="penYears" data-t="pen_years">If repaid within (years)</label><input class="inp num" id="penYears" inputmode="numeric"></div>
+              </div>
+            </details>
+            <button class="mini danger" type="button" id="delOffer" data-t="del_offer" hidden>Remove this bank</button>
+            <div class="derived"><span data-t="client_cash">Client's own cash</span><strong id="cashShow">–</strong></div>
+          </div>
+
+          <div class="grp">
+            <div class="grp-title"><span data-t="g_cv">Cash value from the illustration</span><span class="gt-r"><button class="mini" type="button" id="pdfBtn" data-t="upload_pdf">Upload proposal</button><button class="mini" type="button" id="addCv" data-t="add_year">+ Year</button></span></div>
+            <input type="file" id="pdfFile" accept="application/pdf,.pdf" hidden>
+            <p class="pdf-status" id="pdfStatus" role="status" hidden></p>
+            <table class="cv-table"><thead><tr><th data-t="year">Year</th><th data-t="cv_total">Total cash value</th><th data-t="cv_guar">Guaranteed</th><th><span class="vh">Remove</span></th></tr></thead><tbody id="cvBody"></tbody></table>
+            <p class="note" data-t="cv_note">Copy the surrender values from the insurer's benefit illustration. Guaranteed is optional; it powers the downside view.</p>
+          </div>
+
+          <div class="grp" style="margin-bottom:0">
+            <div class="grp-title"><span data-t="g_risk">Margin-call check</span></div>
+            <div class="row2">
+              <div class="field"><label for="day1" data-t="day1">Day-1 cash value</label><input class="inp num" id="day1" inputmode="decimal"></div>
+              <div class="field"><label for="maxLtv" data-t="max_ltv">Bank's max loan-to-value</label><div class="pct"><input class="inp num" id="maxLtv" inputmode="decimal"><span>%</span></div></div>
+            </div>
+            <p class="note" data-t="ltv_note">Banks usually lend against the policy's surrender value. If the loan exceeds their limit, they can ask for more collateral or repayment.</p>
+          </div>
+        </form>
+
+        <!-- results -->
+        <section class="results" aria-live="polite">
+          <div class="print-head" id="printHead"></div>
+          <div class="kpis">
+            <div class="kpi"><span data-t="k_cash">Client's own cash</span><strong id="kCash">–</strong><em id="kCashSub"></em></div>
+            <div class="kpi"><span data-t="k_month">Monthly interest</span><strong id="kMonth">–</strong><em id="kMonthSub"></em></div>
+            <div class="kpi"><span data-t="k_loan">Loan amount</span><strong id="kLoan">–</strong><em id="kLoanSub"></em></div>
+            <div class="kpi"><span data-t="k_be">Profitable from</span><strong id="kBe">–</strong><em id="kBeSub"></em></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div><h2 data-t="c_chart">Policy breakdown</h2><p data-t="c_chart_p">Each bar is the policy's cash value, stacked from your capital and the bank loan up to the interest paid and the net return on top.</p></div>
+              <div class="toggle" role="group" aria-label="Cash value basis"><button type="button" data-basis="total" aria-pressed="true" data-t="b_total">As illustrated</button><button type="button" data-basis="guar" aria-pressed="false" data-t="b_guar">Guaranteed only</button></div></div>
+            <div class="sliders no-print">
+              <div class="sl"><div class="sl-top"><label for="slRate" data-t="sl_rate">Loan rate</label><output id="slRateOut" for="slRate"></output></div><input type="range" id="slRate" min="0" max="10" step="0.05"><div class="sl-ends"><span>0%</span><span>10%</span></div></div>
+              <div class="sl"><div class="sl-top"><label for="slRatio" data-t="sl_ratio">Loan ratio</label><output id="slRatioOut" for="slRatio"></output></div><input type="range" id="slRatio" min="0" max="90" step="0.5"><div class="sl-ends"><span>0%</span><span>90%</span></div></div>
+              <div class="sl"><div class="sl-top"><label for="slBonus" data-t="sl_bonus">Non-guaranteed bonus paid</label><output id="slBonusOut" for="slBonus"></output></div><input type="range" id="slBonus" min="0" max="120" step="5"><div class="sl-ends"><span data-t="sl_guar_end">Guaranteed</span><span>120%</span></div></div>
+            </div>
+            <div class="chart" id="chart"><div class="tip" id="tip" role="status" hidden></div></div>
+            <div class="legend" id="legend"></div>
+            <div class="avg-strip" id="avgStrip"></div>
+            <p class="note avg-note" data-t="avg_note">The % above each bar is the average annual net return: the cumulative net return % divided by the number of years.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div><h2 data-t="c_table">Year by year</h2><p data-t="c_table_p">Net return % is the net return as a percentage of the client's own cash. Avg annual return is the net return % divided by the number of years, the same figure shown above each bar. IRR is the annual rate of return on the client's actual cash flows: own cash paid at the start, loan interest paid each year, and the value left after repaying the loan in that year.</p></div></div>
+            <div class="tw"><table id="tbl"></table></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div><h2 data-t="c_stress">If interest rates rise</h2><p data-t="c_stress_p">Net return at higher loan rates, and the break-even rate where the plan stops making money.</p></div></div>
+            <div class="tw"><table id="stress"></table></div>
+          </div>
+
+          <div class="card rh-card">
+            <div class="card-head"><div><h2 data-t="c_hist">Hong Kong rates over the past 10 years</h2><p data-t="c_hist_p">How the rates behind P − spread and HIBOR + spread loans have moved, from official HKMC and HKMA data.</p></div></div>
+            <figure class="rh"><h3 data-t="rh_prime">Prime rate (P)</h3><div class="rh-chart" id="rhPrime"></div><div class="rh-stats" id="rhPrimeStats"></div><figcaption class="rh-src" id="rhPrimeSrc"></figcaption></figure>
+            <figure class="rh"><h3 data-t="rh_hibor">1-month HIBOR (monthly average)</h3><div class="rh-chart" id="rhHibor"></div><div class="rh-stats" id="rhHiborStats"></div><figcaption class="rh-src" id="rhHiborSrc"></figcaption></figure>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div><h2 data-t="c_talk">Key points</h2></div></div>
+            <ul class="talk" id="talk"></ul>
+          </div>
+
+          <p class="fine" id="fine"></p>
+          <div class="print-foot" id="printFoot"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="lab cmp" id="cmpView" role="tabpanel" aria-labelledby="tabCmp" hidden>
+      <div class="print-head" id="printHead2"></div>
+      <div class="cmp-top">
+        <div><h2 data-t="cmp_h">Compare plans &amp; banks</h2><p data-t="cmp_p">Tick any plan with any bank offer. Lines and rankings update as you change picks, rates or bonus assumptions.</p></div>
+        <div class="quick no-print"><button class="mini" type="button" data-q="all" data-t="q_all">All</button><button class="mini" type="button" data-q="best" data-t="q_best">Best bank per plan</button><button class="mini" type="button" data-q="clear" data-t="q_clear">Clear</button></div>
+      </div>
+      <div class="tw mix-wrap no-print"><table class="mix" id="mix"></table></div>
+      <details class="bo no-print" id="boBox" open><summary><span data-t="bo_h">Bank offers</span><small data-t="bo_p">Every offer is editable here; the grid, chart and ranking follow as you type.</small></summary>
+        <div class="tw"><table class="bo-t" id="boTbl"></table></div></details>
+      <div class="cmp-ctrl no-print">
+        <div class="toggle" role="group" aria-label="Measure" id="metricSeg">
+          <button type="button" data-metric="gain" data-t="m_gain">Net return (HK$)</button><button type="button" data-metric="roc" data-t="m_roc">Net return %</button><button type="button" data-metric="irr" data-t="m_irr">IRR</button><button type="button" data-metric="net" data-t="m_net">Value after loan</button>
+        </div>
+        <div class="sliders two">
+          <div class="sl"><div class="sl-top"><label for="slShift" data-t="sl_shift">Rate change, every bank</label><output id="slShiftOut" for="slShift"></output></div><input type="range" id="slShift" min="-1" max="3" step="0.25"><div class="sl-ends"><span>−1%</span><span>+3%</span></div></div>
+          <div class="sl"><div class="sl-top"><label for="slBonus2" data-t="sl_bonus">Non-guaranteed bonus paid</label><output id="slBonus2Out" for="slBonus2"></output></div><input type="range" id="slBonus2" min="0" max="120" step="5"><div class="sl-ends"><span data-t="sl_guar_end">Guaranteed</span><span>120%</span></div></div>
+        </div>
+      </div>
+      <div class="cmp-body">
+        <div class="cmp-chart"><div class="chart" id="cmpChart"></div><p class="note" id="cmpNote"></p></div>
+        <aside class="rank" id="rank" aria-live="polite"></aside>
+      </div>
+      <div class="card"><div class="card-head"><div><h2 data-t="c_all">Every combination</h2><p data-t="c_all_p">Own cash, monthly interest and returns for each pick. The best figure in each column is marked.</p></div></div>
+        <div class="tw"><table id="cmpTbl"></table></div></div>
+    </section>
+</main>
+<footer class="gf">
+  <div class="gf-in">
+    <div><div class="gf-brand">Premium Lab</div><p data-st="f_about">An independent guide to insurance premium financing, with a calculator for licensed agents.</p></div>
+    <div><h4 data-st="f_learn">Learn</h4><a href="index.html#learn" data-st="learn">The essentials</a><a href="index.html#explore" data-st="lab">Your case</a><a href="index.html#risks" data-st="risks">The trade-offs</a></div>
+    <div><h4 data-st="f_tools">For agents</h4><a href="calculator.html" data-st="calc">P-Fin calculator</a><h4 data-st="f_src" style="margin-top:20px">Sources</h4><a href="https://www.ia.org.hk/en/legislative_framework/Conduct_in_Focus_Issue_05_03.html" target="_blank" rel="noopener noreferrer" data-st="f_ia1">Insurance Authority: risks &amp; complexities</a><a href="https://www.ia.org.hk/en/premium_financing/smart_tips.html" target="_blank" rel="noopener noreferrer" data-st="f_ia2">Insurance Authority: smart tips</a></div>
+  </div>
+  <div class="gf-base" data-st="f_base">For education only. Illustrations are not guarantees or financial advice.</div>
+</footer>
+
+<dialog id="agentDlg">
+  <form method="dialog" id="agentForm">
+    <h2 data-t="ad_title">Your details for the PDF</h2>
+    <p data-t="ad_p">Shown in the footer of the client PDF. Stored only in this browser.</p>
+    <label class="f"><span data-t="ad_name">Name</span><input id="aName" maxlength="60"></label>
+    <label class="f"><span data-t="ad_lic">Licence no.</span><input id="aLic" maxlength="30"></label>
+    <label class="f"><span data-t="ad_contact">Phone / email</span><input id="aContact" maxlength="80"></label>
+    <div class="row"><button class="btn" value="cancel" data-t="cancel">Cancel</button><button class="btn solid" value="ok" id="aSave" data-t="ad_save">Save details</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="site.js?v=5"></script>
+<script src="engine.js?v=9"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+
+/* ------------------------------------------------------------------ i18n */
+const T = {
+  en: {
+    to_studio:"Present on iPad →",
+    c_hist:"Hong Kong rates over the past 10 years", c_hist_p:"How the rates behind P − spread and HIBOR + spread loans have moved, from official HKMC and HKMA data.", rh_prime:"Prime rate (P)", rh_hibor:"1-month HIBOR (monthly average)", rh_cur:"Current", rh_hi:"Highest", rh_lo:"Lowest", rh_since:"since {d}", rh_range:"{a} – {b}", rh_avg:"{m} average", rh_and:"; ", rh_psrc:"Source: The Hong Kong Mortgage Corporation (HKMC), Hong Kong Prime Rate as specified by HKMC, rates at effective dates (<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC rates update</a>). Data as of 2 Oct 2026. Prime rates differ by bank (some banks quote 5.00%).", rh_hsrc:"Source: HKMA Monthly Statistical Bulletin, HIBOR fixing period averages, 1-month (<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">HKMA API</a>). Data as of Aug 2026 (latest month published).",
+    h_irr:"IRR", m_irr:"IRR", c_table_p:"Net return % is the net return as a percentage of the client's own cash. Avg annual return is the net return % divided by the number of years, the same figure shown above each bar. IRR is the annual rate of return on the client's actual cash flows: own cash paid at the start, loan interest paid each year, and the value left after repaying the loan in that year.", t_lev:"Put just {cash} of your own money to work and hold a policy of {premium}. The bank funds the other {loan} at {rate}, about {month} a month in interest.", t_best:"At year {y}, the cash value of {cv} repays the loan in full and leaves {net}. After interest, your net return is {gain} ({roc}), an average of {ann} a year, with an IRR of {irr}.", t_self:"Financing lifts the IRR at year {y} from {self} (paying the premium without a loan) to {irr}, an extra {delta} a year.", t_be:"Comfortable rate buffer: the plan stays profitable at year {y} as long as the loan rate averages below {be}, {cushion} above today’s {rate}.",
+    h_ann:"Avg annual return", fixed:"P − spread", prime:"P (bank prime rate)", pspread:"Spread", rate_eff:"Loan rate {r} · {m} a month", upload_pdf:"Upload proposal", pdf_reading:"Reading the proposal…", pdf_found:"Filled {n} of {m} years from the proposal: year {ys}.", pdf_missing:"Not listed in the proposal: year {ys}. Please enter these manually.", pdf_avail:"The proposal lists years {ys}.", pdf_none:"Couldn't find a surrender value table in this file. Please enter the values manually.", pdf_scan:"This PDF is a scanned image with no text, so it can't be read automatically. Please enter the values manually.", pdf_err:"Couldn't read this PDF (it may be scanned or password-protected). Please enter the values manually.", avg_ann:"Avg annual net return", cum_ret:"Cumulative net return", avg_note:"The % above each bar is the average annual net return: the cumulative net return % divided by the number of years.",
+    client:"Client", client_ph:"e.g. Mr Chan", case_ph:"e.g. FWD savings 2026", opened:"Opened a case for {c}", pen_pct:"Prepayment penalty (% of loan)", pen_years:"If repaid within (years)", t_pen:"Repaying the loan within the first {years} years costs a prepayment penalty of {pct} of the loan, about {amt}.", t_pen_hit:"It is already counted in the figures for year {ys}.",
+    fee_pct:"Handling fee (% of loan)", rebate:"Cash rebate", upfront:"Other upfront fee", net_upfront:"Net upfront", t_fees:"The bank charges {fee} in fees at the start and gives back a {rebate} cash rebate, a net {net} on day one. This is counted in every return above.",
+    bo_h:"Bank offers", bo_p:"Every offer is editable here; the grid, chart and ranking follow as you type.", bo_eff:"Effective rate",
+    tab_single:"Single case", tab_cmp:"Compare plans & banks", add_plan:"+ Add plan", plan_name:"Plan / insurer", del_plan:"Remove this plan", cmp_h:"Compare plans & banks", cmp_p:"Tick any plan with any bank offer. Lines and rankings update as you change picks, rates or bonus assumptions.", q_all:"All", q_best:"Best bank per plan", q_clear:"Clear", m_gain:"Net return (HK$)", m_roc:"Net return %", m_net:"Value after loan", sl_shift:"Rate change, every bank", rank_h:"Ranking at year {y}", rank_lead:"Leader", no_year:"no value this year", need_short:"add cash values", cmp_empty:"Tick at least one plan and bank in the grid above.", inspect:"Inspect a year", c_all:"Every combination", c_all_p:"Own cash, monthly interest and returns for each pick. The best figure in each column is marked.", h_combo:"Plan · bank", cmp_n:"Combinations",
+    nav_learn:'Learn', nav_home:'Home', nav_essentials:'The essentials', nav_lab:'Scenario lab', nav_risks:'The trade-offs', nav_tools:'For agents', nav_calc:'Financing calculator',
+    agent_label:'Prepared by', agent_add:'Add your details', menu:'Menu',
+    eyebrow:'For licensed agents · illustrative', title:'Premium financing, <em>side by side</em> with your client.',
+    lede:"Enter the policy, the bank's loan offer and the cash values from the insurer's illustration. The returns, the interest cost, the rate the plan can survive and a client-ready PDF follow instantly.",
+    new:'New', save:'Save case', share:'Copy link', print:'Client PDF', case:'Case',
+    g_policy:'Policy', premium:'Total premium', premium_h:'single / prepaid', discount:'First-year discount', discount_h:'prepayment bonus',
+    g_offer:'Bank loan offer', add_offer:'+ Compare bank', bank:'Bank / lender', ratio:'Loan ratio', loan:'Loan amount',
+    rate_type:'Interest rate', hibor:'HIBOR + spread', rate:'Loan rate', hibor_rate:'HIBOR assumed', spread:'Spread',
+    fees:'Fees (optional)', annual_fee:'Annual fee', del_offer:'Remove this bank', client_cash:"Client's own cash",
+    g_cv:'Cash value from the illustration', add_year:'+ Year', year:'Year', cv_total:'Total cash value', cv_guar:'Guaranteed',
+    cv_note:"Copy the surrender values from the insurer's benefit illustration. Guaranteed is optional; it powers the downside view.",
+    g_risk:'Margin-call check', day1:'Day-1 cash value', max_ltv:"Bank's max loan-to-value",
+    ltv_note:"Banks usually lend against the policy's surrender value. If the loan exceeds their limit, they can ask for more collateral or repayment.",
+    k_cash:"Client's own cash", k_month:'Monthly interest', k_loan:'Loan amount', k_be:'Profitable from',
+    of_premium:'{p} of the premium', per_year:'{v} a year', year_n:'Year {n}', not_yet:'Not within the years entered', at_rate:'at {r}',
+    c_chart:'Policy breakdown', c_chart_p:"Each bar is the policy's cash value, stacked from your capital and the bank loan up to the interest paid and the net return on top.",
+    b_total:'As illustrated', b_guar:'Guaranteed only',
+    s_cap:'Your capital', s_loan:'Bank loan', s_disc:'First-year discount', s_cost:'Interest & fees', s_gain:'Net return', s_short:'Shortfall', tt_cv:'Cash value', sl_rate:'Loan rate', sl_ratio:'Loan ratio', sl_bonus:'Non-guaranteed bonus paid', sl_guar_end:'Guaranteed', bonus_na:'needs guaranteed values',
+    start:'Start', c_table:'Year by year', h_year:'Year', h_cv:'Cash value', h_net:'After repaying loan', h_paid:'Total cash in', h_gain:'Net return (HK$)', h_roc:'Net return %', h_self:'IRR without loan', h_ltv:'Loan-to-value',
+    c_stress:'If interest rates rise', c_stress_p:'Net return at higher loan rates, and the break-even rate where the plan stops making money.', h_rate:'Loan rate', h_be:'Break-even rate', now:'now',
+    c_cmp:'Bank offers compared', c_cmp_p:"Same policy and cash values, each bank's loan terms.", h_bank:'Bank', h_month:'Monthly interest',
+    c_talk:'Key points', t_be_none:'At year {y} the plan is not profitable even at today\'s rate. Check the cash values and the loan terms.',
+    t_guar:'Using only guaranteed values, year {y} shows {gain} ({roc}). Non-guaranteed bonuses are not promised.',
+    t_early:'Surrendering early is expensive: before year {y} the cash value does not cover the loan plus the cash put in.',
+    t_ltv:'Day one, the loan is {ltv} of the cash value against the bank\'s limit of {max}. If values fall or the limit tightens, the bank can ask for more collateral or repayment.',
+    t_hibor:'This loan floats with HIBOR. The figures assume {h} plus {s}; every 1% rise adds about {add} a month in interest.',
+    t_rate_risk:'Loan rates can rise. At {r} the return at year {y} becomes {roc}.',
+    fine:'Illustrative only and not financial advice. Results depend on the cash values you enter (copy them from the insurer\'s illustration; non-guaranteed values can change), the bank\'s actual terms, fees and interest rate movements. Interest is shown on an interest-only loan, repaid in full from the cash value at the year shown. Read the Insurance Authority\'s guidance: {l1} and {l2}.',
+    l1:'risks & complexities', l2:'smart tips',
+    p_title:'Premium financing illustration', p_client:'Case', p_date:'Date', p_agent:'Prepared by', p_lic:'Licence',
+    saved:'Case saved in this browser', copied:'Link copied. It contains the numbers, not your client list.', copy_fail:'Copy failed. The link is in the address bar.', deleted:'Case deleted', confirm_del:'Delete this saved case?',
+    need:'Enter a premium and at least one cash value to see results.', bad_loan:'The loan cannot be larger than the premium minus the discount.',
+    cancel:'Cancel', ad_title:'Your details for the PDF', ad_p:'Shown in the footer of the client PDF. Stored only in this browser.', ad_name:'Name', ad_lic:'Licence no.', ad_contact:'Phone / email', ad_save:'Save details'
+  },
+  'zh-Hant': {
+    to_studio:"iPad 互動比較 →",
+    c_hist:"過去 10 年香港利率走勢", c_hist_p:"「P - 息差」及「HIBOR + 息差」貸款所參考利率的歷史走勢，數據來自香港按揭證券有限公司及香港金融管理局。", rh_prime:"最優惠利率 P", rh_hibor:"一個月 HIBOR（每月平均）", rh_cur:"現時", rh_hi:"最高", rh_lo:"最低", rh_since:"自{d}起", rh_range:"{a}至{b}", rh_avg:"{m}平均", rh_and:"；", rh_psrc:"資料來源：香港按揭證券有限公司（HKMC）所訂香港最優惠利率，按生效日期（<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC 利率資料</a>）。數據截至 2026 年 10 月 2 日。各銀行最優惠利率或有不同（部分銀行為 5.00%）。", rh_hsrc:"資料來源：香港金融管理局《金融數據月報》HIBOR 定價每月平均（一個月，<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">金管局 API</a>）。數據截至 2026 年 8 月（最新公布月份）。",
+    h_irr:"IRR", m_irr:"IRR", c_table_p:"「淨回報 %」= 淨回報金額 ÷ 客戶本金；「平均年回報」= 淨回報 % ÷ 年數，與柱狀圖上的百分比相同；「IRR」按客戶實際現金流計算的年化回報率：期初投入本金、每年支付的貸款利息，以及該年償還貸款後剩餘的價值。", t_lev:"只需投入 {cash} 本金，即可持有保費 {premium} 的保單；其餘 {loan} 由銀行以 {rate} 融資，每月利息約 {month}。", t_best:"第 {y} 年，現金價值 {cv} 全數償還貸款後仍剩 {net}。扣除利息後淨回報為 {gain}（{roc}），平均每年 {ann}，IRR 達 {irr}。", t_self:"融資令第 {y} 年的 IRR 由 {self}（不借貸自行繳付保費）提升至 {irr}，每年多 {delta}。", t_be:"利率緩衝充裕：只要平均貸款利率低於 {be}，第 {y} 年仍可獲利，比現時 {rate} 高出 {cushion}。",
+    h_ann:"平均年回報", fixed:"P - 息差", prime:"P（銀行最優惠利率）", pspread:"息差", rate_eff:"貸款利率 {r} · 每月 {m}", upload_pdf:"上載計劃書", pdf_reading:"正在讀取計劃書…", pdf_found:"已從計劃書填入 {m} 年中的 {n} 年：第 {ys} 年。", pdf_missing:"計劃書未列出第 {ys} 年，請手動輸入。", pdf_avail:"計劃書列出的年度：{ys}。", pdf_none:"未能在此檔案找到退保價值表，請手動輸入。", pdf_scan:"此 PDF 為掃描圖片，沒有文字可供讀取，請手動輸入。", pdf_err:"未能讀取此 PDF（可能是掃描檔或設有密碼），請手動輸入。", avg_ann:"平均每年淨回報", cum_ret:"累計淨回報", avg_note:"柱頂的百分比為平均每年淨回報，即累計淨回報 % ÷ 年數。",
+    client:"客戶", client_ph:"例如：陳先生", case_ph:"例如：FWD 儲蓄 2026", opened:"已開啟 {c} 的個案", pen_pct:"提早還款罰息（佔貸款 %）", pen_years:"適用年期（首 N 年）", t_pen:"若於首 {years} 年內償還貸款，須支付貸款額 {pct} 的提早還款罰息，約 {amt}。", t_pen_hit:"第 {ys} 年的數字已計入此罰息。",
+    fee_pct:"手續費（佔貸款 %）", rebate:"現金回贈", upfront:"其他一次性費用", net_upfront:"首日淨費用", t_fees:"銀行開始時收取 {fee} 費用，並提供 {rebate} 現金回贈，首日淨額為 {net}。以上所有回報均已計入。",
+    bo_h:"銀行貸款條件", bo_p:"所有銀行條件均可在此修改；輸入時配對表、圖表及排名即時更新。", bo_eff:"實際利率",
+    tab_single:"單一個案", tab_cmp:"比較計劃及銀行", add_plan:"+ 新增計劃", plan_name:"計劃 / 保險公司", del_plan:"移除此計劃", cmp_h:"比較計劃及銀行", cmp_p:"任意配對計劃與銀行條件。更改配對、利率或紅利假設時，曲線及排名即時更新。", q_all:"全選", q_best:"每個計劃配最佳銀行", q_clear:"清除", m_gain:"淨回報金額", m_roc:"淨回報 %", m_net:"還款後價值", sl_shift:"所有銀行利率變動", rank_h:"第 {y} 年排名", rank_lead:"最佳", no_year:"此年沒有數值", need_short:"請填現金價值", cmp_empty:"請在上方表格選擇最少一個計劃及銀行。", inspect:"查看年份", c_all:"所有配對", c_all_p:"每個配對的本金、每月利息及回報。各欄最佳數字已標示。", h_combo:"計劃 · 銀行", cmp_n:"配對數目",
+    nav_learn:'了解', nav_home:'主頁', nav_essentials:'基本概念', nav_lab:'情景實驗室', nav_risks:'利弊權衡', nav_tools:'代理人工具', nav_calc:'保費融資計算機',
+    agent_label:'制作人', agent_add:'加入你的資料', menu:'選單',
+    eyebrow:'持牌保險代理人專用 · 僅供說明', title:'保費融資，<em>即場</em>與客戶一同計算。',
+    lede:'輸入保單、銀行貸款條件及保險公司建議書內的現金價值。回報、利息成本、計劃可承受的利率，以及給客戶的 PDF，即時生成。',
+    new:'新建', save:'儲存個案', share:'複製連結', print:'客戶 PDF', case:'個案',
+    g_policy:'保單', premium:'保費總額', premium_h:'躉繳 / 預繳', discount:'首年優惠', discount_h:'預繳優惠',
+    g_offer:'銀行貸款條件', add_offer:'+ 比較銀行', bank:'銀行 / 貸款機構', ratio:'貸款比率', loan:'貸款金額',
+    rate_type:'利率', hibor:'HIBOR + 息差', rate:'貸款利率', hibor_rate:'假設 HIBOR', spread:'息差',
+    fees:'費用（可選）', annual_fee:'年費', del_offer:'移除此銀行', client_cash:'客戶本金',
+    g_cv:'建議書現金價值', add_year:'+ 年期', year:'年期', cv_total:'總現金價值', cv_guar:'保證',
+    cv_note:'從保險公司的利益說明書抄錄退保價值。保證價值可不填；填寫後可查看下行情景。',
+    g_risk:'追加按金檢查', day1:'首日現金價值', max_ltv:'銀行最高貸款價值比',
+    ltv_note:'銀行一般以保單退保價值作抵押。若貸款超出上限，銀行可要求補倉或還款。',
+    k_cash:'客戶本金', k_month:'每月利息', k_loan:'貸款金額', k_be:'由此年開始獲利',
+    of_premium:'佔保費 {p}', per_year:'每年 {v}', year_n:'第 {n} 年', not_yet:'所填年期內未獲利', at_rate:'利率 {r}',
+    c_chart:'保單組成部份', c_chart_p:'每條柱代表保單現金價值，由下而上為本金、銀行貸款、利息及費用，最上為淨回報。',
+    b_total:'按建議書', b_guar:'只計保證',
+    s_cap:'本金', s_loan:'銀行貸款', s_disc:'首年優惠', s_cost:'利息及費用', s_gain:'淨回報', s_short:'虧損', tt_cv:'現金價值', sl_rate:'貸款利率', sl_ratio:'貸款比率', sl_bonus:'非保證紅利實現率', sl_guar_end:'只計保證', bonus_na:'需填保證價值',
+    start:'開始', c_table:'逐年明細', h_year:'年期', h_cv:'現金價值', h_net:'還款後價值', h_paid:'總投入', h_gain:'淨回報金額', h_roc:'淨回報 %', h_self:'不借貸 IRR', h_ltv:'貸款價值比',
+    c_stress:'如果利率上升', c_stress_p:'不同貸款利率下的淨回報，以及計劃開始虧損的打和利率。', h_rate:'貸款利率', h_be:'打和利率', now:'現時',
+    c_cmp:'銀行條件比較', c_cmp_p:'同一保單及現金價值，套用各銀行的貸款條件。', h_bank:'銀行', h_month:'每月利息',
+    c_talk:'重點說明', t_be_none:'以現時利率計，第 {y} 年仍未能獲利。請檢查現金價值及貸款條件。',
+    t_guar:'只計保證價值，第 {y} 年回報為 {gain}（淨回報 {roc}）。非保證紅利並無保證。',
+    t_early:'提早退保代價高：第 {y} 年前，現金價值不足以償還貸款及已投入的本金。',
+    t_ltv:'首日貸款佔現金價值 {ltv}，銀行上限為 {max}。若價值下跌或上限收緊，銀行可要求補倉或還款。',
+    t_hibor:'此貸款利率隨 HIBOR 浮動。以上假設 HIBOR {h} 加息差 {s}；利率每升 1%，每月利息約增加 {add}。',
+    t_rate_risk:'貸款利率可能上升。若利率為 {r}，第 {y} 年淨回報變為 {roc}。',
+    fine:'僅供說明，並非財務建議。結果取決於你輸入的現金價值（請從保險公司建議書抄錄；非保證價值可能變動）、銀行實際條件、費用及利率變化。利息按只付息貸款計算，並於所示年期以現金價值全數償還。請參閱保險業監管局指引：{l1} 及 {l2}。',
+    l1:'風險及複雜性', l2:'精明貼士',
+    p_title:'保費融資說明', p_client:'個案', p_date:'日期', p_agent:'制作人', p_lic:'牌照',
+    saved:'個案已儲存於此瀏覽器', copied:'已複製連結。連結只含數字，不含你的客戶名單。', copy_fail:'複製失敗，連結已在網址列。', deleted:'個案已刪除', confirm_del:'刪除此個案？',
+    need:'請輸入保費及最少一個現金價值以查看結果。', bad_loan:'貸款不可大於保費減首年優惠。',
+    cancel:'取消', ad_title:'PDF 上的個人資料', ad_p:'顯示於客戶 PDF 頁尾，只儲存在此瀏覽器。', ad_name:'姓名', ad_lic:'牌照號碼', ad_contact:'電話 / 電郵', ad_save:'儲存資料'
+  },
+  'zh-Hans': {
+    to_studio:"iPad 互动比较 →",
+    c_hist:"过去 10 年香港利率走势", c_hist_p:"「P - 息差」及「HIBOR + 息差」贷款所参考利率的历史走势，数据来自香港按揭证券有限公司及香港金融管理局。", rh_prime:"最优惠利率 P", rh_hibor:"一个月 HIBOR（每月平均）", rh_cur:"现时", rh_hi:"最高", rh_lo:"最低", rh_since:"自{d}起", rh_range:"{a}至{b}", rh_avg:"{m}平均", rh_and:"；", rh_psrc:"资料来源：香港按揭证券有限公司（HKMC）所订香港最优惠利率，按生效日期（<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC 利率资料</a>）。数据截至 2026 年 10 月 2 日。各银行最优惠利率或有不同（部分银行为 5.00%）。", rh_hsrc:"资料来源：香港金融管理局《金融数据月报》HIBOR 定价每月平均（一个月，<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">金管局 API</a>）。数据截至 2026 年 8 月（最新公布月份）。",
+    h_irr:"IRR", m_irr:"IRR", c_table_p:"「净回报 %」= 净回报金额 ÷ 客户本金；「平均年回报」= 净回报 % ÷ 年数，与柱状图上的百分比相同；「IRR」按客户实际现金流计算的年化回报率：期初投入本金、每年支付的贷款利息，以及该年偿还贷款后剩余的价值。", t_lev:"只需投入 {cash} 本金，即可持有保费 {premium} 的保单；其余 {loan} 由银行以 {rate} 融资，每月利息约 {month}。", t_best:"第 {y} 年，现金价值 {cv} 全数偿还贷款后仍剩 {net}。扣除利息后净回报为 {gain}（{roc}），平均每年 {ann}，IRR 达 {irr}。", t_self:"融资令第 {y} 年的 IRR 由 {self}（不借贷自行缴付保费）提升至 {irr}，每年多 {delta}。", t_be:"利率缓冲充裕：只要平均贷款利率低于 {be}，第 {y} 年仍可获利，比现时 {rate} 高出 {cushion}。",
+    h_ann:"平均年回报", fixed:"P - 息差", prime:"P（银行最优惠利率）", pspread:"息差", rate_eff:"贷款利率 {r} · 每月 {m}", upload_pdf:"上载计划书", pdf_reading:"正在读取计划书…", pdf_found:"已从计划书填入 {m} 年中的 {n} 年：第 {ys} 年。", pdf_missing:"计划书未列出第 {ys} 年，请手动输入。", pdf_avail:"计划书列出的年度：{ys}。", pdf_none:"未能在此文件找到退保价值表，请手动输入。", pdf_scan:"此 PDF 为扫描图片，没有文字可供读取，请手动输入。", pdf_err:"未能读取此 PDF（可能是扫描件或设有密码），请手动输入。", avg_ann:"平均每年净回报", cum_ret:"累计净回报", avg_note:"柱顶的百分比为平均每年净回报，即累计净回报 % ÷ 年数。",
+    client:"客户", client_ph:"例如：陈先生", case_ph:"例如：FWD 储蓄 2026", opened:"已开启 {c} 的个案", pen_pct:"提早还款罚息（占贷款 %）", pen_years:"适用年期（首 N 年）", t_pen:"若于首 {years} 年内偿还贷款，须支付贷款额 {pct} 的提早还款罚息，约 {amt}。", t_pen_hit:"第 {ys} 年的数字已计入此罚息。",
+    fee_pct:"手续费（占贷款 %）", rebate:"现金返还", upfront:"其他一次性费用", net_upfront:"首日净费用", t_fees:"银行开始时收取 {fee} 费用，并提供 {rebate} 现金返还，首日净额为 {net}。以上所有回报均已计入。",
+    bo_h:"银行贷款条件", bo_p:"所有银行条件均可在此修改；输入时配对表、图表及排名即时更新。", bo_eff:"实际利率",
+    tab_single:"单一个案", tab_cmp:"比较计划及银行", add_plan:"+ 新增计划", plan_name:"计划 / 保险公司", del_plan:"移除此计划", cmp_h:"比较计划及银行", cmp_p:"任意配对计划与银行条件。更改配对、利率或红利假设时，曲线及排名即时更新。", q_all:"全选", q_best:"每个计划配最佳银行", q_clear:"清除", m_gain:"净回报金额", m_roc:"净回报 %", m_net:"还款后价值", sl_shift:"所有银行利率变动", rank_h:"第 {y} 年排名", rank_lead:"最佳", no_year:"此年没有数值", need_short:"请填现金价值", cmp_empty:"请在上方表格选择最少一个计划及银行。", inspect:"查看年份", c_all:"所有配对", c_all_p:"每个配对的本金、每月利息及回报。各栏最佳数字已标示。", h_combo:"计划 · 银行", cmp_n:"配对数目",
+    nav_learn:'了解', nav_home:'主页', nav_essentials:'基本概念', nav_lab:'情景实验室', nav_risks:'利弊权衡', nav_tools:'代理人工具', nav_calc:'保费融资计算器',
+    agent_label:'制作人', agent_add:'加入你的资料', menu:'菜单',
+    eyebrow:'持牌保险代理人专用 · 仅供说明', title:'保费融资，<em>即场</em>与客户一同计算。',
+    lede:'输入保单、银行贷款条件及保险公司计划书内的现金价值。回报、利息成本、计划可承受的利率，以及给客户的 PDF，即时生成。',
+    new:'新建', save:'保存个案', share:'复制链接', print:'客户 PDF', case:'个案',
+    g_policy:'保单', premium:'保费总额', premium_h:'趸缴 / 预缴', discount:'首年优惠', discount_h:'预缴优惠',
+    g_offer:'银行贷款条件', add_offer:'+ 比较银行', bank:'银行 / 贷款机构', ratio:'贷款比率', loan:'贷款金额',
+    rate_type:'利率', hibor:'HIBOR + 息差', rate:'贷款利率', hibor_rate:'假设 HIBOR', spread:'息差',
+    fees:'费用（可选）', annual_fee:'年费', del_offer:'移除此银行', client_cash:'客户本金',
+    g_cv:'计划书现金价值', add_year:'+ 年期', year:'年期', cv_total:'总现金价值', cv_guar:'保证',
+    cv_note:'从保险公司的利益说明书抄录退保价值。保证价值可不填；填写后可查看下行情景。',
+    g_risk:'追加保证金检查', day1:'首日现金价值', max_ltv:'银行最高贷款价值比',
+    ltv_note:'银行一般以保单退保价值作抵押。若贷款超出上限，银行可要求补仓或还款。',
+    k_cash:'客户本金', k_month:'每月利息', k_loan:'贷款金额', k_be:'由此年开始获利',
+    of_premium:'占保费 {p}', per_year:'每年 {v}', year_n:'第 {n} 年', not_yet:'所填年期内未获利', at_rate:'利率 {r}',
+    c_chart:'保单组成部份', c_chart_p:'每条柱代表保单现金价值，由下而上为本金、银行贷款、利息及费用，最上为净回报。',
+    b_total:'按计划书', b_guar:'只计保证',
+    s_cap:'本金', s_loan:'银行贷款', s_disc:'首年优惠', s_cost:'利息及费用', s_gain:'净回报', s_short:'亏损', tt_cv:'现金价值', sl_rate:'贷款利率', sl_ratio:'贷款比率', sl_bonus:'非保证红利实现率', sl_guar_end:'只计保证', bonus_na:'需填保证价值',
+    start:'开始', c_table:'逐年明细', h_year:'年期', h_cv:'现金价值', h_net:'还款后价值', h_paid:'总投入', h_gain:'净回报金额', h_roc:'净回报 %', h_self:'不借贷 IRR', h_ltv:'贷款价值比',
+    c_stress:'如果利率上升', c_stress_p:'不同贷款利率下的净回报，以及计划开始亏损的盈亏平衡利率。', h_rate:'贷款利率', h_be:'盈亏平衡利率', now:'现时',
+    c_cmp:'银行条件比较', c_cmp_p:'同一保单及现金价值，套用各银行的贷款条件。', h_bank:'银行', h_month:'每月利息',
+    c_talk:'重点说明', t_be_none:'以现时利率计，第 {y} 年仍未能获利。请检查现金价值及贷款条件。',
+    t_guar:'只计保证价值，第 {y} 年回报为 {gain}（净回报 {roc}）。非保证红利并无保证。',
+    t_early:'提早退保代价高：第 {y} 年前，现金价值不足以偿还贷款及已投入的本金。',
+    t_ltv:'首日贷款占现金价值 {ltv}，银行上限为 {max}。若价值下跌或上限收紧，银行可要求补仓或还款。',
+    t_hibor:'此贷款利率随 HIBOR 浮动。以上假设 HIBOR {h} 加息差 {s}；利率每升 1%，每月利息约增加 {add}。',
+    t_rate_risk:'贷款利率可能上升。若利率为 {r}，第 {y} 年净回报变为 {roc}。',
+    fine:'仅供说明，并非财务建议。结果取决于你输入的现金价值（请从保险公司计划书抄录；非保证价值可能变动）、银行实际条件、费用及利率变化。利息按只付息贷款计算，并于所示年期以现金价值全数偿还。请参阅香港保险业监管局指引：{l1} 及 {l2}。',
+    l1:'风险及复杂性', l2:'精明贴士',
+    p_title:'保费融资说明', p_client:'个案', p_date:'日期', p_agent:'制作人', p_lic:'牌照',
+    saved:'个案已保存于此浏览器', copied:'已复制链接。链接只含数字，不含你的客户名单。', copy_fail:'复制失败，链接已在地址栏。', deleted:'个案已删除', confirm_del:'删除此个案？',
+    need:'请输入保费及最少一个现金价值以查看结果。', bad_loan:'贷款不可大于保费减首年优惠。',
+    cancel:'取消', ad_title:'PDF 上的个人资料', ad_p:'显示于客户 PDF 页脚，只保存在此浏览器。', ad_name:'姓名', ad_lic:'牌照号码', ad_contact:'电话 / 电邮', ad_save:'保存资料'
+  }
+};
+let lang = 'en';
+const t = (k, v) => { let s = (T[lang] && T[lang][k]) || T.en[k] || k; if (v) for (const [a, b] of Object.entries(v)) s = s.split('{' + a + '}').join(b); return s; };
+
+/* ------------------------------------------------------------- storage */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+};
+
+/* ------------------------------------------------- state + model (engine.js) */
+const E = window.PLE;
+let S = E.defaults();
+// share of the non-guaranteed part actually paid: 1 = as illustrated, 0 = guaranteed only
+const bonusOf = () => Number.isFinite(S.fulfil) ? S.fulfil : 1;
+const parseNum = s => { const v = Number(String(s).replace(/[,\s]/g, '')); return Number.isFinite(v) ? v : NaN; };
+const fmtInt = E.fmtInt, pct = E.pct, pctS = E.pctS, offerRate = E.offerRate;
+const money = v => E.money(v, S.currency), moneyS = v => E.moneyS(v, S.currency), wan = v => E.wan(v, lang);
+const plan = () => E.plan(S, S.sel.plan), offer = () => E.bank(S, S.sel.bank);
+const loanOf = o => E.loanOf(plan(), o);
+const compute = (o, rate) => E.compute(plan(), o, { rate, fulfil: bonusOf() });
+const planName = (p, i = S.plans.indexOf(p)) => p.name || 'Plan ' + String.fromCharCode(65 + i);
+const bankName = (b, i = S.banks.indexOf(b)) => b.bank || 'Bank ' + String.fromCharCode(65 + i);
+
+/* ---------------------------------------------------------------- form */
+const numIds = ['premium', 'discount', 'ratio', 'loan', 'prime', 'pspread', 'hibor', 'spread', 'upfront', 'annualFee', 'feePct', 'rebate', 'penPct', 'penYears', 'day1', 'maxLtv'];
+const pctIds = new Set(['ratio', 'prime', 'pspread', 'hibor', 'spread', 'maxLtv', 'feePct', 'penPct', 'penYears']);
+function showNum(id, v) { const el = $(id); if (document.activeElement === el) return; el.value = !Number.isFinite(v) ? '' : pctIds.has(id) ? String(+v.toFixed(3)) : fmtInt(v); }
+function fillForm() {
+  $('caseName').value = S.name || ''; $('clientName').value = S.client || '';
+  $('currency').value = S.currency;
+  document.querySelectorAll('.cur').forEach(e => e.textContent = S.currency);
+  const p = plan(), o = offer();
+  $('planName').value = p.name || '';
+  showNum('premium', p.premium); showNum('discount', p.discount);
+  $('bank').value = o.bank || '';
+  showNum('loan', loanOf(o)); showNum('ratio', o.ratio);
+  showNum('prime', o.prime); showNum('pspread', o.pspread); showNum('hibor', o.hibor); showNum('spread', o.spread);
+  showNum('upfront', o.upfront); showNum('annualFee', o.annualFee); showNum('feePct', o.feePct); showNum('rebate', o.rebate); showNum('penPct', o.penPct); showNum('penYears', o.penYears);
+  showNum('day1', p.day1); showNum('maxLtv', o.maxLtv);
+  document.querySelectorAll('[data-rt]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.rt === o.rateType)));
+  $('fixedRow').hidden = o.rateType !== 'fixed'; $('hiborRow').hidden = o.rateType !== 'hibor';
+  $('delOffer').hidden = S.banks.length < 2; $('delPlan').hidden = S.plans.length < 2;
+  renderOfferTabs(); renderPlanTabs(); renderCvRows();
+}
+function renderTabs(box, list, cur, name, pick) {
+  box.innerHTML = '';
+  if (list.length < 2) return;
+  list.forEach((x, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = name(x, i);
+    b.setAttribute('aria-pressed', String(x.id === cur));
+    b.onclick = () => { pick(x.id); fillForm(); update(); };
+    box.appendChild(b);
+  });
+}
+function renderOfferTabs() { renderTabs($('offerTabs'), S.banks, S.sel.bank, bankName, id => S.sel.bank = id); }
+function renderPlanTabs() { renderTabs($('planTabs'), S.plans, S.sel.plan, planName, id => S.sel.plan = id); }
+function renderCvRows() {
+  const tb = $('cvBody'); tb.innerHTML = '';
+  const cvs = plan().cvs;
+  cvs.forEach((c, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input class="inp num" inputmode="numeric" aria-label="Year" value="${c.y}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="Total cash value, year ${c.y}" value="${Number.isFinite(c.cv) ? fmtInt(c.cv) : ''}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="Guaranteed cash value, year ${c.y}" value="${Number.isFinite(c.g) ? fmtInt(c.g) : ''}"></td>
+      <td><button type="button" aria-label="Remove year ${c.y}">×</button></td>`;
+    const [y, cv, g] = tr.querySelectorAll('input');
+    y.oninput = () => { cvs[i].y = Math.round(parseNum(y.value)); update(); };
+    cv.oninput = () => { cvs[i].cv = parseNum(cv.value); update(); };
+    g.oninput = () => { cvs[i].g = parseNum(g.value); update(); };
+    [cv, g].forEach(el => el.onblur = () => { const v = parseNum(el.value); el.value = Number.isFinite(v) ? fmtInt(v) : ''; });
+    tr.querySelector('button').onclick = () => { if (cvs.length > 1) { cvs.splice(i, 1); renderCvRows(); update(); } };
+    tb.appendChild(tr);
+  });
+}
+function bindForm() {
+  numIds.forEach(id => {
+    const el = $(id);
+    el.addEventListener('input', () => {
+      const v = parseNum(el.value), o = offer(), p = plan();
+      el.setAttribute('aria-invalid', String(el.value !== '' && !Number.isFinite(v)));
+      if (!Number.isFinite(v) && el.value !== '') return;
+      const val = el.value === '' ? 0 : v;
+      // a bank offer is a loan ratio, so the same offer fits every plan; the amount follows the premium
+      if (id === 'premium') { p.premium = val; showNum('loan', loanOf(o)); }
+      else if (id === 'discount') p.discount = val;
+      else if (id === 'ratio') { o.ratio = val; showNum('loan', loanOf(o)); }
+      else if (id === 'loan') { o.ratio = p.premium > 0 ? val / p.premium * 100 : 0; showNum('ratio', o.ratio); }
+      else if (id === 'day1') p.day1 = val;
+      else o[id] = val;
+      if (id === 'prime' || id === 'pspread') o.rate = +E.baseRate(o).toFixed(3);
+      update();
+    });
+    el.addEventListener('blur', () => { const v = parseNum(el.value); if (Number.isFinite(v)) el.value = pctIds.has(id) ? String(+v.toFixed(3)) : fmtInt(v); });
+  });
+  $('bank').oninput = () => { offer().bank = $('bank').value; renderOfferTabs(); update(); };
+  $('planName').oninput = () => { plan().name = $('planName').value; renderPlanTabs(); update(); };
+  $('caseName').oninput = () => { S.name = $('caseName').value; persistDraft(); };
+  $('clientName').oninput = () => { S.client = $('clientName').value; persistDraft(); };
+  $('currency').onchange = () => { S.currency = $('currency').value; document.querySelectorAll('.cur').forEach(e => e.textContent = S.currency); update(); };
+  document.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { offer().rateType = b.dataset.rt; fillForm(); update(); });
+  // new plans and banks start as a copy of the current one and join the comparison with their partner
+  $('addOffer').onclick = () => {
+    const o = { ...offer(), id: E.uid(S.banks, 'b'), bank: 'Bank ' + String.fromCharCode(65 + S.banks.length) };
+    S.banks.push(o); S.picks.push([S.sel.plan, o.id]); S.sel.bank = o.id; fillForm(); update(); $('bank').focus(); $('bank').select();
+  };
+  $('delOffer').onclick = () => { if (S.banks.length > 1) { const id = S.sel.bank; S.banks = S.banks.filter(b => b.id !== id); S.picks = S.picks.filter(k => k[1] !== id); S.sel.bank = S.banks[0].id; fillForm(); update(); } };
+  $('addPlan').onclick = () => {
+    const p = JSON.parse(JSON.stringify(plan())); p.id = E.uid(S.plans, 'p'); p.name = 'Plan ' + String.fromCharCode(65 + S.plans.length);
+    S.plans.push(p); S.picks.push([p.id, S.sel.bank]); S.sel.plan = p.id; fillForm(); update(); $('planName').focus(); $('planName').select();
+  };
+  $('delPlan').onclick = () => { if (S.plans.length > 1) { const id = S.sel.plan; S.plans = S.plans.filter(p => p.id !== id); S.picks = S.picks.filter(k => k[0] !== id); S.sel.plan = S.plans[0].id; fillForm(); update(); } };
+  $('addCv').onclick = () => {
+    const cvs = plan().cvs, last = cvs[cvs.length - 1] || { y: 0, cv: NaN, g: NaN };
+    cvs.push({ y: last.y + 1, cv: NaN, g: NaN }); renderCvRows(); update();
+    const rows = $('cvBody').querySelectorAll('tr'); rows[rows.length - 1].querySelectorAll('input')[1].focus();
+  };
+  document.querySelectorAll('[data-basis]').forEach(b => b.onclick = () => { S.fulfil = b.dataset.basis === 'guar' ? 0 : 1; update(); });
+  // live sliders: each one writes the same state the form does
+  $('slRate').oninput = () => {
+    const v = +$('slRate').value, o = offer();
+    E.setRate(o, v);
+    showNum('pspread', o.pspread); showNum('hibor', o.hibor); update();
+  };
+  $('slRatio').oninput = () => { const o = offer(); o.ratio = +$('slRatio').value; showNum('loan', loanOf(o)); showNum('ratio', o.ratio); update(); };
+  $('slBonus').oninput = () => { S.fulfil = +$('slBonus').value / 100; update(); };
+}
+
+/* ---------------------------------------------------------------- chart */
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; parent && parent.appendChild(e); return e; }
+// bottom to top: your capital, bank loan, interest & fees, net return (shortfall hatched above)
+// chart colours follow the light/dark tokens in site.css
+let COL = {}, INK = {}, TC = {};
+function readCols() {
+  const c = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  ['cap', 'loan', 'disc', 'cost', 'gain', 'short'].forEach(k => { COL[k] = c('--c-' + k); INK[k] = c('--on-' + k); });
+  TC = { grid: c('--line'), grid0: c('--line-strong'), axis: c('--faint'), ink: c('--ink'), muted: c('--muted'), surface: c('--surface'), pos: c('--pos'), posbg: c('--pos-bg'), neg: c('--neg'), negbg: c('--neg-bg') };
+}
+let printW = 0; // while printing, charts are drawn at one fixed width so phone and desktop PDFs match
+let chartPrev = null, chartAnim = 0, chartLast = null, chartInstant = false, chartSeen = !('IntersectionObserver' in window);
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function chartModel(r) {
+  const start = { key: 's', label: t('start'), segs: [['cap', r.own], ['loan', r.L], ['disc', r.D]], top: r.P, need: r.P, roc: null,
+    tip: [['cap', r.own], ['loan', r.L], ['disc', r.D]], total: r.P };
+  return [start].concat(r.rows.map(x => {
+    const need = r.own + r.L + x.cost;
+    return { key: 'y' + x.y, label: t('year_n', { n: x.y }), segs: [['cap', r.own], ['loan', r.L], ['cost', x.cost], ['gain', Math.max(0, x.gain)]],
+      top: x.val, need, roc: x.roc, avg: x.roc / x.y, gain: x.gain, total: x.val, y: x.y,
+      tip: [['cap', r.own], ['loan', r.L], ['cost', x.cost]] };
+  }));
+}
+function drawChart(r) {
+  readCols();
+  const target = chartModel(r), zero = target.map(b => ({ ...b, segs: b.segs.map(([k]) => [k, 0]), top: 0, need: 0 }));
+  chartLast = r; cancelAnimationFrame(chartAnim);
+  // Bars wait at the baseline until the chart scrolls into view, then rise once.
+  if (!chartSeen) { chartPrev = null; paintChart(zero, target, r); return; }
+  const grow = !(chartPrev && chartPrev.length === target.length), from = grow ? zero : chartPrev;
+  chartPrev = target;
+  const t0 = performance.now(), dur = reducedMotion || chartInstant ? 0 : grow ? 900 : 520; chartInstant = false;
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const step = now => {
+    const k = dur ? Math.min(1, (now - t0) / dur) : 1, stg = grow ? .12 : 0, ease = q => 1 - Math.pow(1 - q, 3);
+    const frame = target.map((b, i) => { const e = ease(Math.min(1, Math.max(0, (k - stg * i / Math.max(1, target.length - 1)) / (1 - stg))));
+      return { ...b, top: lerp(from[i].top, b.top, e), need: lerp(from[i].need, b.need, e),
+      segs: b.segs.map(([key, v], j) => [key, lerp((from[i].segs[j] || [key, 0])[1], v, e)]) }; });
+    paintChart(frame, target, r);
+    if (k < 1) chartAnim = requestAnimationFrame(step);
+  };
+  step(performance.now());
+  $('legend').innerHTML = ['cap', 'loan', 'cost', 'gain', 'short'].map(k => `<span><i style="--c:${COL[k]}${k === 'short' ? ';background:repeating-linear-gradient(45deg,${COL.short} 0 2px,${TC.surface} 2px 4px);border:1.5px solid ${COL.short}' : ''}"></i>${t('s_' + k)}</span>`).join('')
+    + (r.D > 0 ? `<span><i style="--c:${COL.disc}"></i>${t('s_disc')}</span>` : '');
+  $('avgStrip').innerHTML = r.rows.length ? `<strong>${esc(t('avg_ann'))}</strong>` + r.rows.map(x => `<span>${esc(t('year_n', { n: x.y }))} <b class="${x.roc >= 0 ? 'pos' : 'neg'}">${pctS(x.roc / x.y)}</b></span>`).join('') : '';
+}
+function paintChart(frame, target, r) {
+  const box = $('chart'), tip = $('tip');
+  // draw at the box's real width so text stays at true pixel sizes on phones
+  const W = Math.max(300, Math.round(printW || box.clientWidth || 760)), narrow = W < 560, H = narrow ? 300 : 360, padL = narrow ? 42 : 56, padR = narrow ? 6 : 14, padT = 58, padB = 36;
+  const max = Math.max(...target.map(b => Math.max(b.top, b.need))) * 1.08 || 1;
+  const y = v => padT + (H - padT - padB) * (1 - v / max);
+  const n = frame.length, slot = (W - padL - padR) / n, bw = Math.min(84, slot * (narrow ? .66 : .56));
+  let h = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('c_chart'))}"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${TC.negbg}"/><line x1="0" y1="0" x2="0" y2="6" stroke="${COL.short}" stroke-opacity=".55" stroke-width="2.4"/></pattern></defs>`;
+  for (let i = 0; i <= 4; i++) { const v = max / 1.08 * i / 4, yy = y(v);
+    h += `<line x1="${padL}" x2="${W - padR}" y1="${yy}" y2="${yy}" stroke="${i ? TC.grid : TC.grid0}"/><text x="${padL - 9}" y="${yy + 4}" text-anchor="end" font-size="11.5" fill="${TC.axis}">${wan(v)}</text>`; }
+  frame.forEach((b, i) => {
+    const cx = padL + slot * (i + .5), x0 = cx - bw / 2, base = y(0), tg = target[i];
+    h += `<g class="bar" data-i="${i}" tabindex="0" aria-label="${esc(tg.label + ': ' + money(tg.top) + (tg.roc === null ? '' : ', ' + t('avg_ann') + ' ' + pctS(tg.avg)))}">`;
+    h += `<clipPath id="cl${i}"><rect x="${x0}" y="${y(b.top)}" width="${bw}" height="${Math.max(0, base - y(b.top))}" rx="2"/></clipPath><g clip-path="url(#cl${i})">`;
+    let acc = 0;
+    b.segs.forEach(([k, v]) => { if (v <= 0) return;
+      const y1 = y(acc + v), hh = y(acc) - y1;
+      h += `<rect x="${x0}" y="${y1}" width="${bw}" height="${Math.max(0, hh)}" fill="${COL[k]}"/>`;
+      if (acc > 0) h += `<line x1="${x0}" x2="${x0 + bw}" y1="${y(acc)}" y2="${y(acc)}" stroke="${TC.surface}" stroke-opacity=".85" stroke-width="1.5"/>`;
+      const lbl = t('s_' + k), vis = Math.min(hh, y(acc) - y(Math.min(acc + v, b.top)));
+      if (vis > 22 && [...lbl].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x2e80 ? 11.5 : 6.3), 0) <= bw - 8) h += `<text x="${cx}" y="${y(acc) - vis / 2 + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="${INK[k]}">${esc(lbl)}</text>`;
+      acc += v; });
+    h += `</g>`;
+    // shortfall: what the cash value fails to cover, hatched above the bar
+    if (b.need > b.top + 1 && tg.roc !== null) {
+      const yt = y(b.need), yb = y(b.top);
+      h += `<rect x="${x0 + 1}" y="${yt}" width="${bw - 2}" height="${Math.max(0, yb - yt)}" rx="2" fill="url(#hatch)" stroke="${COL.short}" stroke-dasharray="4 3"/>`;
+      if (yb - yt > 18) h += `<text x="${cx}" y="${(yt + yb) / 2 + 4}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${TC.neg}">${esc(t('s_short'))}</text>`;
+    }
+    h += `<rect class="frame" x="${x0 - 3}" y="${y(Math.max(b.top, b.need)) - 3}" width="${bw + 6}" height="${Math.max(0, base - y(Math.max(b.top, b.need)) + 3)}" rx="3" fill="transparent" stroke="none"/>`;
+    const labTop = y(Math.max(b.top, b.need));
+    h += `<text x="${cx}" y="${labTop - (tg.roc === null ? 10 : 30)}" text-anchor="middle" font-size="${narrow ? 12 : 14}" font-weight="600" fill="${TC.ink}">${wan(tg.top)}</text>`;
+    if (tg.roc !== null) { const txt = pctS(tg.avg), wpx = txt.length * 7 + 14, pos = tg.avg >= 0;
+      h += `<rect x="${cx - wpx / 2}" y="${labTop - 24}" width="${wpx}" height="18" rx="2" fill="${pos ? TC.posbg : TC.negbg}"/><text x="${cx}" y="${labTop - 11}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${pos ? TC.pos : TC.neg}">${txt}</text>`; }
+    h += `<text x="${cx}" y="${H - 12}" text-anchor="middle" font-size="12" fill="${TC.muted}">${esc(tg.label)}</text></g>`;
+  });
+  h += `</svg>`;
+  const keep = tip.hidden ? null : tip.dataset.i;
+  box.innerHTML = h; box.appendChild(tip);
+  const svg = box.querySelector('svg');
+  const show = (g, evt) => {
+    const i = +g.dataset.i, b = target[i]; tip.dataset.i = i;
+    svg.classList.add('hovering'); svg.querySelectorAll('.bar').forEach(x => x.classList.toggle('on', x === g));
+    const rows = b.tip.map(([k, v]) => `<div class="r"><span><i style="--c:${COL[k]}"></i>${esc(t('s_' + k))}</span><span>${money(v)}</span></div>`).join('');
+    const res = b.roc === null ? '' : `<div class="r res ${b.gain < 0 ? 'neg' : ''}"><span>${esc(t(b.gain < 0 ? 's_short' : 's_gain'))}</span><span>${moneyS(b.gain)}</span></div><div class="r"><span>${esc(t('cum_ret'))}</span><span>${pctS(b.roc)}</span></div><div class="r res ${b.avg < 0 ? 'neg' : ''}"><span>${esc(t('avg_ann'))}</span><span>${pctS(b.avg)}</span></div>`;
+    tip.innerHTML = `<strong>${esc(b.label)}</strong>${rows}<div class="r tot"><span>${esc(b.roc === null ? t('premium') : t('tt_cv'))}</span><span>${money(b.total)}</span></div>${res}`;
+    tip.hidden = false;
+    const br = box.getBoundingClientRect(), gr = g.getBoundingClientRect();
+    let left = (evt && evt.clientX ? evt.clientX : gr.left + gr.width / 2) - br.left;
+    left = Math.max(tip.offsetWidth / 2 + 4, Math.min(br.width - tip.offsetWidth / 2 - 4, left));
+    tip.style.left = left + 'px'; tip.style.top = Math.max(tip.offsetHeight + 6, gr.top - br.top + 6) + 'px';
+  };
+  const hide = () => { tip.hidden = true; svg.classList.remove('hovering'); svg.querySelectorAll('.bar').forEach(x => x.classList.remove('on')); };
+  svg.querySelectorAll('.bar').forEach(g => {
+    g.addEventListener('pointermove', e => show(g, e)); g.addEventListener('pointerdown', e => show(g, e));
+    g.addEventListener('focus', () => show(g)); g.addEventListener('blur', hide);
+  });
+  svg.addEventListener('pointerleave', hide);
+  if (keep !== null && keep !== undefined) { const g = svg.querySelector(`.bar[data-i="${keep}"]`); if (g) show(g); }
+}
+/* sliders + presets mirror the state */
+function syncSliders(r) {
+  const o = offer(), rate = offerRate(o), ratio = o.ratio, hasG = plan().cvs.some(c => Number.isFinite(c.g) && c.g > 0);
+  const set = (id, v, txt) => { const el = $(id), out = $(id + 'Out');
+    if (document.activeElement !== el) el.value = v;
+    el.style.setProperty('--p', ((+el.value - el.min) / (el.max - el.min) * 100) + '%');
+    if (out.textContent !== txt) { out.textContent = txt; out.classList.remove('bump'); void out.offsetWidth; out.classList.add('bump'); clearTimeout(out._t); out._t = setTimeout(() => out.classList.remove('bump'), 350); } };
+  set('slRate', rate, rate.toFixed(2) + '%');
+  set('slRatio', ratio, ratio.toFixed(1) + '%');
+  $('slBonus').disabled = !hasG;
+  set('slBonus', bonusOf() * 100, hasG ? Math.round(bonusOf() * 100) + '%' : t('bonus_na'));
+  document.querySelectorAll('[data-basis]').forEach(b => b.setAttribute('aria-pressed', String(hasG && (b.dataset.basis === 'guar' ? bonusOf() === 0 : bonusOf() === 1))));
+}
+/* headline numbers count to their new value */
+function countTo(el, value, fmt) {
+  if (!Number.isFinite(value)) { el.textContent = '–'; el._v = undefined; return; }
+  const from = Number.isFinite(el._v) ? el._v : value; el._v = value;
+  if (reducedMotion || from === value) { el.textContent = fmt(value); return; }
+  cancelAnimationFrame(el._a); const t0 = performance.now();
+  const step = now => { const k = Math.min(1, (now - t0) / 380), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(from + (value - from) * e); if (k < 1) el._a = requestAnimationFrame(step); };
+  el._a = requestAnimationFrame(step);
+}
+
+/* --------------------------------------------------------------- tables */
+const cls = v => v >= 0 ? 'pos' : 'neg';
+function renderTable(r) {
+  const head = `<thead><tr><th>${t('h_year')}</th><th>${t('h_cv')}</th><th>${t('h_net')}</th><th>${t('h_paid')}</th><th>${t('h_gain')}</th><th>${t('h_roc')}</th><th>${t('h_ann')}</th><th>${t('h_irr')}</th><th>${t('h_self')}</th></tr></thead>`;
+  const body = r.rows.map(x => `<tr><td><strong>${t('year_n', { n: x.y })}</strong></td><td>${money(x.val)}</td><td>${moneyS(x.net)}</td><td>${money(x.paid)}</td>
+    <td class="${cls(x.gain)}">${moneyS(x.gain)}</td><td><span class="pill-r ${cls(x.roc)}">${pctS(x.roc)}</span></td>
+    <td class="${cls(x.ann)}">${pctS(x.ann)}</td><td class="${cls(x.irr)}">${pct(x.irr)}</td><td>${pct(x.selfIrr)}</td></tr>`).join('');
+  $('tbl').innerHTML = head + '<tbody>' + body + '</tbody>';
+}
+function renderStress(o) {
+  const base = offerRate(o), steps = [0, 0.5, 1, 1.5].map(d => +(base + d).toFixed(3));
+  const rs = steps.map(rt => compute(o, rt)), r0 = rs[0];
+  const head = `<thead><tr><th>${t('h_rate')}</th>${r0.rows.map(x => `<th>${t('year_n', { n: x.y })}</th>`).join('')}</tr></thead>`;
+  const body = rs.map((r, i) => `<tr class="${i === 0 ? 'hl' : ''}"><td><strong>${steps[i].toFixed(2)}%</strong> ${i === 0 ? '<span class="row-now">(' + t('now') + ')</span>' : ''}</td>${r.rows.map(x => `<td class="${cls(x.roc)}">${pctS(x.roc)}</td>`).join('')}</tr>`).join('')
+    + `<tr><td><strong>${t('h_be')}</strong></td>${r0.rows.map(x => `<td>${Number.isFinite(x.be) ? (x.be * 100).toFixed(2) + '%' : '–'}</td>`).join('')}</tr>`;
+  $('stress').innerHTML = head + '<tbody>' + body + '</tbody>';
+}
+/* ---------------------------------------------------------- talking points */
+function renderTalk(r, o) {
+  const items = [], rate = offerRate(o);
+  items.push(t('t_lev', { cash: money(r.own), premium: money(r.P), loan: money(r.L), rate: rate.toFixed(2) + '%', month: money(r.monthly) }));
+  const pos = r.rows.filter(x => x.gain > 0), focus = pos[0] || r.rows[r.rows.length - 1];
+  if (focus) {
+    items.push(t('t_best', { y: focus.y, cv: money(focus.val), net: moneyS(focus.net), gain: moneyS(focus.gain), roc: pctS(focus.roc), ann: pct(focus.ann), irr: pct(focus.irr) }));
+    if (Number.isFinite(focus.selfIrr) && Number.isFinite(focus.irr) && focus.irr > focus.selfIrr) items.push(t('t_self', { y: focus.y, self: pct(focus.selfIrr), irr: pct(focus.irr), delta: pctS(focus.irr - focus.selfIrr) }));
+    if (focus.gain > 0 && Number.isFinite(focus.be) && focus.be * 100 > rate) items.push(t('t_be', { y: focus.y, be: (focus.be * 100).toFixed(2) + '%', rate: rate.toFixed(2) + '%', cushion: ((focus.be * 100) - rate).toFixed(2) + '%' }));
+  }
+  if (r.fee > 0 || r.rebate > 0) items.push(t('t_fees', { fee: money(r.fee), rebate: money(r.rebate), net: moneyS(r.upfront) }));
+  $('talk').innerHTML = items.map(s => `<li><b class="ic">✓</b><span>${s}</span></li>`).join('');
+}
+
+/* ------------------------------------------- 10-year rate history (static HKMA data) */
+// Prime: Hong Kong Prime Rate as specified by HKMC, at effective dates, month-end values Oct 2016 – Sep 2026 (fetched 2 Oct 2026).
+// HIBOR: 1-month HIBOR fixing, monthly averages Sep 2016 – Aug 2026 (HKMA). Fetched 2 Oct 2026.
+const RATE_HIST = {"prime": {"start": "2016-10", "startRate": 5.25, "changes": [["2018-10-02", 5.375], ["2019-11-01", 5.25], ["2022-09-26", 5.375], ["2022-11-07", 5.625], ["2022-12-19", 5.875], ["2023-05-08", 6.0], ["2023-07-31", 6.125], ["2024-09-23", 5.875], ["2024-11-11", 5.625], ["2024-12-23", 5.5], ["2025-09-22", 5.375], ["2025-11-03", 5.25]], "monthly": [["2016-10", 5.25], ["2016-11", 5.25], ["2016-12", 5.25], ["2017-01", 5.25], ["2017-02", 5.25], ["2017-03", 5.25], ["2017-04", 5.25], ["2017-05", 5.25], ["2017-06", 5.25], ["2017-07", 5.25], ["2017-08", 5.25], ["2017-09", 5.25], ["2017-10", 5.25], ["2017-11", 5.25], ["2017-12", 5.25], ["2018-01", 5.25], ["2018-02", 5.25], ["2018-03", 5.25], ["2018-04", 5.25], ["2018-05", 5.25], ["2018-06", 5.25], ["2018-07", 5.25], ["2018-08", 5.25], ["2018-09", 5.25], ["2018-10", 5.375], ["2018-11", 5.375], ["2018-12", 5.375], ["2019-01", 5.375], ["2019-02", 5.375], ["2019-03", 5.375], ["2019-04", 5.375], ["2019-05", 5.375], ["2019-06", 5.375], ["2019-07", 5.375], ["2019-08", 5.375], ["2019-09", 5.375], ["2019-10", 5.375], ["2019-11", 5.25], ["2019-12", 5.25], ["2020-01", 5.25], ["2020-02", 5.25], ["2020-03", 5.25], ["2020-04", 5.25], ["2020-05", 5.25], ["2020-06", 5.25], ["2020-07", 5.25], ["2020-08", 5.25], ["2020-09", 5.25], ["2020-10", 5.25], ["2020-11", 5.25], ["2020-12", 5.25], ["2021-01", 5.25], ["2021-02", 5.25], ["2021-03", 5.25], ["2021-04", 5.25], ["2021-05", 5.25], ["2021-06", 5.25], ["2021-07", 5.25], ["2021-08", 5.25], ["2021-09", 5.25], ["2021-10", 5.25], ["2021-11", 5.25], ["2021-12", 5.25], ["2022-01", 5.25], ["2022-02", 5.25], ["2022-03", 5.25], ["2022-04", 5.25], ["2022-05", 5.25], ["2022-06", 5.25], ["2022-07", 5.25], ["2022-08", 5.25], ["2022-09", 5.375], ["2022-10", 5.375], ["2022-11", 5.625], ["2022-12", 5.875], ["2023-01", 5.875], ["2023-02", 5.875], ["2023-03", 5.875], ["2023-04", 5.875], ["2023-05", 6.0], ["2023-06", 6.0], ["2023-07", 6.125], ["2023-08", 6.125], ["2023-09", 6.125], ["2023-10", 6.125], ["2023-11", 6.125], ["2023-12", 6.125], ["2024-01", 6.125], ["2024-02", 6.125], ["2024-03", 6.125], ["2024-04", 6.125], ["2024-05", 6.125], ["2024-06", 6.125], ["2024-07", 6.125], ["2024-08", 6.125], ["2024-09", 5.875], ["2024-10", 5.875], ["2024-11", 5.625], ["2024-12", 5.5], ["2025-01", 5.5], ["2025-02", 5.5], ["2025-03", 5.5], ["2025-04", 5.5], ["2025-05", 5.5], ["2025-06", 5.5], ["2025-07", 5.5], ["2025-08", 5.5], ["2025-09", 5.375], ["2025-10", 5.375], ["2025-11", 5.25], ["2025-12", 5.25], ["2026-01", 5.25], ["2026-02", 5.25], ["2026-03", 5.25], ["2026-04", 5.25], ["2026-05", 5.25], ["2026-06", 5.25], ["2026-07", 5.25], ["2026-08", 5.25], ["2026-09", 5.25]], "asOf": "2026-10-02"}, "hibor": {"monthly": [["2016-09", 0.2642], ["2016-10", 0.2894], ["2016-11", 0.3738], ["2016-12", 0.6149], ["2017-01", 0.678], ["2017-02", 0.5126], ["2017-03", 0.4472], ["2017-04", 0.4106], ["2017-05", 0.3718], ["2017-06", 0.4077], ["2017-07", 0.4486], ["2017-08", 0.4243], ["2017-09", 0.4699], ["2017-10", 0.6063], ["2017-11", 0.8153], ["2017-12", 1.1052], ["2018-01", 0.9605], ["2018-02", 0.7824], ["2018-03", 0.7901], ["2018-04", 1.0041], ["2018-05", 1.059], ["2018-06", 1.6254], ["2018-07", 1.814], ["2018-08", 1.423], ["2018-09", 1.8095], ["2018-10", 1.6045], ["2018-11", 1.0672], ["2018-12", 2.2054], ["2019-01", 1.3562], ["2019-02", 0.9957], ["2019-03", 1.5275], ["2019-04", 1.9351], ["2019-05", 1.825], ["2019-06", 2.3535], ["2019-07", 2.2192], ["2019-08", 1.9579], ["2019-09", 1.9118], ["2019-10", 1.7168], ["2019-11", 2.1882], ["2019-12", 2.5739], ["2020-01", 2.0766], ["2020-02", 1.8196], ["2020-03", 1.5675], ["2020-04", 1.6017], ["2020-05", 0.83], ["2020-06", 0.6176], ["2020-07", 0.3272], ["2020-08", 0.2541], ["2020-09", 0.442], ["2020-10", 0.415], ["2020-11", 0.1516], ["2020-12", 0.2317], ["2021-01", 0.1281], ["2021-02", 0.1399], ["2021-03", 0.1458], ["2021-04", 0.1031], ["2021-05", 0.0828], ["2021-06", 0.0897], ["2021-07", 0.0837], ["2021-08", 0.0718], ["2021-09", 0.0648], ["2021-10", 0.0647], ["2021-11", 0.0806], ["2021-12", 0.195], ["2022-01", 0.1549], ["2022-02", 0.1697], ["2022-03", 0.2735], ["2022-04", 0.1979], ["2022-05", 0.1865], ["2022-06", 0.5412], ["2022-07", 0.9237], ["2022-08", 1.6751], ["2022-09", 2.2877], ["2022-10", 2.7269], ["2022-11", 3.5206], ["2022-12", 4.7706], ["2023-01", 3.2712], ["2023-02", 2.5319], ["2023-03", 3.2136], ["2023-04", 3.0036], ["2023-05", 4.2221], ["2023-06", 4.7116], ["2023-07", 5.0717], ["2023-08", 4.6173], ["2023-09", 4.887], ["2023-10", 4.9435], ["2023-11", 5.1341], ["2023-12", 5.4878], ["2024-01", 4.7563], ["2024-02", 4.5307], ["2024-03", 4.6003], ["2024-04", 4.2757], ["2024-05", 4.3422], ["2024-06", 4.5561], ["2024-07", 4.5926], ["2024-08", 4.0815], ["2024-09", 3.889], ["2024-10", 4.3465], ["2024-11", 4.1393], ["2024-12", 4.4633], ["2025-01", 3.9908], ["2025-02", 3.8549], ["2025-03", 3.808], ["2025-04", 3.6534], ["2025-05", 1.4662], ["2025-06", 0.6838], ["2025-07", 1.0029], ["2025-08", 1.9218], ["2025-09", 3.2866], ["2025-10", 3.5046], ["2025-11", 2.9628], ["2025-12", 3.1003], ["2026-01", 2.7754], ["2026-02", 2.4822], ["2026-03", 2.1581], ["2026-04", 2.3389], ["2026-05", 2.5971], ["2026-06", 2.8008], ["2026-07", 2.7254], ["2026-08", 2.6674]], "asOf": "2026-08"}};
+const MON_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fmtDay = d => { const [y, m, dd] = d.split('-').map(Number); return lang === 'en' ? `${dd} ${MON_EN[m - 1]} ${y}` : `${y}年${m}月${dd}日`; };
+const fmtMon = d => { const [y, m] = d.split('-').map(Number); return lang === 'en' ? `${MON_EN[m - 1]} ${y}` : `${y}年${m}月`; };
+const hPct = v => v.toFixed(2) + '%';
+const rPct = v => (+v.toFixed(3)).toString().replace(/(\.\d\d)0$/, '$1').replace(/^(\d+)$/, '$1.00').replace(/^(\d+\.\d)$/, '$10') + '%';
+function primeStats() {
+  const P = RATE_HIST.prime, segs = []; let from = P.start, v = P.startRate;
+  P.changes.forEach(([d, r]) => { segs.push({ from, to: d, v, open: from === P.start }); from = d; v = r; });
+  segs.push({ from, to: null, v });
+  const hi = Math.max(...segs.map(x => x.v)), lo = Math.min(...segs.map(x => x.v));
+  const dayBefore = d => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - 1); return t.toISOString().slice(0, 10); };
+  const range = x => x.to === null ? t('rh_since', { d: fmtDay(x.from) }) : t('rh_range', { a: x.open ? fmtMon(x.from) : fmtDay(x.from), b: fmtDay(dayBefore(x.to)) });
+  return { cur: { v, txt: t('rh_since', { d: fmtDay(from) }) }, hi: { v: hi, txt: segs.filter(x => x.v === hi).map(range).join(t('rh_and')) }, lo: { v: lo, txt: segs.filter(x => x.v === lo).map(range).join(t('rh_and')) } };
+}
+function hiborStats() {
+  const M = RATE_HIST.hibor.monthly, last = M[M.length - 1];
+  const hi = M.reduce((a, b) => b[1] > a[1] ? b : a), lo = M.reduce((a, b) => b[1] < a[1] ? b : a);
+  const f = x => ({ v: x[1], txt: t('rh_avg', { m: fmtMon(x[0]) }), at: x[0] });
+  return { cur: f(last), hi: f(hi), lo: f(lo) };
+}
+function drawRateChart(box, pts, opt) {
+  const W = Math.max(300, Math.round(printW || box.clientWidth || 760)), narrow = W < 560, H = narrow ? 210 : 240;
+  const padL = narrow ? 40 : 48, padR = narrow ? 12 : 18, padT = 26, padB = 30;
+  const vs = pts.map(p => p[1]), vmax = Math.max(...vs), vmin = Math.min(...vs), span = (vmax - vmin) || 1;
+  const step = [0.1, 0.2, 0.25, 0.5, 1, 2].find(x => x >= (span * 1.25) / 4) || 2;
+  const bot = Math.max(0, Math.floor((vmin - span * 0.08) / step) * step), top = Math.ceil((vmax + span * 0.16) / step) * step, nT = Math.round((top - bot) / step);
+  const X = i => padL + i / (pts.length - 1) * (W - padL - padR), Y = v => padT + (H - padT - padB) * (1 - (v - bot) / (top - bot));
+  let d = ''; pts.forEach((p, i) => { d += i ? (opt.step ? `H${X(i).toFixed(1)}V${Y(p[1]).toFixed(1)}` : `L${X(i).toFixed(1)} ${Y(p[1]).toFixed(1)}`) : `M${X(0).toFixed(1)} ${Y(p[1]).toFixed(1)}`; });
+  let h = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.aria)}">`;
+  for (let i = 0; i <= nT; i++) { const v = bot + step * i, yy = Y(v);
+    h += `<line x1="${padL}" x2="${W - padR}" y1="${yy}" y2="${yy}" stroke="${i ? TC.grid : TC.grid0}"/><text x="${padL - 7}" y="${yy + 4}" text-anchor="end" font-size="11" fill="${TC.axis}">${v.toFixed(step < 0.5 ? 2 : 1)}%</text>`; }
+  let lastX = -1e9; pts.forEach((p, i) => { if (!p[0].endsWith('-01')) return; const yr = p[0].slice(0, 4); if (narrow && +yr % 2) return; const x = X(i); if (x - lastX < 30) return; lastX = x;
+    h += `<line x1="${x}" x2="${x}" y1="${H - padB}" y2="${H - padB + 4}" stroke="${TC.grid0}"/><text x="${x}" y="${H - 10}" text-anchor="middle" font-size="11" fill="${TC.axis}">${yr}</text>`; });
+  h += `<path d="${d}V${Y(bot)}H${X(0)}Z" fill="${opt.color}" fill-opacity=".12"/><path d="${d}" fill="none" stroke="${opt.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  opt.marks.forEach(m => { const i = Math.max(0, pts.findIndex(p => p[0] === m.at)); const x = X(i), y = Y(pts[i][1]);
+    const anchor = x > W - padR - 70 ? 'end' : x < padL + 70 ? 'start' : 'middle', ty = m.below && y + 18 < H - padB - 4 ? y + 18 : y - 10;
+    h += `<circle cx="${x}" cy="${y}" r="4.5" fill="${m.c}" stroke="${TC.surface}" stroke-width="1.5"/><text x="${x}" y="${ty}" text-anchor="${anchor}" font-size="11.5" font-weight="700" fill="${m.c}">${esc(m.label)}</text>`; });
+  box.innerHTML = h + '</svg>';
+}
+function drawRates() {
+  if (!$('rhPrime')) return; readCols();
+  const P = RATE_HIST.prime.monthly, Hm = RATE_HIST.hibor.monthly, ps = primeStats(), hs = hiborStats();
+  const stat = (k, c, x, f = rPct) => `<div style="--c:${c}"><span>${esc(t(k))}</span><strong>${f(x.v)}</strong><em>${esc(x.txt)}</em></div>`;
+  const pHiAt = P.find(p => p[1] === ps.hi.v)[0], pLoAt = P.find(p => p[1] === ps.lo.v)[0];
+  drawRateChart($('rhPrime'), P, { step: true, color: COL.cost, aria: t('rh_prime'), marks: [
+    { at: pHiAt, c: TC.neg, label: t('rh_hi') + ' ' + rPct(ps.hi.v) },
+    { at: pLoAt, c: TC.pos, label: t('rh_lo') + ' ' + rPct(ps.lo.v), below: true },
+    { at: P[P.length - 1][0], c: TC.ink, label: t('rh_cur') + ' ' + rPct(ps.cur.v), below: true }] });
+  $('rhPrimeStats').innerHTML = stat('rh_cur', TC.ink, ps.cur) + stat('rh_hi', TC.neg, ps.hi) + stat('rh_lo', TC.pos, ps.lo);
+  $('rhPrimeSrc').innerHTML = t('rh_psrc');
+  drawRateChart($('rhHibor'), Hm, { step: false, color: COL.loan, aria: t('rh_hibor'), marks: [
+    { at: hs.hi.at, c: TC.neg, label: t('rh_hi') + ' ' + hPct(hs.hi.v) },
+    { at: hs.lo.at, c: TC.pos, label: t('rh_lo') + ' ' + hPct(hs.lo.v), below: true },
+    { at: hs.cur.at, c: TC.ink, label: t('rh_cur') + ' ' + hPct(hs.cur.v) }] });
+  $('rhHiborStats').innerHTML = stat('rh_cur', TC.ink, hs.cur, hPct) + stat('rh_hi', TC.neg, hs.hi, hPct) + stat('rh_lo', TC.pos, hs.lo, hPct);
+  $('rhHiborSrc').innerHTML = t('rh_hsrc');
+}
+
+/* --------------------------------------------------------------- update */
+function update() {
+  const o = offer(), p = plan(), cashEl = $('cashShow');
+  renderCmp(); persistDraft();
+  if (!E.hasYears(p)) {
+    $('talk').innerHTML = `<li><b class="ic">i</b><span>${t('need')}</span></li>`; cashEl.textContent = '–'; return;
+  }
+  const r = compute(o);
+  const invalidLoan = r.own < 0;
+  $('loan').setAttribute('aria-invalid', String(invalidLoan)); $('ratio').setAttribute('aria-invalid', String(invalidLoan));
+  cashEl.textContent = money(r.own);
+  $('monthlyHint').textContent = t('rate_eff', { r: (r.rate * 100).toFixed(2) + '%', m: money(r.monthly) });
+  if (invalidLoan) { $('talk').innerHTML = `<li class="risk"><b class="ic">!</b><span>${t('bad_loan')}</span></li>`; return; }
+  countTo($('kCash'), r.own, money); $('kCashSub').textContent = t('of_premium', { p: pct(r.own / r.P, 1) });
+  countTo($('kMonth'), r.monthly, money); $('kMonthSub').textContent = t('per_year', { v: money(r.yearCost) });
+  countTo($('kLoan'), r.L, money); $('kLoanSub').textContent = r.P > 0 ? t('of_premium', { p: E.pct(r.L / r.P, 1) }) : '';
+  const be = r.rows.find(x => x.gain > 0);
+  $('kBe').textContent = be ? t('year_n', { n: be.y }) : '–';
+  $('kBeSub').textContent = be ? t('at_rate', { r: (r.rate * 100).toFixed(2) + '%' }) : t('not_yet');
+  syncSliders(r); drawChart(r); renderTable(r); renderStress(o); renderTalk(r, o); renderPrint(r, o);
+}
+
+
+/* ------------------------------------------------------ compare plans × banks */
+let view = 'single', cmpFocus = null, cmpHi = null;
+const METRIC = {
+  gain: { axis: v => wan(v), full: v => moneyS(v) },
+  net: { axis: v => wan(v), full: v => moneyS(v) },
+  roc: { axis: v => pctS(v, 0), full: v => pctS(v) },
+  irr: { axis: v => pct(v, 1), full: v => pct(v) }
+};
+const pickKey = (pid, bid) => pid + '|' + bid;
+const picked = (pid, bid) => S.picks.some(k => k[0] === pid && k[1] === bid);
+// a combination keeps its colour while the plan and bank lists stay the same
+function combo(pid, bid) {
+  const p = E.plan(S, pid), b = E.bank(S, bid), pi = S.plans.indexOf(p), bi = S.banks.indexOf(b);
+  return { id: pickKey(p.id, b.id), p, b, label: planName(p, pi) + ' · ' + bankName(b, bi), color: E.css('--k' + ((pi * S.banks.length + bi) % 8 + 1)),
+    r: E.hasYears(p) ? E.compute(p, b, { fulfil: bonusOf(), shift: S.shift || 0 }) : null };
+}
+const lastRow = c => c.r && c.r.rows[c.r.rows.length - 1];
+const at = (c, y) => c.r && c.r.rows.find(x => x.y === y);
+function showView(v) {
+  view = v;
+  if (v === 'single') fillForm();
+  $('singleView').hidden = v !== 'single'; $('cmpView').hidden = v !== 'cmp';
+  $('tabSingle').setAttribute('aria-selected', String(v === 'single')); $('tabCmp').setAttribute('aria-selected', String(v === 'cmp'));
+  history.replaceState(null, '', v === 'cmp' ? '#compare' : location.pathname);
+  if (v === 'cmp') renderCmp(true); else if (chartLast) { chartInstant = true; drawChart(chartLast); }
+}
+function renderMix() {
+  const head = `<thead><tr><th></th>${S.banks.map((b, bi) => `<th><button type="button" class="nm" data-edit-bank="${b.id}">${E.esc(bankName(b, bi))}</button><small>${offerRate(b).toFixed(2)}% · ${b.ratio.toFixed(0)}%</small></th>`).join('')}</tr></thead>`;
+  const body = S.plans.map((p, pi) => `<tr><th><button type="button" class="nm" data-edit-plan="${p.id}">${E.esc(planName(p, pi))}</button><small>${wan(p.premium)}</small></th>${S.banks.map(b => {
+    const c = combo(p.id, b.id), on = picked(p.id, b.id), lr = lastRow(c);
+    return `<td><button type="button" class="cell" data-p="${p.id}" data-b="${b.id}" aria-pressed="${on}" style="--kc:${c.color}" aria-label="${E.esc(c.label)}"><i></i><span>${lr ? pct(lr.irr, 1) : '–'}</span><small>${lr ? 'IRR · ' + t('year_n', { n: lr.y }) : t('need_short')}</small></button></td>`; }).join('')}</tr>`).join('');
+  $('mix').innerHTML = head + '<tbody>' + body + '</tbody>';
+}
+function drawCmp(instant) {
+  const list = S.picks.map(([pid, bid]) => combo(pid, bid)).filter(c => c.r && c.r.rows.length), m = S.metric || 'gain', M = METRIC[m];
+  const years = [...new Set(list.flatMap(c => c.r.rows.map(x => x.y)))].sort((a, z) => a - z);
+  // default to the latest year every pick has, so the ranking compares like with like
+  const common = years.filter(y => list.every(c => at(c, y)));
+  if (!years.includes(cmpFocus)) cmpFocus = common.length ? common[common.length - 1] : years[years.length - 1] ?? null;
+  $('cmpNote').textContent = list.length ? '' : t('cmp_empty');
+  E.lineChart($('cmpChart'), {
+    series: list.map(c => ({ id: c.id, label: c.label, color: c.color, points: c.r.rows.map(x => ({ x: x.y, y: x[m] })) })),
+    fmtY: (v, axis) => axis ? M.axis(v) : M.full(v), fmtX: y => t('year_n', { n: y }), endLabels: true, zero: m === 'net' ? false : true,
+    focusX: cmpFocus, hi: cmpHi, instant, aria: t('cmp_h'), inspectLabel: t('inspect'),
+    onInspect: y => { cmpFocus = y; drawCmp(true); }, onHover: id => { cmpHi = id; drawCmp(true); }
+  });
+  // ranking at the inspected year
+  const rows = list.map(c => ({ c, x: at(c, cmpFocus) })).sort((a, z) => (z.x ? z.x[m] : -Infinity) - (a.x ? a.x[m] : -Infinity));
+  $('rank').innerHTML = `<div class="rank-h"><span class="label">${E.esc(t('rank_h', { y: cmpFocus ?? '–' }))}</span><b>${E.esc(t('m_' + m))}</b></div>` + (rows.length ? rows.map(({ c, x }, i) =>
+    `<button type="button" class="rk-row${cmpHi === c.id ? ' on' : ''}" data-id="${c.id}" style="--kc:${c.color}"><span class="n">${x ? i + 1 : '–'}</span><span class="who"><i></i>${E.esc(c.label)}${i === 0 && x ? `<em>${t('rank_lead')}</em>` : ''}</span>
+      <strong class="${!x ? 'na' : x[m] < 0 ? 'neg' : ''}">${x ? M.full(x[m]) : t('no_year')}</strong><small>${t('k_cash')} ${money(c.r.own)} · ${t('k_month')} ${money(c.r.monthly)}</small></button>`).join('') : `<p class="note">${t('cmp_empty')}</p>`);
+  $('rank').querySelectorAll('.rk-row').forEach(b => { b.onpointerenter = () => { cmpHi = b.dataset.id; drawCmp(true); }; b.onpointerleave = () => { cmpHi = null; drawCmp(true); };
+    b.onfocus = b.onpointerenter; b.onblur = b.onpointerleave; });
+  return { list, years };
+}
+function renderCmp(instant) {
+  $('pickCount').textContent = S.picks.length ? String(S.picks.length) : '';
+  if (view !== 'cmp') return;
+  renderMix(); renderOffers();
+  document.querySelectorAll('[data-metric]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.metric === (S.metric || 'gain'))));
+  const sync = (id, v, txt) => { const el = $(id); if (document.activeElement !== el) el.value = v; el.style.setProperty('--p', ((+el.value - el.min) / (el.max - el.min) * 100) + '%'); $(id + 'Out').textContent = txt; };
+  sync('slShift', S.shift || 0, ((S.shift || 0) >= 0 ? '+' : '−') + Math.abs(S.shift || 0).toFixed(2) + '%');
+  sync('slBonus2', bonusOf() * 100, Math.round(bonusOf() * 100) + '%');
+  const { list, years } = drawCmp(instant);
+  // every combination, with the best figure per column marked
+  const best = years.map(y => ({ roc: Math.max(...list.map(c => at(c, y) ? at(c, y).roc : -Infinity)), irr: Math.max(...list.map(c => at(c, y) ? at(c, y).irr : -Infinity)) }));
+  const minOwn = Math.min(...list.map(c => c.r.own)), minMonth = Math.min(...list.map(c => c.r.monthly));
+  const mark = (on, cls) => on ? ` class="${cls} best"` : ` class="${cls}"`;
+  $('cmpTbl').innerHTML = list.length ? `<thead><tr><th>${t('h_combo')}</th><th>${t('k_cash')}</th><th>${t('loan')}</th><th>${t('h_rate')}</th><th>${t('h_month')}</th>${years.map(y => `<th>${t('year_n', { n: y })} · ${t('h_roc')}</th><th>IRR</th>`).join('')}<th>${t('h_be')}</th></tr></thead><tbody>` +
+    list.map(c => `<tr><td><span class="who" style="--kc:${c.color}"><i></i><strong>${E.esc(c.label)}</strong></span></td><td${mark(c.r.own === minOwn && list.length > 1, '')}>${money(c.r.own)}</td><td>${money(c.r.L)}</td><td>${(c.r.rate * 100).toFixed(2)}%</td><td${mark(c.r.monthly === minMonth && list.length > 1, '')}>${money(c.r.monthly)}</td>` +
+      years.map((y, j) => { const x = at(c, y); return x ? `<td${mark(x.roc === best[j].roc && list.length > 1, cls(x.roc))}>${pctS(x.roc)}</td><td${mark(x.irr === best[j].irr && list.length > 1, cls(x.irr))}>${pct(x.irr)}</td>` : '<td>–</td><td>–</td>'; }).join('') +
+      `<td>${Number.isFinite(lastRow(c).be) ? (lastRow(c).be * 100).toFixed(2) + '%' : '–'}</td></tr>`).join('') + '</tbody>' : '';
+  const a = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
+  $('printHead2').innerHTML = `<h2>${t('cmp_h')}</h2><div class="meta"><div>${t('p_client')}<b>${E.esc(S.name || '—')}</b></div><div>${t('cmp_n')}<b>${list.length}</b></div><div>${t('p_agent')}<b>${E.esc(a.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
+}
+
+/* every bank offer, side by side and editable */
+const BO = [ // [field, label key, kind]
+  ['bank', 'bank', 'text'], ['ratio', 'ratio', 'pct'], ['rateType', 'rate_type', 'type'], ['prime', 'prime', 'pct', 'fixed'], ['pspread', 'pspread', 'pct', 'fixed'],
+  ['hibor', 'hibor_rate', 'pct', 'hibor'], ['spread', 'spread', 'pct', 'hibor'], ['feePct', 'fee_pct', 'pct'], ['upfront', 'upfront', 'money'], ['rebate', 'rebate', 'money'], ['penPct', 'pen_pct', 'pct'], ['penYears', 'pen_years', 'num'], ['annualFee', 'annual_fee', 'money'], ['maxLtv', 'max_ltv', 'pct']
+];
+let boKey = '';
+function renderOffers() {
+  const key = [lang, S.currency, S.banks.map(b => b.id + b.rateType).join()].join('|');
+  if (key === boKey && $('boTbl').contains(document.activeElement)) { boDerived(); return; }
+  boKey = key;
+  const cell = (b, [f, , kind, only]) => {
+    if (only && b.rateType !== only) return '<td class="na">–</td>';
+    const a = `data-b="${b.id}" data-f="${f}" aria-label="${E.esc(bankName(b) + ' · ' + t(BO.find(x => x[0] === f)[1]))}"`;
+    if (kind === 'text') return `<td><input class="inp" ${a} maxlength="40" value="${E.esc(b.bank || '')}" placeholder="${E.esc(bankName(b))}"></td>`;
+    if (kind === 'type') return `<td><select class="inp" ${a}><option value="fixed"${b.rateType === 'fixed' ? ' selected' : ''}>${t('fixed')}</option><option value="hibor"${b.rateType === 'hibor' ? ' selected' : ''}>${t('hibor')}</option></select></td>`;
+    const v = b[f], txt = !Number.isFinite(v) ? '' : kind === 'money' ? fmtInt(v) : String(+v.toFixed(3));
+    if (kind === 'num') return `<td><input class="inp num" inputmode="numeric" ${a} value="${txt}"></td>`;
+    return `<td><div class="${kind === 'pct' ? 'pct' : 'money'}">${kind === 'money' ? `<span class="cur">${S.currency}</span>` : ''}<input class="inp num" inputmode="decimal" ${a} value="${txt}">${kind === 'pct' ? '<span>%</span>' : ''}</div></td>`;
+  };
+  $('boTbl').innerHTML = `<thead><tr><th></th>${S.banks.map((b, i) => `<th>${E.esc(bankName(b, i))}${S.banks.length > 1 ? ` <button type="button" class="bo-x" data-del="${b.id}" aria-label="${E.esc(t('del_offer') + ': ' + bankName(b, i))}">×</button>` : ''}</th>`).join('')}<th rowspan="${BO.length + 2}" class="bo-add"><button type="button" class="mini" id="boAdd">${t('add_offer')}</button></th></tr></thead><tbody>` +
+    BO.map(r => `<tr><th>${t(r[1])}</th>${S.banks.map(b => cell(b, r)).join('')}</tr>`).join('') +
+    `<tr class="bo-eff"><th>${t('bo_eff')}</th>${S.banks.map(b => `<td data-eff="${b.id}"></td>`).join('')}</tr></tbody>`;
+  boDerived();
+}
+// read-only results under the inputs: effective rate, loan and own cash on the selected plan
+function boDerived() {
+  const p = plan();
+  S.banks.forEach(b => { const c = $('boTbl').querySelector(`[data-eff="${b.id}"]`); if (c) c.innerHTML = `<b>${offerRate(b).toFixed(2)}%</b><small>${t('loan')} ${money(E.loanOf(p, b))} · ${t('k_month')} ${money(E.loanOf(p, b) * offerRate(b) / 1200)}</small><small>${t('net_upfront')} ${moneyS((b.upfront || 0) + E.loanOf(p, b) * (b.feePct || 0) / 100 - (b.rebate || 0))}</small>`; });
+}
+function bindOffers() {
+  const box = $('boTbl');
+  box.addEventListener('input', e => {
+    const el = e.target, b = S.banks.find(x => x.id === el.dataset.b), f = el.dataset.f; if (!b || !f) return;
+    if (f === 'bank') b.bank = el.value;
+    else if (f !== 'rateType') { const v = el.value === '' ? 0 : parseNum(el.value); el.setAttribute('aria-invalid', String(!Number.isFinite(v))); if (!Number.isFinite(v)) return; b[f] = v; if (f === 'prime' || f === 'pspread') b.rate = +E.baseRate(b).toFixed(3); }
+    update();
+  });
+  box.addEventListener('change', e => { const el = e.target; if (el.dataset.f !== 'rateType') return; const b = S.banks.find(x => x.id === el.dataset.b); b.rateType = el.value; boKey = ''; update(); });
+  box.addEventListener('focusout', e => { const el = e.target; if (el.classList.contains('num')) { const v = parseNum(el.value); if (Number.isFinite(v)) el.value = el.closest('.money') ? fmtInt(v) : String(+v.toFixed(3)); } if (el.dataset.f === 'bank') renderMix(); });
+  box.addEventListener('click', e => {
+    const del = e.target.closest('[data-del]');
+    if (del && S.banks.length > 1 && confirm(t('del_offer') + '?')) { const id = del.dataset.del; S.banks = S.banks.filter(b => b.id !== id); S.picks = S.picks.filter(k => k[1] !== id); if (S.sel.bank === id) S.sel.bank = S.banks[0].id; update(); }
+    if (e.target.id === 'boAdd') { const o = { ...offer(), id: E.uid(S.banks, 'b'), bank: 'Bank ' + String.fromCharCode(65 + S.banks.length) }; S.banks.push(o); S.picks.push([S.sel.plan, o.id]); update();
+      const inp = box.querySelector(`[data-b="${o.id}"][data-f="bank"]`); if (inp) { inp.focus(); inp.select(); } }
+  });
+}
+function bindCmp() {
+  bindOffers();
+  document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
+  $('mix').addEventListener('click', e => {
+    const cell = e.target.closest('.cell'), ep = e.target.closest('[data-edit-plan]'), eb = e.target.closest('[data-edit-bank]');
+    if (cell) { const { p, b } = cell.dataset; S.picks = picked(p, b) ? S.picks.filter(k => !(k[0] === p && k[1] === b)) : S.picks.concat([[p, b]]); update(); }
+    if (ep || eb) { if (ep) S.sel.plan = ep.dataset.editPlan; if (eb) S.sel.bank = eb.dataset.editBank; fillForm(); showView('single'); update(); }
+  });
+  document.querySelectorAll('[data-q]').forEach(b => b.onclick = () => {
+    const q = b.dataset.q;
+    if (q === 'clear') S.picks = [];
+    if (q === 'all') S.picks = S.plans.flatMap(p => S.banks.map(k => [p.id, k.id]));
+    if (q === 'best') S.picks = S.plans.map(p => { let best = null, v = -Infinity; S.banks.forEach(k => { const lr = lastRow(combo(p.id, k.id)); if (lr && lr.irr > v) { v = lr.irr; best = k.id; } }); return best && [p.id, best]; }).filter(Boolean);
+    update();
+  });
+  document.querySelectorAll('[data-metric]').forEach(b => b.onclick = () => { S.metric = b.dataset.metric; update(); });
+  $('slShift').oninput = () => { S.shift = +$('slShift').value; update(); };
+  $('slBonus2').oninput = () => { S.fulfil = +$('slBonus2').value / 100; update(); };
+  document.addEventListener('pl:theme', () => renderCmp(true));
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => renderCmp(true), 150); });
+}
+
+
+/* ------------------------------------------- my clients (cases saved in this browser) */
+// "Open" on the My clients page arrives as calculator.html#local=<position in the saved list>
+function openWanted() {
+  const m = location.hash.match(/^#local=(\d+)$/); if (!m) return;
+  history.replaceState(null, '', location.pathname);
+  const c = cases()[+m[1]]; if (!c) return;
+  S = E.migrate(JSON.parse(JSON.stringify(c))) || S; fillForm(); update(); renderChips();
+  if (c.client) toast(t('opened', { c: c.client }));
+}
+
+/* ------------------------------------------------ proposal upload (PDF) */
+const blankCase = () => { const s = E.defaults(); s.plans[0].cvs = E.blankCvs(); return s; };
+const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/';
+let pdfLib = null;
+async function pdfText(file) {
+  if (!pdfLib) { pdfLib = await import(PDFJS + 'build/pdf.min.mjs'); pdfLib.GlobalWorkerOptions.workerSrc = PDFJS + 'build/pdf.worker.min.mjs'; }
+  const doc = await pdfLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true }).promise;
+  const lines = [];
+  for (let n = 1; n <= Math.min(doc.numPages, 80); n++) {
+    const page = await doc.getPage(n), vp = page.getViewport({ scale: 1 }), tc = await page.getTextContent();
+    const items = tc.items.filter(it => it.str && it.str.trim()).map(it => { const m = pdfLib.Util.transform(vp.transform, it.transform); return { s: it.str.normalize('NFKC'), x: m[4], y: m[5], w: it.width || 0, h: Math.abs(it.height || m[3] || 10) }; })
+      .sort((a, z) => a.y - z.y || a.x - z.x);
+    let cur = null;
+    items.forEach(it => { if (!cur || Math.abs(it.y - cur.y) > 3) { cur = { y: it.y, items: [] }; lines.push(cur); } cur.items.push(it); });
+  }
+  // split every text run into tokens, each with an approximate x position
+  // glue runs that touch (some PDFs draw "1,000" as "1" "," "000"), then split into tokens with an approximate x
+  return lines.map(l => { const toks = [], runs = [];
+    l.items.sort((a, z) => a.x - z.x).forEach(it => { const prev = runs[runs.length - 1];
+      if (prev && it.x - (prev.x + prev.w) < Math.max(1, it.h * 0.2)) { prev.s += it.s; prev.w = it.x + it.w - prev.x; } else runs.push({ ...it }); });
+    runs.forEach(it => { const len = it.s.length || 1;
+    it.s.replace(/\S+/g, (w, at) => { toks.push({ s: w, x: it.x + it.w * (at + w.length / 2) / len }); return w; }); }); return toks; });
+}
+// Find the surrender value table: rows that start with a policy year followed by several amounts.
+// Total = guaranteed + non-guaranteed parts, so the first column whose following columns add up to a later
+// column is "guaranteed" and that later column is "total". Header keywords are the fallback.
+function parseSurrender(lines) {
+  const AMT = /^[-−(]?(?:HK|US|RMB|S)?\$?\d{1,3}(?:,\d{3})*(?:\.\d+)?\)?$|^[-−(]?(?:HK|US)?\$?\d+(?:\.\d+)?\)?$/;
+  const val = w => { const neg = /^[-−(]/.test(w); const v = parseFloat(w.replace(/[^\d.]/g, '')); return neg ? -v : v; };
+  const rows = [];
+  lines.forEach((toks, li) => {
+    for (let k = 0; k < toks.length; k++) {
+      const w = toks[k].s; if (!/^\d{1,3}$/.test(w) || +w < 1 || +w > 120) continue;
+      const nums = [], xs = []; let j = k + 1;
+      while (j < toks.length && AMT.test(toks[j].s)) { nums.push(val(toks[j].s)); xs.push(toks[j].x); j++; }
+      if (nums.length >= 3) { rows.push({ y: +w, nums, xs, li }); k = j - 1; }
+    }
+  });
+  const pairOf = n => {
+    for (let i = 0; i < n.length - 2; i++) { if (!(n[i] >= 100)) continue; let sum = n[i];
+      for (let j = i + 1; j < n.length; j++) { if (j >= i + 2 && n[j] > 0 && Math.abs(n[j] - sum) <= j - i + 1) return [i, j]; sum += n[j]; } }
+    return null;
+  };
+  const found = new Map(), layout = new Map();
+  rows.forEach(r => { const p = pairOf(r.nums); if (p) layout.set(r.nums.length, layout.get(r.nums.length) || p);
+    if (p && !found.has(r.y)) found.set(r.y, { cv: r.nums[p[1]], g: r.nums[p[0]] }); });
+  // rows that missed the sum check (rounding) but share a table's shape
+  rows.forEach(r => { const p = layout.get(r.nums.length); if (p && !found.has(r.y) && r.nums[p[1]] > 0) found.set(r.y, { cv: r.nums[p[1]], g: r.nums[p[0]] }); });
+  if (!found.size) { // fallback: column headers
+    let gx = null, tx = null;
+    lines.forEach(toks => toks.forEach(tk => {
+      if (gx === null && /保證現金價值|保证现金价值|^Guaranteed/i.test(tk.s)) gx = tk.x;
+      else if (gx !== null && tx === null && tk.x > gx && /退保價值總額|退保价值总额|總額|总额|^Total|\(A\)\+/i.test(tk.s)) tx = tk.x;
+    }));
+    if (gx !== null && tx !== null) rows.forEach(r => { if (found.has(r.y)) return;
+      const near = x => r.xs.reduce((b, v, i) => Math.abs(v - x) < Math.abs(r.xs[b] - x) ? i : b, 0);
+      const gi = near(gx), ti = near(tx);
+      if (gi !== ti && Math.abs(r.xs[gi] - gx) < 80 && Math.abs(r.xs[ti] - tx) < 80 && r.nums[ti] > 0) found.set(r.y, { cv: r.nums[ti], g: r.nums[gi] }); });
+  }
+  return found;
+}
+function pdfStatus(msg, kind) { const e = $('pdfStatus'); e.hidden = !msg; e.textContent = msg || ''; e.className = 'pdf-status' + (kind ? ' ' + kind : ''); }
+async function readProposal(file) {
+  pdfStatus(t('pdf_reading'));
+  let found;
+  try { const lines = await pdfText(file); if (!lines.some(l => l.length)) { pdfStatus(t('pdf_scan'), 'bad'); return; } found = parseSurrender(lines); } catch (e) { console.warn('proposal', e); pdfStatus(t('pdf_err'), 'bad'); return; }
+  if (!found.size) { pdfStatus(t('pdf_none'), 'bad'); return; }
+  const p = plan();
+  if (!p.cvs.some(c => c.y > 0)) p.cvs = E.blankCvs();
+  const want = p.cvs.filter(c => c.y > 0), hit = [], miss = [];
+  want.forEach(c => { const f = found.get(c.y); if (f) { c.cv = f.cv; c.g = f.g; hit.push(c.y); } else miss.push(c.y); });
+  renderCvRows(); update();
+  const avail = [...found.keys()].sort((a, z) => a - z).join(', ');
+  if (!hit.length) { pdfStatus(t('pdf_avail', { ys: avail }) + ' ' + t('pdf_missing', { ys: miss.join(', ') }), 'bad'); return; }
+  pdfStatus(t('pdf_found', { n: hit.length, m: want.length, ys: hit.join(', ') }) + (miss.length ? ' ' + t('pdf_missing', { ys: miss.join(', ') }) + ' ' + t('pdf_avail', { ys: avail }) : ''), miss.length ? '' : 'ok');
+}
+function bindProposal() {
+  $('pdfBtn').onclick = () => $('pdfFile').click();
+  $('pdfFile').onchange = () => { const f = $('pdfFile').files[0]; $('pdfFile').value = ''; if (f) readProposal(f); };
+}
+
+/* ------------------------------------------------------- print / share */
+function agent() { return store.get('pl-agent', { name: '', lic: '', contact: '' }); }
+function renderPrint(r, o) {
+  const a = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
+  $('printHead').innerHTML = `<h2>${t('p_title')}</h2><div class="meta">
+    <div>${t('p_client')}<b>${esc(S.name || '—')}</b></div><div>${t('premium')}<b>${money(r.P)}</b></div>
+    <div>${t('h_bank')}<b>${esc(o.bank || '—')} · ${offerRate(o).toFixed(2)}%</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
+  $('printFoot').innerHTML = (a.name ? `${t('p_agent')}: <b>${esc(a.name)}</b>${a.lic ? ' · ' + t('p_lic') + ' ' + esc(a.lic) : ''}${a.contact ? ' · ' + esc(a.contact) : ''}<br>` : '') + $('fine').textContent;
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function toast(msg) { const e = $('toast'); e.textContent = msg; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2600); }
+function persistDraft() { clearTimeout(persistDraft.t); persistDraft.t = setTimeout(() => E.save(S), 250); }
+
+/* --------------------------------------------------------------- cases */
+function cases() { return store.get('pl-cases', []); }
+function renderChips() {
+  const box = $('chips'), list = cases(); box.innerHTML = '';
+  list.forEach((c, i) => {
+    const chip = document.createElement('span'); chip.className = 'chip';
+    if (c.name === S.name && S.name) chip.setAttribute('aria-current', 'true');
+    chip.innerHTML = `<button type="button" class="open"></button><button type="button" class="x" aria-label="Delete">×</button>`;
+    chip.querySelector('.open').textContent = c.name || ('Case ' + (i + 1));
+    chip.querySelector('.open').onclick = () => { S = E.migrate(JSON.parse(JSON.stringify(c))) || S; fillForm(); update(); renderChips(); };
+    chip.querySelector('.x').onclick = () => { if (confirm(t('confirm_del'))) { const l = cases(); l.splice(i, 1); store.set('pl-cases', l); renderChips(); toast(t('deleted')); } };
+    box.appendChild(chip);
+  });
+}
+function bindActions() {
+  $('saveBtn').onclick = () => {
+    if (!S.name.trim()) { S.name = 'Case ' + (cases().length + 1); $('caseName').value = S.name; }
+    const l = cases(), i = l.findIndex(c => c.name === S.name);
+    const snap = { ...JSON.parse(JSON.stringify(S)), savedAt: Date.now() };
+    if (i >= 0) l[i] = snap; else l.unshift(snap);
+    store.set('pl-cases', l.slice(0, 40)); renderChips(); toast(t('saved'));
+  };
+  $('newBtn').onclick = () => { S = blankCase(); fillForm(); update(); renderChips(); history.replaceState(null, '', location.pathname); };
+  $('shareBtn').onclick = async () => {
+    const url = location.origin + location.pathname + '#c=' + E.encode(S);
+    history.replaceState(null, '', url);
+    try { await navigator.clipboard.writeText(url); toast(t('copied')); } catch (e) { toast(t('copy_fail')); }
+  };
+  $('printBtn').onclick = () => { update(); document.body.classList.toggle('print-cmp', view === 'cmp'); enterPrint(); window.print(); };
+  // agent profile
+  const dlg = $('agentDlg');
+  $('agentBtn').onclick = () => { const a = agent(); $('aName').value = a.name; $('aLic').value = a.lic; $('aContact').value = a.contact; dlg.showModal(); };
+  $('agentForm').addEventListener('submit', e => {
+    if (e.submitter && e.submitter.value === 'ok') { store.set('pl-agent', { name: $('aName').value.trim(), lic: $('aLic').value.trim(), contact: $('aContact').value.trim() }); showAgent(); update(); }
+  });
+  // language + theme come from the shared header (site.js)
+  document.addEventListener('pl:lang', e => setLang(e.detail));
+  document.addEventListener('pl:theme', () => { if (chartLast) { chartInstant = true; drawChart(chartLast); } drawRates(); });
+  // re-draw the chart at the new width (debounced)
+  if (!chartSeen) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); chartSeen = true; if (chartLast) drawChart(chartLast); } }, { threshold: .3 }); io.observe($('chart')); }
+  // printing never scrolls: paint the finished chart first
+  addEventListener('afterprint', () => { document.body.classList.remove('print-cmp'); exitPrint(); });
+  addEventListener('beforeprint', enterPrint); matchMedia('print').addEventListener?.('change', e => e.matches ? enterPrint() : exitPrint());
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (chartLast) { chartInstant = true; drawChart(chartLast); } drawRates(); }, 150); });
+}
+const PRINT_W = 760;
+function enterPrint() {
+  if (printW === PRINT_W && chartSeen) return;
+  printW = PRINT_W; E.printW = PRINT_W; chartSeen = true;
+  chartInstant = true; if (chartLast) drawChart(chartLast); drawRates();
+  renderCmp(true);
+}
+function exitPrint() {
+  if (!printW) return;
+  printW = 0; E.printW = 0;
+  chartInstant = true; if (chartLast) drawChart(chartLast); drawRates();
+  renderCmp(true);
+}
+function showAgent() { const a = agent(); $('agentShow').textContent = a.name ? t('agent_label') + ': ' + a.name : t('agent_add'); }
+function setLang(l) {
+  lang = T[l] ? l : 'en'; store.set('pl-lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
+  document.querySelectorAll('[data-t-html]').forEach(e => e.innerHTML = t(e.dataset.tHtml));
+  document.querySelectorAll('[data-t-ph]').forEach(e => e.placeholder = t(e.dataset.tPh));
+  const l1 = '<a href="https://www.ia.org.hk/en/legislative_framework/Conduct_in_Focus_Issue_05_03.html" target="_blank" rel="noopener noreferrer">' + t('l1') + '</a>';
+  const l2 = '<a href="https://www.ia.org.hk/en/premium_financing/smart_tips.html" target="_blank" rel="noopener noreferrer">' + t('l2') + '</a>';
+  $('fine').innerHTML = t('fine', { l1, l2 });
+  showAgent(); update(); drawRates();
+}
+
+/* ----------------------------------------------------------------- boot */
+(function boot() {
+  const fromLink = location.hash.startsWith('#c=') ? E.migrate(E.decode(location.hash.slice(3))) : null;
+  S = fromLink ? { ...fromLink, name: '' } : E.load();
+  // dashboard: "New case for this client" arrives as #new=<client name>
+  const nw = location.hash.match(/^#new=(.+)$/);
+  if (nw) { S = { ...blankCase(), client: decodeURIComponent(nw[1]).slice(0, 80) }; history.replaceState(null, '', location.pathname); }
+  bindForm(); bindActions(); bindCmp(); bindProposal(); fillForm(); renderChips();
+  if (location.hash === '#compare') showView('cmp');
+  addEventListener('hashchange', () => { if (location.hash === '#compare' && view !== 'cmp') showView('cmp'); });
+  // another tab (or the home page) changed the case: follow it
+  E.onChange(n => { S = n; fillForm(); update(); renderChips(); });
+  setLang(window.PL ? PL.lang : 'en');
+  openWanted();
+})();
+</script>
+</body>
+</html>
