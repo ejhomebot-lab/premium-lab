@@ -3,6 +3,8 @@
      own cash = premium − loan − first-year discount
      return(N) = cash value(N) − loan − own cash − interest & fees paid to N
      return on own cash = return / own cash
+   Prepaid (multi-year) plans: loan = LTV % × Day-1 policy value; own cash = total premium after discount − loan;
+   years inside the payment period show no returns (same as the insurer's premium-financing calculator sheet).
    Prepayment penalty = penPct % of the loan when it is repaid within the first penYears years.
    Loan rate: P (bank prime rate) − spread, or HIBOR + spread.
    Upfront = flat fee + handling fee % of the loan − the bank's cash rebate (can be negative).
@@ -24,7 +26,8 @@
     picks: [['p1', 'b1']]
   });
   // a new case starts with empty surrender values for policy years 5 to 10
-  E.blankCvs = () => [5, 6, 7, 8, 9, 10].map(y => ({ y, cv: NaN, g: NaN }));
+  // prepaid (multi-year) plans start with policy years 1 to 10, so the payment period shows too
+  E.blankCvs = type => (type === 'prepaid' ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [5, 6, 7, 8, 9, 10]).map(y => ({ y, cv: NaN, g: NaN }));
   const num = (v, d) => Number.isFinite(+v) && v !== null && v !== '' ? +v : d;
   // P − spread: cases saved with a single fixed rate keep that rate (P 5.25% less the matching spread)
   const primeOf = b => {
@@ -38,7 +41,7 @@
     if (c.v === 2) {
       if (!Array.isArray(c.plans) || !c.plans.length || !Array.isArray(c.banks) || !c.banks.length) return null;
       const s = { ...E.defaults(), ...c };
-      s.plans = c.plans.map((p, i) => ({ id: String(p.id || 'p' + (i + 1)), name: String(p.name || ''), premium: num(p.premium, 0), discount: num(p.discount, 0), day1: num(p.day1, 0),
+      s.plans = c.plans.map((p, i) => ({ id: String(p.id || 'p' + (i + 1)), name: String(p.name || ''), type: p.type === 'prepaid' ? 'prepaid' : 'single', annual: num(p.annual, 0), payYears: Math.max(0, Math.round(num(p.payYears, 0))), premium: num(p.premium, 0), discount: num(p.discount, 0), day1: num(p.day1, 0),
         cvs: (Array.isArray(p.cvs) ? p.cvs : []).map(x => ({ y: Math.round(num(x.y, 0)), cv: num(x.cv, NaN), g: num(x.g, NaN) })) }));
       s.banks = c.banks.map((b, i) => ({ id: String(b.id || 'b' + (i + 1)), bank: String(b.bank || ''), ratio: num(b.ratio, 0), rateType: b.rateType === 'hibor' ? 'hibor' : 'fixed',
         ...primeOf(b), hibor: num(b.hibor, 0), spread: num(b.spread, 0), penPct: num(b.penPct, 0), penYears: Math.max(0, Math.round(num(b.penYears, 0))), upfront: num(b.upfront, 0), feePct: num(b.feePct, 0), rebate: num(b.rebate, 0), annualFee: num(b.annualFee, 0), maxLtv: num(b.maxLtv, 90) }));
@@ -79,7 +82,10 @@
     else { if (!Number.isFinite(b.prime)) b.prime = 5.25; b.pspread = +(b.prime - v).toFixed(3); }
     b.rate = +E.baseRate(b).toFixed(3);
   };
-  E.loanOf = (p, b) => p.premium * (b.ratio || 0) / 100;
+  // single premium: the loan is a % of the premium; prepaid: a % (LTV) of the Day-1 policy value
+  E.loanBase = p => p.type === 'prepaid' ? (p.day1 || 0) : p.premium;
+  E.loanOf = (p, b) => E.loanBase(p) * (b.ratio || 0) / 100;
+  E.payYears = p => p.type === 'prepaid' ? (p.payYears || 0) : 0;
   // monthly is paid every month; from `skip` months on, `later` is paid on top (interest after an interest-free period)
   E.irrMonthly = (c0, monthly, months, terminal, later = 0, skip = 0) => {
     const ann = (m, n) => Math.abs(m) < 1e-12 ? n : (1 - Math.pow(1 + m, -n)) / m;
@@ -97,7 +103,7 @@
     for (let i = 0; i < 300; i++) { const mid = (lo + hi) / 2, fm = npv(mid); if ((fm > 0) === (flo > 0)) lo = mid; else hi = mid; }
     return (lo + hi) / 2;
   };
-  E.hasYears = p => p.premium > 0 && p.cvs.some(c => c.y > 0 && Number.isFinite(c.cv) && c.cv > 0);
+  E.hasYears = p => p.premium > 0 && p.cvs.some(c => c.y > E.payYears(p) && Number.isFinite(c.cv) && c.cv > 0);
   // opt.rate overrides the bank's rate (rate stress); opt.shift adds to it; opt.fulfil = share of the non-guaranteed part paid
   E.compute = (p, b, opt = {}) => {
     const P = p.premium, D = p.discount || 0, L = E.loanOf(p, b), fulfil = Number.isFinite(opt.fulfil) ? opt.fulfil : 1;
@@ -105,8 +111,12 @@
     const own = P - L - D, fee = (b.upfront || 0) + L * (b.feePct || 0) / 100, rebate = b.rebate || 0, upfront = fee - rebate, aFee = b.annualFee || 0;
     const yearCost = L * rate + aFee;
     const intMonths = y => y * 12; // months of interest charged by year y
-    const rows = p.cvs.filter(c => c.y > 0 && Number.isFinite(c.cv)).sort((a, z) => a.y - z.y).map(c => {
-      const val = Number.isFinite(c.g) && c.g > 0 ? c.g + fulfil * (c.cv - c.g) : c.cv;
+    const py = E.payYears(p), valOf = c => Number.isFinite(c.g) && c.g > 0 ? c.g + fulfil * (c.cv - c.g) : c.cv;
+    const all = p.cvs.filter(c => c.y > 0 && Number.isFinite(c.cv)).sort((a, z) => a.y - z.y);
+    // prepaid plans: years inside the payment period carry a value but no return figures
+    const payRows = all.filter(c => c.y <= py).map(c => ({ y: c.y, val: valOf(c), g: c.g, inPay: true }));
+    const rows = all.filter(c => c.y > py).map(c => {
+      const val = valOf(c);
       const pen = c.y <= (b.penYears || 0) ? L * (b.penPct || 0) / 100 : 0; // paid when the loan is repaid in year y
       const cost = upfront + aFee * c.y + L * rate / 12 * intMonths(c.y) + pen;
       const net = val - L, gain = net - own - cost, paid = own + cost;
@@ -118,7 +128,7 @@
       const roc = gain / own, ann = roc / c.y; // average annual return = return on own cash ÷ years
       return { y: c.y, val, net, paid, cost, pen, gain, roc, roa: gain / paid, ann, irr, selfIrr, be, ltv: L / val };
     });
-    return { P, D, L, own, rate, monthly: L * rate / 12, yearCost, rows, upfront, fee, rebate, aFee };
+    return { P, D, L, own, rate, monthly: L * rate / 12, yearCost, rows, payRows, upfront, fee, rebate, aFee, prepaid: p.type === 'prepaid', payYears: py, day1: p.day1 || 0 };
   };
 
   /* ------------------------------------------------------ formatting */

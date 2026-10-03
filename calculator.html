@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=10">
+<link rel="stylesheet" href="site.css?v=11">
 <style>
 main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
 .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
@@ -268,6 +268,44 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
   .pill-r{padding:0 4px}
   .card{break-inside:avoid;padding:12px;margin-top:12px}
 }
+
+/* v11: prepaid plans + compare two cases */
+.pp-box[hidden],.sp-only[hidden]{display:none}
+.pp-box .derived{margin:0 0 12px}
+.cv-table.pp td:first-child{width:46px}
+.cv-table.pp .inp{padding:0 6px;font-size:13px}
+.cv-table .tot{background:var(--sunk);font-weight:600}
+tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);letter-spacing:.04em}
+.pdf-status.warn{background:var(--warn-bg);color:var(--warn)}
+.pp-badge{display:inline-block;font-size:11.5px;font-weight:600;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:2px;padding:0 6px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+.pair{padding:26px 30px}
+.pair-top h2{font-size:26px}.pair-top p{color:var(--muted);font-size:14px;margin-top:6px;max-width:48em}
+.pair-pick{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;margin-top:18px}
+.pair-pick label{display:flex;align-items:center;gap:10px;min-width:0}
+.pp-tag{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--surface);background:var(--kc)}
+.pp-vs{font-family:var(--serif);color:var(--faint);font-size:18px}
+.pair-sum th:not(:first-child),.pair-sum td:not(:first-child){width:38%}
+.pair-sum thead th{text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);white-space:normal}
+.pair-sum thead th .pp-tag{display:inline-grid;width:20px;height:20px;font-size:11px;margin-right:6px;vertical-align:middle}
+.pair-sum td.best,.pair-yt td.best{background:color-mix(in srgb,var(--pos) 10%,transparent);box-shadow:inset 0 -2px 0 var(--pos);font-weight:700}
+.pair-yt th{text-transform:none;letter-spacing:0}
+.pair-yt thead tr:first-child th{text-align:center;border-left:1px solid var(--line)}
+.pair-yt thead tr:first-child th:first-child{border-left:0;text-align:left}
+.pair-yt td.ca,.pair-yt th.ca{border-left:1px solid var(--line)}
+.pair-yt .kA,.pair-yt .kB{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--kc);margin-right:4px}
+.pair-yt td:first-child,.pair-yt th:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+.pair-yt thead th:first-child{background:var(--sunk)}
+.pair-charts{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.pair-charts figure{margin:0}
+.pair-charts h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);margin:4px 0 8px}
+.pair-charts svg{display:block;width:100%;height:auto}
+.pair-charts svg text{font-family:var(--sans)}
+.pair-leg{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:12px}
+.pair-leg span{display:flex;align-items:center;gap:7px}.pair-leg i{width:11px;height:11px;border-radius:1px;background:var(--kc)}
+.pair-msg{margin-top:18px}
+@media (max-width:760px){.pair-charts{grid-template-columns:1fr}}
+@media (max-width:600px){.pair{padding:20px 14px}.pair-pick{grid-template-columns:1fr}.pp-vs{display:none}.pair-sum th,.pair-sum td{white-space:normal}}
+@media print{body.print-pair #singleView,body.print-pair #cmpView{display:none!important}body.print-pair #pairView{display:block!important;border:0;box-shadow:none;padding:0}body:not(.print-pair) #pairView{display:none!important}.pair-top{display:none!important}.pair-charts{grid-template-columns:1fr 1fr}.pair-yt td:first-child,.pair-yt th:first-child{position:static}}
 </style>
 </head>
 <body>
@@ -323,6 +361,7 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
     <div class="vtabs no-print" role="tablist" aria-label="View">
       <button type="button" role="tab" id="tabSingle" aria-selected="true" aria-controls="singleView" data-view="single" data-t="tab_single">Single case</button>
       <button type="button" role="tab" id="tabCmp" aria-selected="false" aria-controls="cmpView" data-view="cmp"><span data-t="tab_cmp">Compare plans &amp; banks</span><b class="badge" id="pickCount"></b></button>
+      <button type="button" role="tab" id="tabPair" aria-selected="false" aria-controls="pairView" data-view="pair" data-t="tab_pair">Compare two cases</button>
       <a class="vt-link" href="studio.html" data-t="to_studio">Present on iPad →</a>
     </div>
 
@@ -333,11 +372,20 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
           <div class="grp">
             <div class="grp-title"><span data-t="g_policy">Policy</span><span class="gt-r"><select class="inp" id="currency" style="width:auto;height:30px;padding:0 6px;font-size:12px" aria-label="Currency"><option>HKD</option><option>USD</option><option>CNY</option><option>SGD</option></select><button class="mini" type="button" id="addPlan" data-t="add_plan">+ Add plan</button></span></div>
             <div class="offer-tabs" id="planTabs" role="group" aria-label="Plans"></div>
+            <div class="field"><div class="lbl" data-t="plan_type">Premium type</div>
+              <div class="seg" role="group" aria-label="Premium type" id="ptSeg"><button type="button" data-pt="single" aria-pressed="true" data-t="pt_single">Single / lump sum</button><button type="button" data-pt="prepaid" aria-pressed="false" data-t="pt_prepaid">Prepaid (multi-year)</button></div></div>
             <div class="field"><label for="planName" data-t="plan_name">Plan / insurer</label><input class="inp" id="planName" maxlength="40"></div>
-            <div class="field"><label for="premium"><span data-t="premium">Total premium</span><small data-t="premium_h">single / prepaid</small></label>
+            <div class="pp-box" id="ppBox" hidden><div class="row2">
+              <div class="field"><label for="annual" data-t="annual">Annual premium</label><div class="money"><span class="cur">HKD</span><input class="inp num" id="annual" inputmode="decimal"></div></div>
+              <div class="field"><label for="payYears" data-t="pay_years">Payment years</label><input class="inp num" id="payYears" inputmode="numeric"></div></div></div>
+            <div class="field"><label for="premium"><span data-t="premium" data-pp="premium_pp">Total premium</span><small data-t="premium_h" data-pp="premium_pp_h">single / prepaid</small></label>
               <div class="money"><span class="cur">HKD</span><input class="inp num" id="premium" inputmode="decimal"></div></div>
-            <div class="field"><label for="discount"><span data-t="discount">First-year discount</span><small data-t="discount_h">prepayment bonus</small></label>
+            <div class="field"><label for="discount"><span data-t="discount" data-pp="discount_pp">First-year discount</span><small data-t="discount_h" data-pp="discount_pp_h">prepayment bonus</small></label>
               <div class="money"><span class="cur">HKD</span><input class="inp num" id="discount" inputmode="decimal"></div></div>
+            <div class="pp-box" id="ppBox2" hidden>
+              <div class="derived"><span data-t="prem_net">Total premium after discount</span><strong id="netShow">–</strong></div>
+              <div class="field"><label for="day1p"><span data-t="day1_pp">Day-1 policy value</span><small data-t="day1_pp_h">the bank lends against this</small></label>
+                <div class="money"><span class="cur">HKD</span><input class="inp num" id="day1p" inputmode="decimal"></div></div></div>
             <button class="mini danger" type="button" id="delPlan" data-t="del_plan" hidden>Remove this plan</button>
           </div>
 
@@ -346,7 +394,7 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
             <div class="offer-tabs" id="offerTabs" role="group" aria-label="Loan offers"></div>
             <div class="field"><label for="bank" data-t="bank">Bank / lender</label><input class="inp" id="bank" maxlength="40"></div>
             <div class="row2">
-              <div class="field"><label for="ratio" data-t="ratio">Loan ratio</label><div class="pct"><input class="inp num" id="ratio" inputmode="decimal"><span>%</span></div></div>
+              <div class="field"><label for="ratio" data-t="ratio" data-pp="ratio_pp">Loan ratio</label><div class="pct"><input class="inp num" id="ratio" inputmode="decimal"><span>%</span></div></div>
               <div class="field"><label for="loan" data-t="loan">Loan amount</label><input class="inp num" id="loan" inputmode="decimal"></div>
             </div>
             <div class="field"><div class="lbl" data-t="rate_type">Interest rate</div>
@@ -382,14 +430,14 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
             <div class="grp-title"><span data-t="g_cv">Cash value from the illustration</span><span class="gt-r"><button class="mini" type="button" id="pdfBtn" data-t="upload_pdf">Upload proposal</button><button class="mini" type="button" id="addCv" data-t="add_year">+ Year</button></span></div>
             <input type="file" id="pdfFile" accept="application/pdf,.pdf" hidden>
             <p class="pdf-status" id="pdfStatus" role="status" hidden></p>
-            <table class="cv-table"><thead><tr><th data-t="year">Year</th><th data-t="cv_total">Total cash value</th><th data-t="cv_guar">Guaranteed</th><th><span class="vh">Remove</span></th></tr></thead><tbody id="cvBody"></tbody></table>
-            <p class="note" data-t="cv_note">Copy the surrender values from the insurer's benefit illustration. Guaranteed is optional; it powers the downside view.</p>
+            <table class="cv-table" id="cvTable"><thead id="cvHead"></thead><tbody id="cvBody"></tbody></table>
+            <p class="note" data-t="cv_note" data-pp="cv_note_pp">Copy the surrender values from the insurer's benefit illustration. Guaranteed is optional; it powers the downside view.</p>
           </div>
 
           <div class="grp" style="margin-bottom:0">
             <div class="grp-title"><span data-t="g_risk">Margin-call check</span></div>
             <div class="row2">
-              <div class="field"><label for="day1" data-t="day1">Day-1 cash value</label><input class="inp num" id="day1" inputmode="decimal"></div>
+              <div class="field sp-only" id="day1Wrap"><label for="day1" data-t="day1">Day-1 cash value</label><input class="inp num" id="day1" inputmode="decimal"></div>
               <div class="field"><label for="maxLtv" data-t="max_ltv">Bank's max loan-to-value</label><div class="pct"><input class="inp num" id="maxLtv" inputmode="decimal"><span>%</span></div></div>
             </div>
             <p class="note" data-t="ltv_note">Banks usually lend against the policy's surrender value. If the loan exceeds their limit, they can ask for more collateral or repayment.</p>
@@ -411,7 +459,7 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
               <div class="toggle" role="group" aria-label="Cash value basis"><button type="button" data-basis="total" aria-pressed="true" data-t="b_total">As illustrated</button><button type="button" data-basis="guar" aria-pressed="false" data-t="b_guar">Guaranteed only</button></div></div>
             <div class="sliders no-print">
               <div class="sl"><div class="sl-top"><label for="slRate" data-t="sl_rate">Loan rate</label><output id="slRateOut" for="slRate"></output></div><input type="range" id="slRate" min="0" max="10" step="0.05"><div class="sl-ends"><span>0%</span><span>10%</span></div></div>
-              <div class="sl"><div class="sl-top"><label for="slRatio" data-t="sl_ratio">Loan ratio</label><output id="slRatioOut" for="slRatio"></output></div><input type="range" id="slRatio" min="0" max="90" step="0.5"><div class="sl-ends"><span>0%</span><span>90%</span></div></div>
+              <div class="sl"><div class="sl-top"><label for="slRatio" data-t="sl_ratio">Loan ratio</label><output id="slRatioOut" for="slRatio"></output></div><input type="range" id="slRatio" min="0" max="100" step="0.5"><div class="sl-ends"><span>0%</span><span>100%</span></div></div>
               <div class="sl"><div class="sl-top"><label for="slBonus" data-t="sl_bonus">Non-guaranteed bonus paid</label><output id="slBonusOut" for="slBonus"></output></div><input type="range" id="slBonus" min="0" max="120" step="5"><div class="sl-ends"><span data-t="sl_guar_end">Guaranteed</span><span>120%</span></div></div>
             </div>
             <div class="chart" id="chart"><div class="tip" id="tip" role="status" hidden></div></div>
@@ -472,6 +520,17 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
       <div class="card"><div class="card-head"><div><h2 data-t="c_all">Every combination</h2><p data-t="c_all_p">Own cash, monthly interest and returns for each pick. The best figure in each column is marked.</p></div></div>
         <div class="tw"><table id="cmpTbl"></table></div></div>
     </section>
+
+    <section class="lab pair" id="pairView" role="tabpanel" aria-labelledby="tabPair" hidden>
+      <div class="print-head" id="printHead3"></div>
+      <div class="pair-top"><h2 data-t="pair_h">Compare two cases</h2><p data-t="pair_p">Pick any two cases, for example a prepaid plan and a single-premium plan, each with its own bank terms. The better figure in each row is highlighted.</p></div>
+      <div class="pair-pick no-print">
+        <label style="--kc:var(--k1)"><span class="pp-tag">A</span><select class="inp" id="pairA" aria-label="Case A"></select></label>
+        <span class="pp-vs">vs</span>
+        <label style="--kc:var(--k2)"><span class="pp-tag">B</span><select class="inp" id="pairB" aria-label="Case B"></select></label>
+      </div>
+      <div id="pairOut"></div>
+    </section>
 </main>
 <footer class="gf">
   <div class="gf-in">
@@ -495,7 +554,7 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 <div class="toast" id="toast" role="status"></div>
 
 <script src="site.js?v=5"></script>
-<script src="engine.js?v=10"></script>
+<script src="engine.js?v=11"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -504,6 +563,9 @@ const $ = id => document.getElementById(id);
 const T = {
   en: {
     to_studio:"Present on iPad →",
+    plan_type:"Premium type", pt_single:"Single / lump sum", pt_prepaid:"Prepaid (multi-year)", annual:"Annual premium", pay_years:"Payment years", premium_pp:"Prepaid total premium", premium_pp_h:"before discount", discount_pp:"Premium discount", discount_pp_h:"prepayment / first-year", prem_net:"Total premium after discount", day1_pp:"Day-1 policy value", day1_pp_h:"the bank lends against this", ratio_pp:"LTV (of Day-1 value)", cv_guar_pp:"Guaranteed cash value", cv_tb:"Terminal bonus", cv_total_pp:"Total surrender value", cv_note_pp:"Enter the guaranteed cash value and terminal bonus for each policy year; the total is added up for you (or type the total directly). Years within the payment period show “Payment period” instead of returns.", in_pay:"Payment period", of_day1:"{p} of Day-1 value", h_sv:"Total surrender value", pp_badge:"Prepaid · {n}-year payment", sp_badge:"Single premium",
+    pdf_pp:"Prepaid plan detected: switched to Prepaid mode.", pdf_meta:"Also filled: {f}.", pdf_day1:"This proposal does not show the Day-1 policy value (即時保單價值), which the bank uses as the loan base. Please enter it under Policy.", pdf_tot:"Years {ys}: the proposal lists only the total surrender value, so guaranteed and terminal bonus are left blank.", pdf_sheet:"Premium financing calculator sheet detected.", f_ltv:"loan ratio", f_rate:"loan rate", f_name:"plan name",
+    tab_pair:"Compare two cases", pair_h:"Compare two cases", pair_p:"Pick any two cases, for example a prepaid plan and a single-premium plan, each with its own bank terms. The better figure in each row is highlighted.", pair_cur:"Current case", pair_none:"Save at least one other case (Save case) or add a second plan, then pick it here.", pair_same:"Pick two different cases.", pair_type:"Premium type", pair_prem:"Total premium (after discount)", pair_rate:"Loan rate", pair_years:"Year by year", pair_years_p:"Total surrender value, net return, net return % (of own cash), average annual return and IRR for each case. Payment-period years have no return figures.", pair_roc:"Net return % by year", pair_irr:"IRR by year", pair_note:"Each case uses its own loan terms and bonus assumption as saved. Illustrations are not guarantees; non-guaranteed values can change.", pair_cur_diff:"The two cases use different currencies; amounts are shown in each case's own currency and not converted.", pair_better:"Highlighted = the better of the two", pair_metric:"Measure", pair_case:"Case {k}",
     c_hist:"Hong Kong rates over the past 10 years", c_hist_p:"How the rates behind P − spread and HIBOR + spread loans have moved, from official HKMC and HKMA data.", rh_prime:"Prime rate (P)", rh_hibor:"1-month HIBOR (monthly average)", rh_cur:"Current", rh_hi:"Highest", rh_lo:"Lowest", rh_since:"since {d}", rh_range:"{a} – {b}", rh_avg:"{m} average", rh_and:"; ", rh_psrc:"Source: The Hong Kong Mortgage Corporation (HKMC), Hong Kong Prime Rate as specified by HKMC, rates at effective dates (<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC rates update</a>). Data as of 2 Oct 2026. Prime rates differ by bank (some banks quote 5.00%).", rh_hsrc:"Source: HKMA Monthly Statistical Bulletin, HIBOR fixing period averages, 1-month (<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">HKMA API</a>). Data as of Aug 2026 (latest month published).",
     h_irr:"IRR", m_irr:"IRR", c_table_p:"Net return % is the net return as a percentage of the client's own cash. Avg annual return is the net return % divided by the number of years, the same figure shown above each bar. IRR is the annual rate of return on the client's actual cash flows: own cash paid at the start, loan interest paid each year, and the value left after repaying the loan in that year.", t_lev:"Put just {cash} of your own money to work and hold a policy of {premium}. The bank funds the other {loan} at {rate}, about {month} a month in interest.", t_best:"At year {y}, the cash value of {cv} repays the loan in full and leaves {net}. After interest, your net return is {gain} ({roc}), an average of {ann} a year, with an IRR of {irr}.", t_self:"Financing lifts the IRR at year {y} from {self} (paying the premium without a loan) to {irr}, an extra {delta} a year.", t_be:"Comfortable rate buffer: the plan stays profitable at year {y} as long as the loan rate averages below {be}, {cushion} above today’s {rate}.",
     h_ann:"Avg annual return", fixed:"P − spread", prime:"P (bank prime rate)", pspread:"Spread", rate_eff:"Loan rate {r} · {m} a month", upload_pdf:"Upload proposal", pdf_reading:"Reading the proposal…", pdf_found:"Filled {n} of {m} years from the proposal: year {ys}.", pdf_missing:"Not listed in the proposal: year {ys}. Please enter these manually.", pdf_avail:"The proposal lists years {ys}.", pdf_none:"Couldn't find a surrender value table in this file. Please enter the values manually.", pdf_scan:"This PDF is a scanned image with no text, so it can't be read automatically. Please enter the values manually.", pdf_err:"Couldn't read this PDF (it may be scanned or password-protected). Please enter the values manually.", avg_ann:"Avg annual net return", cum_ret:"Cumulative net return", avg_note:"The % above each bar is the average annual net return: the cumulative net return % divided by the number of years.",
@@ -547,6 +609,9 @@ const T = {
   },
   'zh-Hant': {
     to_studio:"iPad 互動比較 →",
+    plan_type:"供款方式", pt_single:"躉繳 / 一次過", pt_prepaid:"預繳（多年供款）", annual:"年繳保費", pay_years:"供款年期", premium_pp:"預繳總保費", premium_pp_h:"未計折扣", discount_pp:"保費折扣", discount_pp_h:"預繳 / 首年優惠", prem_net:"總保費（已計折扣）", day1_pp:"即時保單價值", day1_pp_h:"銀行按此計算貸款", ratio_pp:"貸款比例（即時價值）", cv_guar_pp:"保證現金價值", cv_tb:"終期紅利", cv_total_pp:"總退保價值", cv_note_pp:"按保單年度輸入保證現金價值及終期紅利，總退保價值自動相加（亦可直接輸入總額）。繳費期內的年度只顯示「繳費期內」，不計回報。", in_pay:"繳費期內", of_day1:"佔即時保單價值 {p}", h_sv:"總退保價值", pp_badge:"預繳 · {n} 年供款", sp_badge:"躉繳",
+    pdf_pp:"偵測到預繳計劃，已切換至「預繳」模式。", pdf_meta:"另已填入：{f}。", pdf_day1:"計劃書未列出即時保單價值（銀行以此計算貸款額），請在「保單」欄手動輸入。", pdf_tot:"第 {ys} 年：計劃書只列出總退保價值，保證現金價值及終期紅利留空。", pdf_sheet:"已讀取保費融資試算表。", f_ltv:"貸款比例", f_rate:"貸款利率", f_name:"計劃名稱",
+    tab_pair:"比較兩個個案", pair_h:"比較兩個個案", pair_p:"任選兩個個案（例如預繳計劃對躉繳計劃），各自按其銀行條件計算，每行較佳的數字會標示。", pair_cur:"目前個案", pair_none:"請先儲存另一個個案（儲存個案）或新增第二個計劃，再在此選擇。", pair_same:"請選擇兩個不同的個案。", pair_type:"供款方式", pair_prem:"總保費（已計折扣）", pair_rate:"貸款利率", pair_years:"逐年比較", pair_years_p:"兩個個案的總退保價值、淨回報金額、淨回報 %（佔客戶本金）、平均年回報及 IRR。繳費期內的年度不計回報。", pair_roc:"每年淨回報 %", pair_irr:"每年 IRR", pair_note:"各個案按其儲存的貸款條件及紅利假設計算。建議書數字並非保證，非保證價值可能變動。", pair_cur_diff:"兩個個案貨幣不同，金額按各自貨幣顯示，並未換算。", pair_better:"已標示 = 兩者中較佳", pair_metric:"指標", pair_case:"個案 {k}",
     c_hist:"過去 10 年香港利率走勢", c_hist_p:"「P - 息差」及「HIBOR + 息差」貸款所參考利率的歷史走勢，數據來自香港按揭證券有限公司及香港金融管理局。", rh_prime:"最優惠利率 P", rh_hibor:"一個月 HIBOR（每月平均）", rh_cur:"現時", rh_hi:"最高", rh_lo:"最低", rh_since:"自{d}起", rh_range:"{a}至{b}", rh_avg:"{m}平均", rh_and:"；", rh_psrc:"資料來源：香港按揭證券有限公司（HKMC）所訂香港最優惠利率，按生效日期（<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC 利率資料</a>）。數據截至 2026 年 10 月 2 日。各銀行最優惠利率或有不同（部分銀行為 5.00%）。", rh_hsrc:"資料來源：香港金融管理局《金融數據月報》HIBOR 定價每月平均（一個月，<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">金管局 API</a>）。數據截至 2026 年 8 月（最新公布月份）。",
     h_irr:"IRR", m_irr:"IRR", c_table_p:"「淨回報 %」= 淨回報金額 ÷ 客戶本金；「平均年回報」= 淨回報 % ÷ 年數，與柱狀圖上的百分比相同；「IRR」按客戶實際現金流計算的年化回報率：期初投入本金、每年支付的貸款利息，以及該年償還貸款後剩餘的價值。", t_lev:"只需投入 {cash} 本金，即可持有保費 {premium} 的保單；其餘 {loan} 由銀行以 {rate} 融資，每月利息約 {month}。", t_best:"第 {y} 年，現金價值 {cv} 全數償還貸款後仍剩 {net}。扣除利息後淨回報為 {gain}（{roc}），平均每年 {ann}，IRR 達 {irr}。", t_self:"融資令第 {y} 年的 IRR 由 {self}（不借貸自行繳付保費）提升至 {irr}，每年多 {delta}。", t_be:"利率緩衝充裕：只要平均貸款利率低於 {be}，第 {y} 年仍可獲利，比現時 {rate} 高出 {cushion}。",
     h_ann:"平均年回報", fixed:"P - 息差", prime:"P（銀行最優惠利率）", pspread:"息差", rate_eff:"貸款利率 {r} · 每月 {m}", upload_pdf:"上載計劃書", pdf_reading:"正在讀取計劃書…", pdf_found:"已從計劃書填入 {m} 年中的 {n} 年：第 {ys} 年。", pdf_missing:"計劃書未列出第 {ys} 年，請手動輸入。", pdf_avail:"計劃書列出的年度：{ys}。", pdf_none:"未能在此檔案找到退保價值表，請手動輸入。", pdf_scan:"此 PDF 為掃描圖片，沒有文字可供讀取，請手動輸入。", pdf_err:"未能讀取此 PDF（可能是掃描檔或設有密碼），請手動輸入。", avg_ann:"平均每年淨回報", cum_ret:"累計淨回報", avg_note:"柱頂的百分比為平均每年淨回報，即累計淨回報 % ÷ 年數。",
@@ -590,6 +655,9 @@ const T = {
   },
   'zh-Hans': {
     to_studio:"iPad 互动比较 →",
+    plan_type:"供款方式", pt_single:"趸缴 / 一次过", pt_prepaid:"预缴（多年供款）", annual:"年缴保费", pay_years:"供款年期", premium_pp:"预缴总保费", premium_pp_h:"未计折扣", discount_pp:"保费折扣", discount_pp_h:"预缴 / 首年优惠", prem_net:"总保费（已计折扣）", day1_pp:"即时保单价值", day1_pp_h:"银行按此计算贷款", ratio_pp:"贷款比例（即时价值）", cv_guar_pp:"保证现金价值", cv_tb:"终期红利", cv_total_pp:"总退保价值", cv_note_pp:"按保单年度输入保证现金价值及终期红利，总退保价值自动相加（亦可直接输入总额）。缴费期内的年度只显示「缴费期内」，不计回报。", in_pay:"缴费期内", of_day1:"占即时保单价值 {p}", h_sv:"总退保价值", pp_badge:"预缴 · {n} 年供款", sp_badge:"趸缴",
+    pdf_pp:"侦测到预缴计划，已切换至「预缴」模式。", pdf_meta:"另已填入：{f}。", pdf_day1:"计划书未列出即时保单价值（银行以此计算贷款额），请在「保单」栏手动输入。", pdf_tot:"第 {ys} 年：计划书只列出总退保价值，保证现金价值及终期红利留空。", pdf_sheet:"已读取保费融资试算表。", f_ltv:"贷款比例", f_rate:"贷款利率", f_name:"计划名称",
+    tab_pair:"比较两个个案", pair_h:"比较两个个案", pair_p:"任选两个个案（例如预缴计划对趸缴计划），各自按其银行条件计算，每行较佳的数字会标示。", pair_cur:"当前个案", pair_none:"请先保存另一个个案（保存个案）或新增第二个计划，再在此选择。", pair_same:"请选择两个不同的个案。", pair_type:"供款方式", pair_prem:"总保费（已计折扣）", pair_rate:"贷款利率", pair_years:"逐年比较", pair_years_p:"两个个案的总退保价值、净回报金额、净回报 %（占客户本金）、平均年回报及 IRR。缴费期内的年度不计回报。", pair_roc:"每年净回报 %", pair_irr:"每年 IRR", pair_note:"各个案按其保存的贷款条件及红利假设计算。计划书数字并非保证，非保证价值可能变动。", pair_cur_diff:"两个个案货币不同，金额按各自货币显示，并未换算。", pair_better:"已标示 = 两者中较佳", pair_metric:"指标", pair_case:"个案 {k}",
     c_hist:"过去 10 年香港利率走势", c_hist_p:"「P - 息差」及「HIBOR + 息差」贷款所参考利率的历史走势，数据来自香港按揭证券有限公司及香港金融管理局。", rh_prime:"最优惠利率 P", rh_hibor:"一个月 HIBOR（每月平均）", rh_cur:"现时", rh_hi:"最高", rh_lo:"最低", rh_since:"自{d}起", rh_range:"{a}至{b}", rh_avg:"{m}平均", rh_and:"；", rh_psrc:"资料来源：香港按揭证券有限公司（HKMC）所订香港最优惠利率，按生效日期（<a href=\"https://www.hkmc.com.hk/eng/information_centre/rates_update.html\" target=\"_blank\" rel=\"noopener noreferrer\">HKMC 利率资料</a>）。数据截至 2026 年 10 月 2 日。各银行最优惠利率或有不同（部分银行为 5.00%）。", rh_hsrc:"资料来源：香港金融管理局《金融数据月报》HIBOR 定价每月平均（一个月，<a href=\"https://apidocs.hkma.gov.hk/documentation/market-data-and-statistics/monthly-statistical-bulletin/er-ir/hk-interbank-ir-periodaverage/\" target=\"_blank\" rel=\"noopener noreferrer\">金管局 API</a>）。数据截至 2026 年 8 月（最新公布月份）。",
     h_irr:"IRR", m_irr:"IRR", c_table_p:"「净回报 %」= 净回报金额 ÷ 客户本金；「平均年回报」= 净回报 % ÷ 年数，与柱状图上的百分比相同；「IRR」按客户实际现金流计算的年化回报率：期初投入本金、每年支付的贷款利息，以及该年偿还贷款后剩余的价值。", t_lev:"只需投入 {cash} 本金，即可持有保费 {premium} 的保单；其余 {loan} 由银行以 {rate} 融资，每月利息约 {month}。", t_best:"第 {y} 年，现金价值 {cv} 全数偿还贷款后仍剩 {net}。扣除利息后净回报为 {gain}（{roc}），平均每年 {ann}，IRR 达 {irr}。", t_self:"融资令第 {y} 年的 IRR 由 {self}（不借贷自行缴付保费）提升至 {irr}，每年多 {delta}。", t_be:"利率缓冲充裕：只要平均贷款利率低于 {be}，第 {y} 年仍可获利，比现时 {rate} 高出 {cushion}。",
     h_ann:"平均年回报", fixed:"P - 息差", prime:"P（银行最优惠利率）", pspread:"息差", rate_eff:"贷款利率 {r} · 每月 {m}", upload_pdf:"上载计划书", pdf_reading:"正在读取计划书…", pdf_found:"已从计划书填入 {m} 年中的 {n} 年：第 {ys} 年。", pdf_missing:"计划书未列出第 {ys} 年，请手动输入。", pdf_avail:"计划书列出的年度：{ys}。", pdf_none:"未能在此文件找到退保价值表，请手动输入。", pdf_scan:"此 PDF 为扫描图片，没有文字可供读取，请手动输入。", pdf_err:"未能读取此 PDF（可能是扫描件或设有密码），请手动输入。", avg_ann:"平均每年净回报", cum_ret:"累计净回报", avg_note:"柱顶的百分比为平均每年净回报，即累计净回报 % ÷ 年数。",
@@ -656,7 +724,7 @@ const planName = (p, i = S.plans.indexOf(p)) => p.name || 'Plan ' + String.fromC
 const bankName = (b, i = S.banks.indexOf(b)) => b.bank || 'Bank ' + String.fromCharCode(65 + i);
 
 /* ---------------------------------------------------------------- form */
-const numIds = ['premium', 'discount', 'ratio', 'loan', 'prime', 'pspread', 'hibor', 'spread', 'upfront', 'annualFee', 'feePct', 'rebate', 'penPct', 'penYears', 'day1', 'maxLtv'];
+const numIds = ['annual', 'payYears', 'day1p', 'premium', 'discount', 'ratio', 'loan', 'prime', 'pspread', 'hibor', 'spread', 'upfront', 'annualFee', 'feePct', 'rebate', 'penPct', 'penYears', 'day1', 'maxLtv'];
 const pctIds = new Set(['ratio', 'prime', 'pspread', 'hibor', 'spread', 'maxLtv', 'feePct', 'penPct', 'penYears']);
 function showNum(id, v) { const el = $(id); if (document.activeElement === el) return; el.value = !Number.isFinite(v) ? '' : pctIds.has(id) ? String(+v.toFixed(3)) : fmtInt(v); }
 function fillForm() {
@@ -670,7 +738,12 @@ function fillForm() {
   showNum('loan', loanOf(o)); showNum('ratio', o.ratio);
   showNum('prime', o.prime); showNum('pspread', o.pspread); showNum('hibor', o.hibor); showNum('spread', o.spread);
   showNum('upfront', o.upfront); showNum('annualFee', o.annualFee); showNum('feePct', o.feePct); showNum('rebate', o.rebate); showNum('penPct', o.penPct); showNum('penYears', o.penYears);
-  showNum('day1', p.day1); showNum('maxLtv', o.maxLtv);
+  showNum('day1', p.day1); showNum('day1p', p.day1); showNum('maxLtv', o.maxLtv);
+  showNum('annual', p.annual); showNum('payYears', p.payYears);
+  const pp = p.type === 'prepaid';
+  document.querySelectorAll('[data-pt]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pt === (pp ? 'prepaid' : 'single'))));
+  $('ppBox').hidden = !pp; $('ppBox2').hidden = !pp; $('day1Wrap').hidden = pp;
+  relabel();
   document.querySelectorAll('[data-rt]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.rt === o.rateType)));
   $('fixedRow').hidden = o.rateType !== 'fixed'; $('hiborRow').hidden = o.rateType !== 'hibor';
   $('delOffer').hidden = S.banks.length < 2; $('delPlan').hidden = S.plans.length < 2;
@@ -688,20 +761,51 @@ function renderTabs(box, list, cur, name, pick) {
 }
 function renderOfferTabs() { renderTabs($('offerTabs'), S.banks, S.sel.bank, bankName, id => S.sel.bank = id); }
 function renderPlanTabs() { renderTabs($('planTabs'), S.plans, S.sel.plan, planName, id => S.sel.plan = id); }
+// prepaid plans relabel a few fields (data-pp holds the prepaid label key)
+function relabel() {
+  const pp = plan().type === 'prepaid';
+  document.querySelectorAll('[data-pp]').forEach(e => { const k = pp ? e.dataset.pp : e.dataset.t; if (e.textContent !== t(k)) e.textContent = t(k); });
+}
 function renderCvRows() {
   const tb = $('cvBody'); tb.innerHTML = '';
-  const cvs = plan().cvs;
+  const p = plan(), cvs = p.cvs, pp = p.type === 'prepaid';
+  $('cvTable').classList.toggle('pp', pp);
+  $('cvHead').innerHTML = pp ? `<tr><th>${t('year')}</th><th>${t('cv_guar_pp')}</th><th>${t('cv_tb')}</th><th>${t('cv_total_pp')}</th><th><span class="vh">Remove</span></th></tr>`
+    : `<tr><th>${t('year')}</th><th>${t('cv_total')}</th><th>${t('cv_guar')}</th><th><span class="vh">Remove</span></th></tr>`;
+  const f = v => Number.isFinite(v) ? fmtInt(v) : '';
   cvs.forEach((c, i) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input class="inp num" inputmode="numeric" aria-label="Year" value="${c.y}"></td>
-      <td><input class="inp num" inputmode="decimal" aria-label="Total cash value, year ${c.y}" value="${Number.isFinite(c.cv) ? fmtInt(c.cv) : ''}"></td>
-      <td><input class="inp num" inputmode="decimal" aria-label="Guaranteed cash value, year ${c.y}" value="${Number.isFinite(c.g) ? fmtInt(c.g) : ''}"></td>
+    if (!pp) {
+      tr.innerHTML = `<td><input class="inp num" inputmode="numeric" aria-label="Year" value="${c.y}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="Total cash value, year ${c.y}" value="${f(c.cv)}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="Guaranteed cash value, year ${c.y}" value="${f(c.g)}"></td>
       <td><button type="button" aria-label="Remove year ${c.y}">×</button></td>`;
-    const [y, cv, g] = tr.querySelectorAll('input');
-    y.oninput = () => { cvs[i].y = Math.round(parseNum(y.value)); update(); };
-    cv.oninput = () => { cvs[i].cv = parseNum(cv.value); update(); };
-    g.oninput = () => { cvs[i].g = parseNum(g.value); update(); };
-    [cv, g].forEach(el => el.onblur = () => { const v = parseNum(el.value); el.value = Number.isFinite(v) ? fmtInt(v) : ''; });
+      const [y, cv, g] = tr.querySelectorAll('input');
+      y.oninput = () => { cvs[i].y = Math.round(parseNum(y.value)); update(); };
+      cv.oninput = () => { cvs[i].cv = parseNum(cv.value); update(); };
+      g.oninput = () => { cvs[i].g = parseNum(g.value); update(); };
+      [cv, g].forEach(el => el.onblur = () => { const v = parseNum(el.value); el.value = Number.isFinite(v) ? fmtInt(v) : ''; });
+    } else {
+      // guaranteed cash value + terminal bonus = total surrender value (stored as g and cv)
+      tr.innerHTML = `<td><input class="inp num" inputmode="numeric" aria-label="Year" value="${c.y}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="${E.esc(t('cv_guar_pp'))}, ${c.y}" value="${f(c.g)}"></td>
+      <td><input class="inp num" inputmode="decimal" aria-label="${E.esc(t('cv_tb'))}, ${c.y}" value="${Number.isFinite(c.g) ? f(c.cv - c.g) : ''}"></td>
+      <td><input class="inp num tot" inputmode="decimal" aria-label="${E.esc(t('cv_total_pp'))}, ${c.y}" value="${f(c.cv)}"></td>
+      <td><button type="button" aria-label="Remove year ${c.y}">×</button></td>`;
+      const [y, g, b, tot] = tr.querySelectorAll('input');
+      const paint = () => { const x = cvs[i];
+        if (document.activeElement !== tot) tot.value = f(x.cv);
+        if (document.activeElement !== b) b.value = Number.isFinite(x.g) && Number.isFinite(x.cv) ? f(x.cv - x.g) : '';
+        if (document.activeElement !== g) g.value = f(x.g); };
+      y.oninput = () => { cvs[i].y = Math.round(parseNum(y.value)); update(); };
+      g.oninput = () => { const x = cvs[i], v = parseNum(g.value), bonus = parseNum(b.value);
+        x.g = v; x.cv = Number.isFinite(v) ? v + (Number.isFinite(bonus) ? bonus : 0) : (Number.isFinite(bonus) ? NaN : x.cv); paint(); update(); };
+      b.oninput = () => { const x = cvs[i], v = parseNum(b.value);
+        if (!Number.isFinite(x.g)) x.g = 0;
+        x.cv = x.g + (Number.isFinite(v) ? v : 0); paint(); update(); };
+      tot.oninput = () => { cvs[i].cv = parseNum(tot.value); paint(); update(); };
+      [g, b, tot].forEach(el => el.onblur = () => { const v = parseNum(el.value); el.value = Number.isFinite(v) ? fmtInt(v) : ''; paint(); });
+    }
     tr.querySelector('button').onclick = () => { if (cvs.length > 1) { cvs.splice(i, 1); renderCvRows(); update(); } };
     tb.appendChild(tr);
   });
@@ -716,10 +820,13 @@ function bindForm() {
       const val = el.value === '' ? 0 : v;
       // a bank offer is a loan ratio, so the same offer fits every plan; the amount follows the premium
       if (id === 'premium') { p.premium = val; showNum('loan', loanOf(o)); }
+      else if (id === 'annual') p.annual = val;
+      else if (id === 'payYears') p.payYears = Math.max(0, Math.min(30, Math.round(val)));
+      else if (id === 'day1p') { p.day1 = val; showNum('day1', val); showNum('loan', loanOf(o)); }
       else if (id === 'discount') p.discount = val;
       else if (id === 'ratio') { o.ratio = val; showNum('loan', loanOf(o)); }
-      else if (id === 'loan') { o.ratio = p.premium > 0 ? val / p.premium * 100 : 0; showNum('ratio', o.ratio); }
-      else if (id === 'day1') p.day1 = val;
+      else if (id === 'loan') { const base = E.loanBase(p); o.ratio = base > 0 ? val / base * 100 : 0; showNum('ratio', o.ratio); }
+      else if (id === 'day1') { p.day1 = val; showNum('day1p', val); showNum('loan', loanOf(o)); }
       else o[id] = val;
       if (id === 'prime' || id === 'pspread') o.rate = +E.baseRate(o).toFixed(3);
       update();
@@ -732,6 +839,16 @@ function bindForm() {
   $('clientName').oninput = () => { S.client = $('clientName').value; persistDraft(); };
   $('currency').onchange = () => { S.currency = $('currency').value; document.querySelectorAll('.cur').forEach(e => e.textContent = S.currency); update(); };
   document.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { offer().rateType = b.dataset.rt; fillForm(); update(); });
+  // premium type: a prepaid plan needs payment years and the years inside the payment period
+  document.querySelectorAll('[data-pt]').forEach(b => b.onclick = () => {
+    const p = plan(), to = b.dataset.pt; if ((p.type || 'single') === to) return;
+    p.type = to;
+    if (to === 'prepaid') {
+      if (!(p.payYears > 0)) p.payYears = 5;
+      if (!p.cvs.some(c => Number.isFinite(c.cv))) p.cvs = E.blankCvs('prepaid');
+    }
+    fillForm(); update();
+  });
   // new plans and banks start as a copy of the current one and join the comparison with their partner
   $('addOffer').onclick = () => {
     const o = { ...offer(), id: E.uid(S.banks, 'b'), bank: 'Bank ' + String.fromCharCode(65 + S.banks.length) };
@@ -892,11 +1009,12 @@ function countTo(el, value, fmt) {
 /* --------------------------------------------------------------- tables */
 const cls = v => v >= 0 ? 'pos' : 'neg';
 function renderTable(r) {
-  const head = `<thead><tr><th>${t('h_year')}</th><th>${t('h_cv')}</th><th>${t('h_net')}</th><th>${t('h_paid')}</th><th>${t('h_gain')}</th><th>${t('h_roc')}</th><th>${t('h_ann')}</th><th>${t('h_irr')}</th><th>${t('h_self')}</th></tr></thead>`;
+  const head = `<thead><tr><th>${t('h_year')}</th><th>${t(r.prepaid ? 'h_sv' : 'h_cv')}</th><th>${t('h_net')}</th><th>${t('h_paid')}</th><th>${t('h_gain')}</th><th>${t('h_roc')}</th><th>${t('h_ann')}</th><th>${t('h_irr')}</th><th>${t('h_self')}</th></tr></thead>`;
   const body = r.rows.map(x => `<tr><td><strong>${t('year_n', { n: x.y })}</strong></td><td>${money(x.val)}</td><td>${moneyS(x.net)}</td><td>${money(x.paid)}</td>
     <td class="${cls(x.gain)}">${moneyS(x.gain)}</td><td><span class="pill-r ${cls(x.roc)}">${pctS(x.roc)}</span></td>
     <td class="${cls(x.ann)}">${pctS(x.ann)}</td><td class="${cls(x.irr)}">${pct(x.irr)}</td><td>${pct(x.selfIrr)}</td></tr>`).join('');
-  $('tbl').innerHTML = head + '<tbody>' + body + '</tbody>';
+  const pay = (r.payRows || []).map(x => `<tr class="pay"><td><strong>${t('year_n', { n: x.y })}</strong></td><td>${money(x.val)}</td><td colspan="7" class="pay-c">${t('in_pay')}</td></tr>`).join('');
+  $('tbl').innerHTML = head + '<tbody>' + pay + body + '</tbody>';
 }
 function renderStress(o) {
   const base = offerRate(o), steps = [0, 0.5, 1, 1.5].map(d => +(base + d).toFixed(3));
@@ -909,7 +1027,7 @@ function renderStress(o) {
 /* ---------------------------------------------------------- talking points */
 function renderTalk(r, o) {
   const items = [], rate = offerRate(o);
-  items.push(t('t_lev', { cash: money(r.own), premium: money(r.P), loan: money(r.L), rate: rate.toFixed(2) + '%', month: money(r.monthly) }));
+  items.push(t('t_lev', { cash: money(r.own), premium: money(r.prepaid ? r.P - r.D : r.P), loan: money(r.L), rate: rate.toFixed(2) + '%', month: money(r.monthly) }));
   const pos = r.rows.filter(x => x.gain > 0), focus = pos[0] || r.rows[r.rows.length - 1];
   if (focus) {
     items.push(t('t_best', { y: focus.y, cv: money(focus.val), net: moneyS(focus.net), gain: moneyS(focus.gain), roc: pctS(focus.roc), ann: pct(focus.ann), irr: pct(focus.irr) }));
@@ -985,7 +1103,8 @@ function drawRates() {
 /* --------------------------------------------------------------- update */
 function update() {
   const o = offer(), p = plan(), cashEl = $('cashShow');
-  renderCmp(); persistDraft();
+  renderCmp(); renderPair(); persistDraft(); relabel();
+  $('netShow').textContent = money((p.premium || 0) - (p.discount || 0));
   if (!E.hasYears(p)) {
     $('talk').innerHTML = `<li><b class="ic">i</b><span>${t('need')}</span></li>`; cashEl.textContent = '–'; return;
   }
@@ -995,9 +1114,9 @@ function update() {
   cashEl.textContent = money(r.own);
   $('monthlyHint').textContent = t('rate_eff', { r: (r.rate * 100).toFixed(2) + '%', m: money(r.monthly) });
   if (invalidLoan) { $('talk').innerHTML = `<li class="risk"><b class="ic">!</b><span>${t('bad_loan')}</span></li>`; return; }
-  countTo($('kCash'), r.own, money); $('kCashSub').textContent = t('of_premium', { p: pct(r.own / r.P, 1) });
+  countTo($('kCash'), r.own, money); $('kCashSub').textContent = t('of_premium', { p: pct(r.own / (r.prepaid ? r.P - r.D : r.P), 1) });
   countTo($('kMonth'), r.monthly, money); $('kMonthSub').textContent = t('per_year', { v: money(r.yearCost) });
-  countTo($('kLoan'), r.L, money); $('kLoanSub').textContent = r.P > 0 ? t('of_premium', { p: E.pct(r.L / r.P, 1) }) : '';
+  countTo($('kLoan'), r.L, money); $('kLoanSub').textContent = r.prepaid ? (r.day1 > 0 ? t('of_day1', { p: E.pct(r.L / r.day1, 1) }) : '') : r.P > 0 ? t('of_premium', { p: E.pct(r.L / r.P, 1) }) : '';
   const be = r.rows.find(x => x.gain > 0);
   $('kBe').textContent = be ? t('year_n', { n: be.y }) : '–';
   $('kBeSub').textContent = be ? t('at_rate', { r: (r.rate * 100).toFixed(2) + '%' }) : t('not_yet');
@@ -1026,9 +1145,10 @@ const at = (c, y) => c.r && c.r.rows.find(x => x.y === y);
 function showView(v) {
   view = v;
   if (v === 'single') fillForm();
-  $('singleView').hidden = v !== 'single'; $('cmpView').hidden = v !== 'cmp';
-  $('tabSingle').setAttribute('aria-selected', String(v === 'single')); $('tabCmp').setAttribute('aria-selected', String(v === 'cmp'));
-  history.replaceState(null, '', v === 'cmp' ? '#compare' : location.pathname);
+  $('singleView').hidden = v !== 'single'; $('cmpView').hidden = v !== 'cmp'; $('pairView').hidden = v !== 'pair';
+  $('tabSingle').setAttribute('aria-selected', String(v === 'single')); $('tabCmp').setAttribute('aria-selected', String(v === 'cmp')); $('tabPair').setAttribute('aria-selected', String(v === 'pair'));
+  history.replaceState(null, '', v === 'cmp' ? '#compare' : v === 'pair' ? '#pair' : location.pathname);
+  if (v === 'pair') renderPair();
   if (v === 'cmp') renderCmp(true); else if (chartLast) { chartInstant = true; drawChart(chartLast); }
 }
 function renderMix() {
@@ -1222,23 +1342,221 @@ function parseSurrender(lines) {
   return found;
 }
 function pdfStatus(msg, kind) { const e = $('pdfStatus'); e.hidden = !msg; e.textContent = msg || ''; e.className = 'pdf-status' + (kind ? ' ' + kind : ''); }
+// Simplified → Traditional for the characters the proposal readers look for
+const S2T = { '缴': '繳', '时': '時', '总': '總', '费': '費', '预': '預', '余': '餘', '额': '額', '证': '證', '红': '紅', '价': '價', '终': '終', '岁': '歲', '应': '應', '计': '計', '划': '劃', '险': '險', '实': '實', '现': '現', '还': '還', '贷': '貸', '单': '單', '优': '優', '国': '國', '寿': '壽', '试': '試', '内': '內', '币': '幣', '说': '說', '发': '發', '于': '於', '扣': '扣', '剩': '剩', '例': '例', '润': '潤', '利': '利', '息': '息' };
+const toT = s => s.replace(/[\u4e00-\u9fff]/g, c => S2T[c] || c);
+const AMT_RE = /^[-−(]?(?:HK|US|RMB|S)?\$?\d{1,3}(?:,\d{3})*(?:\.\d+)?\)?$|^[-−(]?(?:HK|US)?\$?\d+(?:\.\d+)?\)?$/;
+const amtOf = w => { const neg = /^[-−(]/.test(w); const v = parseFloat(String(w).replace(/[^\d.]/g, '')); return Number.isFinite(v) ? (neg ? -v : v) : NaN; };
+// a table row: a policy year as the first word, then amounts ("65歲" age rows are skipped)
+function leadRow(toks) {
+  if (!toks.length || !/^\d{1,3}$/.test(toks[0].s)) return null;
+  const y = +toks[0].s; if (y < 1 || y > 120 || (toks[1] && /^[歲岁]/.test(toks[1].s))) return null;
+  const nums = []; for (let j = 1; j < toks.length && AMT_RE.test(toks[j].s); j++) nums.push(amtOf(toks[j].s));
+  return { y, nums, pcs: toks.filter(x => /%$/.test(x.s)).length };
+}
+// China Life (Overseas) benefit illustration: "說明摘要" table = premiums (A), guaranteed (B), terminal bonus (C), total (D) at
+// years 1–5, 10, 15 …; the prepaid supplement ("預繳保費餘額利益摘要") lists the total surrender value for every year.
+function parseCL(lines) {
+  const main = new Map(), supp = new Map(); let sec = '';
+  lines.forEach(toks => {
+    const txt = toT(toks.map(x => x.s).join(''));
+    if (/說明摘要/.test(txt)) sec = 'main';
+    else if (/不同投資回報/.test(txt)) sec = 'other';
+    else if (/預繳保費餘額利益摘要/.test(txt)) sec = 'supp';
+    if (sec !== 'main' && sec !== 'supp') return;
+    const r = leadRow(toks); if (!r || r.nums.length < 4) return;
+    if (sec === 'main' && !main.has(r.y)) { const [, g, tb, tot] = r.nums; if (tot > 0 && Math.abs(g + tb - tot) <= 2) main.set(r.y, { cv: tot, g }); }
+    if (sec === 'supp' && !supp.has(r.y) && r.nums[2] > 0) supp.set(r.y, { cv: r.nums[2], g: NaN });
+  });
+  const found = new Map(main); supp.forEach((v, y) => { if (!found.has(y)) found.set(y, v); });
+  return { found, totalOnly: [...supp.keys()].filter(y => !main.has(y)) };
+}
+function metaCL(text) {
+  const n = re => { const x = text.match(re); return x ? amtOf(x[1]) : NaN; }, m = {};
+  m.annual = n(/投保時每年總保費\s*[:：]\s*([\d,]+(?:\.\d+)?)/);
+  m.premium = n(/按年繳交及預繳剩餘年期保費\s*[:：]\s*([\d,]+(?:\.\d+)?)/);
+  m.discount = n(/保費折扣優惠[^:：\n]*[:：]\s*([\d,]+\.\d+)/);
+  m.net = n(/應繳保費\s*[:：]\s*([\d,]+\.\d+)/);
+  const py = text.match(/[\d,]+\.\d{2}\s+(\d{1,2})\s*年\s+(?:終身|\d)/); if (py) m.payYears = +py[1];
+  const nm = text.match(/([\u4e00-\u9fff]{2,}保險計劃)/); if (nm) m.name = '中國人壽 ' + nm[1];
+  m.prepaid = /預繳/.test(text);
+  const cur = text.match(/保單貨幣\s*[:：]\s*(港元|美元|人民幣)/); if (cur) m.currency = { '港元': 'HKD', '美元': 'USD', '人民幣': 'CNY' }[cur[1]];
+  return m;
+}
+// the insurer's one-page premium financing calculator (保費融資試算表): inputs at the top, then a year table of
+// guaranteed cash value, terminal bonus, total surrender value, loan, rate, interest (+ returns after the payment period)
+function parseSheet(lines, text) {
+  const n = re => { const x = text.match(re); return x ? amtOf(x[1]) : NaN; }, m = { prepaid: true };
+  m.net = n(/預繳總保費\s*\(已計折扣\)[^$\d\n]*\$\s*([\d,]+(?:\.\d+)?)/);
+  m.premium = n(/預繳總保費\s*\(未計折扣\)[^$\d\n]*\$\s*([\d,]+(?:\.\d+)?)/);
+  m.discount = n(/保險公司首年保費折扣[^$\d\n]*\$\s*([\d,]+(?:\.\d+)?)/);
+  m.annual = n(/年繳保費[^$\d\n]*\$\s*([\d,]+(?:\.\d+)?)/);
+  m.day1 = n(/即時保單價值[^$\d\n]*\$\s*([\d,]+(?:\.\d+)?)/);
+  m.ltv = n(/貸款比例[^%\n]*?([\d.]+)\s*%/);
+  m.rate = n(/預期息率[^%\n]*?([\d.]+)\s*%/);
+  const nm = text.match(/Plan Name\s+([^\n]+)/i);
+  if (nm) { let s = nm[1].trim(); const c = s.match(/\((HKD|USD|CNY|RMB)\)\s*$/); if (c) { m.currency = c[1] === 'RMB' ? 'CNY' : c[1]; s = s.replace(/\s*\((HKD|USD|CNY|RMB)\)\s*$/, ''); } m.name = s; }
+  if (Number.isFinite(m.premium) && Number.isFinite(m.net) && !Number.isFinite(m.discount)) m.discount = m.premium - m.net;
+  if (Number.isFinite(m.premium) && Number.isFinite(m.net) && Math.abs(m.premium - m.discount - m.net) > 1) { m.premium = m.net; m.discount = 0; }
+  const found = new Map(); let lastPay = 0, firstRet = 0;
+  lines.forEach(toks => {
+    const r = leadRow(toks); if (!r || r.nums.length < 3) return;
+    const [g, tb, tot] = r.nums; if (!(tot > 0) || Math.abs(g + tb - tot) > 2) return;
+    if (!found.has(r.y)) found.set(r.y, { cv: tot, g });
+    if (r.pcs >= 3) { if (!firstRet || r.y < firstRet) firstRet = r.y; } else lastPay = Math.max(lastPay, r.y);
+  });
+  m.payYears = firstRet ? firstRet - 1 : lastPay;
+  return { found, meta: m };
+}
+const yearsTxt = ys => { const out = []; let i = 0; while (i < ys.length) { let j = i; while (j + 1 < ys.length && ys[j + 1] === ys[j] + 1) j++; out.push(j - i >= 2 ? ys[i] + '–' + ys[j] : ys.slice(i, j + 1).join(', ')); i = j + 1; } return out.join(', '); };
 async function readProposal(file) {
   pdfStatus(t('pdf_reading'));
-  let found;
-  try { const lines = await pdfText(file); if (!lines.some(l => l.length)) { pdfStatus(t('pdf_scan'), 'bad'); return; } found = parseSurrender(lines); } catch (e) { console.warn('proposal', e); pdfStatus(t('pdf_err'), 'bad'); return; }
+  let lines;
+  try { lines = await pdfText(file); } catch (e) { console.warn('proposal', e); pdfStatus(t('pdf_err'), 'bad'); return; }
+  if (!lines.some(l => l.length)) { pdfStatus(t('pdf_scan'), 'bad'); return; }
+  const text = toT(lines.map(l => l.map(x => x.s).join(' ')).join('\n'));
+  let found = null, meta = null, totalOnly = [], kind = 'wis';
+  if (/保費融資試算表|Premium Financing Calculator/i.test(text)) { const r = parseSheet(lines, text); if (r.found.size) { kind = 'sheet'; found = r.found; meta = r.meta; } }
+  else if (/中國人壽|China Life/i.test(text) && /終期紅利|Terminal Bonus/i.test(text)) { const r = parseCL(lines); if (r.found.size) { kind = 'cl'; found = r.found; totalOnly = r.totalOnly; meta = metaCL(text); } }
+  if (!found) found = parseSurrender(lines);
   if (!found.size) { pdfStatus(t('pdf_none'), 'bad'); return; }
-  const p = plan();
-  if (!p.cvs.some(c => c.y > 0)) p.cvs = E.blankCvs();
+  const p = plan(), o = offer(), msgs = [], filled = [], ok = v => Number.isFinite(v) && v > 0;
+  if (kind === 'sheet') msgs.push(t('pdf_sheet'));
+  if (meta) {
+    if (meta.prepaid && p.type !== 'prepaid') { p.type = 'prepaid'; msgs.push(t('pdf_pp')); if (!ok(meta.day1)) p.day1 = 0; } // a single-premium Day-1 cash value is not a prepaid loan base
+    if (ok(meta.annual)) { p.annual = meta.annual; filled.push(t('annual')); }
+    if (ok(meta.payYears)) { p.payYears = meta.payYears; filled.push(t('pay_years')); }
+    if (ok(meta.premium) && Number.isFinite(meta.discount)) { p.premium = meta.premium; p.discount = meta.discount; filled.push(t('premium_pp'), t('discount_pp')); }
+    else if (ok(meta.net)) { p.premium = meta.net; p.discount = 0; filled.push(t('prem_net')); }
+    if (ok(meta.day1)) { p.day1 = meta.day1; filled.push(t('day1_pp')); }
+    if (ok(meta.ltv)) { o.ratio = meta.ltv; filled.push(t('f_ltv')); }
+    if (ok(meta.rate)) { o.rateType = 'fixed'; if (!Number.isFinite(o.prime) || o.prime < meta.rate) o.prime = Math.max(5.25, meta.rate); o.pspread = +(o.prime - meta.rate).toFixed(3); o.rate = meta.rate; filled.push(t('f_rate')); }
+    if (meta.name && (!p.name || /^Plan [A-Z]$/.test(p.name))) { p.name = meta.name.slice(0, 40); filled.push(t('f_name')); }
+    if (meta.currency) S.currency = meta.currency;
+  }
+  if (p.type === 'prepaid' && !(p.payYears > 0)) p.payYears = 5;
+  if (!p.cvs.some(c => c.y > 0)) p.cvs = E.blankCvs(p.type);
+  if (p.type === 'prepaid') { // a prepaid plan shows its first ten years, payment period included
+    const have = new Set(p.cvs.map(c => c.y)); for (let y = 1; y <= 10; y++) if (!have.has(y)) p.cvs.push({ y, cv: NaN, g: NaN });
+    p.cvs.sort((a, z) => a.y - z.y);
+  }
   const want = p.cvs.filter(c => c.y > 0), hit = [], miss = [];
   want.forEach(c => { const f = found.get(c.y); if (f) { c.cv = f.cv; c.g = f.g; hit.push(c.y); } else miss.push(c.y); });
-  renderCvRows(); update();
-  const avail = [...found.keys()].sort((a, z) => a - z).join(', ');
-  if (!hit.length) { pdfStatus(t('pdf_avail', { ys: avail }) + ' ' + t('pdf_missing', { ys: miss.join(', ') }), 'bad'); return; }
-  pdfStatus(t('pdf_found', { n: hit.length, m: want.length, ys: hit.join(', ') }) + (miss.length ? ' ' + t('pdf_missing', { ys: miss.join(', ') }) + ' ' + t('pdf_avail', { ys: avail }) : ''), miss.length ? '' : 'ok');
+  fillForm(); update();
+  const avail = yearsTxt([...found.keys()].sort((a, z) => a - z));
+  if (!hit.length) msgs.push(t('pdf_avail', { ys: avail }) + ' ' + t('pdf_missing', { ys: miss.join(', ') }));
+  else {
+    msgs.push(t('pdf_found', { n: hit.length, m: want.length, ys: yearsTxt(hit) }));
+    if (miss.length) msgs.push(t('pdf_missing', { ys: miss.join(', ') }) + ' ' + t('pdf_avail', { ys: avail }));
+  }
+  const tot = totalOnly.filter(y => hit.includes(y)); if (tot.length) msgs.push(t('pdf_tot', { ys: yearsTxt(tot) }));
+  if (filled.length) msgs.push(t('pdf_meta', { f: filled.join(lang === 'en' ? ', ' : '、') }));
+  const needDay1 = p.type === 'prepaid' && !(p.day1 > 0);
+  if (needDay1) { msgs.push(t('pdf_day1')); $('day1p').setAttribute('aria-invalid', 'true'); }
+  pdfStatus(msgs.join(' '), !hit.length ? 'bad' : (miss.length || needDay1) ? 'warn' : 'ok');
 }
 function bindProposal() {
   $('pdfBtn').onclick = () => $('pdfFile').click();
   $('pdfFile').onchange = () => { const f = $('pdfFile').files[0]; $('pdfFile').value = ''; if (f) readProposal(f); };
+}
+
+/* ------------------------------------------- compare two cases (current or saved, any premium type) */
+let pairSel = store.get('pl-pair', { a: '', b: '' });
+function pairOptions() {
+  const out = [];
+  const add = (src, c, key, tag) => c.plans.forEach((p, pi) => c.banks.forEach((b, bi) => out.push({ key: key + '|' + p.id + '|' + b.id, src, c, p, b,
+    label: tag + ' · ' + (p.name || 'Plan ' + String.fromCharCode(65 + pi)) + (c.banks.length > 1 ? ' · ' + (b.bank || 'Bank ' + String.fromCharCode(65 + bi)) : '') })));
+  add('cur', S, 'cur', t('pair_cur') + (S.name ? ': ' + S.name : ''));
+  cases().forEach((raw, i) => { const c = E.migrate(JSON.parse(JSON.stringify(raw))); if (c) add('sv', c, 'sv' + (raw.savedAt || i), c.name || 'Case ' + (i + 1)); });
+  return out;
+}
+function pairBars(box, years, X, key, fmt, aria) {
+  const W = Math.max(280, Math.round(printW ? printW / 2 - 12 : box.clientWidth || 360)), H = 230, padL = 46, padR = 8, padT = 24, padB = 30;
+  const rowAt = (o, y) => o.r && o.r.rows.find(x => x.y === y);
+  const vals = years.flatMap(y => X.map(o => { const x = rowAt(o, y); return x ? x[key] : NaN; })).filter(Number.isFinite);
+  let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals); if (hi - lo < 1e-9) hi = lo + 0.01;
+  const step = [0.005, 0.01, 0.02, 0.025, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5].find(s => (hi - lo) / s <= 5) || 10;
+  lo = Math.floor(lo / step - 1e-9) * step; hi = Math.ceil(hi / step + 0.15) * step;
+  const Y = v => padT + (H - padT - padB) * (hi - v) / (hi - lo), gw = (W - padL - padR) / Math.max(1, years.length), bw = Math.min(24, gw * 0.34);
+  const col = [E.css('--k1'), E.css('--k2')], C = { grid: E.css('--line'), grid0: E.css('--line-strong'), axis: E.css('--faint'), ink: E.css('--ink') };
+  let h = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${E.esc(aria)}">`;
+  for (let v = lo; v <= hi + 1e-9; v += step) { const yy = Y(v), z = Math.abs(v) < 1e-9;
+    h += `<line x1="${padL}" x2="${W - padR}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}" stroke="${z ? C.grid0 : C.grid}"/><text x="${padL - 6}" y="${(yy + 4).toFixed(1)}" text-anchor="end" font-size="10.5" fill="${C.axis}">${(v * 100).toFixed(Math.abs(step * 100 - Math.round(step * 100)) > 1e-9 ? 1 : 0)}%</text>`; }
+  years.forEach((y, i) => {
+    const cx = padL + gw * (i + 0.5);
+    X.forEach((o, k) => { const x = rowAt(o, y), bx = cx - bw - 1 + k * (bw + 2); if (!x || !Number.isFinite(x[key])) return;
+      const v = x[key], y0 = Y(Math.max(0, v)), y1 = Y(Math.min(0, v));
+      h += `<rect x="${bx.toFixed(1)}" y="${y0.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, y1 - y0).toFixed(1)}" fill="${col[k]}" rx="1"/>`;
+      if (gw >= 54) h += `<text x="${(bx + bw / 2).toFixed(1)}" y="${(v >= 0 ? y0 - 4 : y1 + 11).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="${C.ink}">${fmt(v)}</text>`; });
+    h += `<text x="${cx.toFixed(1)}" y="${H - 10}" text-anchor="middle" font-size="11" fill="${C.axis}">${E.esc(gw >= 50 ? t('year_n', { n: y }) : String(y))}</text>`;
+  });
+  box.innerHTML = h + '</svg>';
+}
+function renderPair() {
+  if (view !== 'pair') return;
+  const opts = pairOptions(), A = $('pairA'), B = $('pairB');
+  let a = opts.find(o => o.key === pairSel.a), b = opts.find(o => o.key === pairSel.b);
+  if (!a) a = opts.find(o => o.src === 'cur' && o.p.id === S.sel.plan && o.b.id === S.sel.bank) || opts[0];
+  if (!b) b = opts.find(o => o.src === 'sv' && o.c.name !== S.name && o.key !== a.key) || opts.find(o => o.key !== a.key) || null;
+  const optHtml = sel => opts.map(o => `<option value="${E.esc(o.key)}"${o === sel ? ' selected' : ''}>${E.esc(o.label)}</option>`).join('');
+  A.innerHTML = optHtml(a); B.innerHTML = (b ? '' : '<option value="" selected>—</option>') + optHtml(b);
+  const ag = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
+  $('printHead3').innerHTML = `<h2>${t('pair_h')}</h2><div class="meta"><div>${t('pair_case', { k: 'A' })}<b>${E.esc(a ? a.label : '—')}</b></div><div>${t('pair_case', { k: 'B' })}<b>${E.esc(b ? b.label : '—')}</b></div><div>${t('p_agent')}<b>${E.esc(ag.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
+  if (!b) { $('pairOut').innerHTML = `<p class="note pair-msg">${t('pair_none')}</p>`; return; }
+  if (a.key === b.key) { $('pairOut').innerHTML = `<p class="note pair-msg">${t('pair_same')}</p>`; return; }
+  const run = o => ({ ...o, cur: o.c.currency || 'HKD', r: E.hasYears(o.p) ? E.compute(o.p, o.b, { fulfil: Number.isFinite(o.c.fulfil) ? o.c.fulfil : 1 }) : null });
+  const X = [run(a), run(b)], same = X[0].cur === X[1].cur, kc = ['--k1', '--k2'];
+  const tag = k => `<span class="pp-tag" style="--kc:var(${kc[k]})">${'AB'[k]}</span>`;
+  const better = (vals, i, on = true) => on && vals.every(Number.isFinite) && vals[0] !== vals[1] && vals[i] === Math.max(...vals);
+  const typeTxt = o => o.p.type === 'prepaid' ? t('pp_badge', { n: o.p.payYears || 0 }) : t('sp_badge');
+  const SUM = [ // [label, text, score (higher = better), compare across currencies]
+    [t('pair_type'), o => esc(typeTxt(o))],
+    [t('pair_prem'), o => E.money((o.p.premium || 0) - (o.p.discount || 0), o.cur)],
+    [t('k_cash'), o => o.r ? E.money(o.r.own, o.cur) : '–', o => o.r ? -o.r.own : NaN, false],
+    [t('k_loan'), o => o.r ? E.money(o.r.L, o.cur) : '–'],
+    [t('pair_rate'), o => o.r ? (o.r.rate * 100).toFixed(2) + '%' : '–', o => o.r ? -o.r.rate : NaN, true],
+    [t('k_month'), o => o.r ? E.money(o.r.monthly, o.cur) : '–', o => o.r ? -o.r.monthly : NaN, false]
+  ];
+  let h = `<div class="tw"><table class="pair-sum"><thead><tr><th></th>${X.map((o, k) => `<th>${tag(k)}${E.esc(o.label)}</th>`).join('')}</tr></thead><tbody>` +
+    SUM.map(([lbl, txt, score, cross]) => { const v = score ? X.map(score) : [NaN, NaN];
+      return `<tr><td>${lbl}</td>${X.map((o, k) => `<td${score && better(v, k, same || cross) ? ' class="best"' : ''}>${txt(o)}</td>`).join('')}</tr>`; }).join('') + '</tbody></table></div>';
+  // year by year
+  const rowAt = (o, y) => o.r && o.r.rows.find(x => x.y === y), payAt = (o, y) => o.r && (o.r.payRows || []).find(x => x.y === y);
+  const all = [...new Set(X.flatMap(o => o.r ? o.r.rows.concat(o.r.payRows || []).map(x => x.y) : []))].sort((p, q) => p - q);
+  const both = y => rowAt(X[0], y) && rowAt(X[1], y);
+  let years = all.filter(y => y >= 5 && y <= 10);
+  if (!years.some(both)) years = all.filter(both);
+  if (!years.length) years = all;
+  const MET = [ // [label key, value, format, compare across currencies]
+    ['h_sv', x => x.val, (v, o) => E.money(v, o.cur), false],
+    ['h_gain', x => x.gain, (v, o) => E.moneyS(v, o.cur), false],
+    ['h_roc', x => x.roc, v => pctS(v), true],
+    ['h_ann', x => x.ann, v => pctS(v), true],
+    ['h_irr', x => x.irr, v => pct(v), true]
+  ];
+  const cell = (o, y, [k, val, fmt, cross], i) => {
+    const x = rowAt(o, y), pr = payAt(o, y), first = i === 0 ? ' ca' : '';
+    if (!x) return pr ? (k === 'h_sv' ? `<td class="${first}">${fmt(pr.val, o)}</td>` : `<td class="pay-c${first}">${t('in_pay')}</td>`) : `<td class="${first}">–</td>`;
+    const vs = X.map(q => { const r = rowAt(q, y); return r ? val(r) : NaN; }), v = val(x);
+    const c = [k === 'h_sv' ? '' : cls(v), better(vs, X.indexOf(o), same || cross) ? 'best' : '', first.trim()].filter(Boolean).join(' ');
+    return `<td${c ? ` class="${c}"` : ''}>${fmt(v, o)}</td>`;
+  };
+  h += `<div class="card"><div class="card-head"><div><h2>${t('pair_years')}</h2><p>${t('pair_years_p')}</p></div></div>
+    <div class="tw"><table class="pair-yt"><thead><tr><th rowspan="2">${t('h_year')}</th>${MET.map(m => `<th colspan="2">${t(m[0])}</th>`).join('')}</tr>
+    <tr>${MET.map(() => X.map((o, k) => `<th class="${k === 0 ? 'ca' : ''}" style="--kc:var(${kc[k]})"><i class="k${'AB'[k]}"></i>${'AB'[k]}</th>`).join('')).join('')}</tr></thead><tbody>` +
+    years.map(y => `<tr><td><strong>${t('year_n', { n: y })}</strong></td>${MET.map(m => X.map(o => cell(o, y, m, X.indexOf(o))).join('')).join('')}</tr>`).join('') +
+    `</tbody></table></div><p class="note">${t('pair_better')}${lang === 'en' ? '. ' : '。'}${same ? '' : t('pair_cur_diff') + ' '}${t('pair_note')}</p></div>`;
+  const cy = years.filter(y => X.some(o => rowAt(o, y)));
+  h += `<div class="card"><div class="pair-charts"><figure><h3>${t('pair_roc')}</h3><div id="pcRoc"></div></figure><figure><h3>${t('pair_irr')}</h3><div id="pcIrr"></div></figure></div>
+    <div class="pair-leg">${X.map((o, k) => `<span style="--kc:var(${kc[k]})"><i></i>${'AB'[k]} · ${E.esc(o.label)}</span>`).join('')}</div></div>`;
+  $('pairOut').innerHTML = h;
+  if (cy.length) { pairBars($('pcRoc'), cy, X, 'roc', v => (v * 100).toFixed(1) + '%', t('pair_roc')); pairBars($('pcIrr'), cy, X, 'irr', v => (v * 100).toFixed(1) + '%', t('pair_irr')); }
+}
+function bindPair() {
+  $('pairA').onchange = () => { pairSel.a = $('pairA').value; store.set('pl-pair', pairSel); renderPair(); };
+  $('pairB').onchange = () => { pairSel.b = $('pairB').value; store.set('pl-pair', pairSel); renderPair(); };
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(renderPair, 150); });
+  document.addEventListener('pl:theme', renderPair);
 }
 
 /* ------------------------------------------------------- print / share */
@@ -1246,7 +1564,7 @@ function agent() { return store.get('pl-agent', { name: '', lic: '', contact: ''
 function renderPrint(r, o) {
   const a = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
   $('printHead').innerHTML = `<h2>${t('p_title')}</h2><div class="meta">
-    <div>${t('p_client')}<b>${esc(S.name || '—')}</b></div><div>${t('premium')}<b>${money(r.P)}</b></div>
+    <div>${t('p_client')}<b>${esc(S.name || '—')}</b></div><div>${t(r.prepaid ? 'prem_net' : 'premium')}<b>${money(r.prepaid ? r.P - r.D : r.P)}${r.prepaid ? ' · ' + esc(t('pp_badge', { n: r.payYears })) : ''}</b></div>
     <div>${t('h_bank')}<b>${esc(o.bank || '—')} · ${offerRate(o).toFixed(2)}%</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
   $('printFoot').innerHTML = (a.name ? `${t('p_agent')}: <b>${esc(a.name)}</b>${a.lic ? ' · ' + t('p_lic') + ' ' + esc(a.lic) : ''}${a.contact ? ' · ' + esc(a.contact) : ''}<br>` : '') + $('fine').textContent;
 }
@@ -1274,7 +1592,7 @@ function bindActions() {
     const l = cases(), i = l.findIndex(c => c.name === S.name);
     const snap = { ...JSON.parse(JSON.stringify(S)), savedAt: Date.now() };
     if (i >= 0) l[i] = snap; else l.unshift(snap);
-    store.set('pl-cases', l.slice(0, 40)); renderChips(); toast(t('saved'));
+    store.set('pl-cases', l.slice(0, 40)); renderChips(); renderPair(); toast(t('saved'));
   };
   $('newBtn').onclick = () => { S = blankCase(); fillForm(); update(); renderChips(); history.replaceState(null, '', location.pathname); };
   $('shareBtn').onclick = async () => {
@@ -1282,7 +1600,7 @@ function bindActions() {
     history.replaceState(null, '', url);
     try { await navigator.clipboard.writeText(url); toast(t('copied')); } catch (e) { toast(t('copy_fail')); }
   };
-  $('printBtn').onclick = () => { update(); document.body.classList.toggle('print-cmp', view === 'cmp'); enterPrint(); window.print(); };
+  $('printBtn').onclick = () => { update(); document.body.classList.toggle('print-cmp', view === 'cmp'); document.body.classList.toggle('print-pair', view === 'pair'); enterPrint(); window.print(); };
   // agent profile
   const dlg = $('agentDlg');
   $('agentBtn').onclick = () => { const a = agent(); $('aName').value = a.name; $('aLic').value = a.lic; $('aContact').value = a.contact; dlg.showModal(); };
@@ -1295,7 +1613,7 @@ function bindActions() {
   // re-draw the chart at the new width (debounced)
   if (!chartSeen) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); chartSeen = true; if (chartLast) drawChart(chartLast); } }, { threshold: .3 }); io.observe($('chart')); }
   // printing never scrolls: paint the finished chart first
-  addEventListener('afterprint', () => { document.body.classList.remove('print-cmp'); exitPrint(); });
+  addEventListener('afterprint', () => { document.body.classList.remove('print-cmp', 'print-pair'); exitPrint(); });
   addEventListener('beforeprint', enterPrint); matchMedia('print').addEventListener?.('change', e => e.matches ? enterPrint() : exitPrint());
   let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (chartLast) { chartInstant = true; drawChart(chartLast); } drawRates(); }, 150); });
 }
@@ -1304,13 +1622,13 @@ function enterPrint() {
   if (printW === PRINT_W && chartSeen) return;
   printW = PRINT_W; E.printW = PRINT_W; chartSeen = true;
   chartInstant = true; if (chartLast) drawChart(chartLast); drawRates();
-  renderCmp(true);
+  renderCmp(true); renderPair();
 }
 function exitPrint() {
   if (!printW) return;
   printW = 0; E.printW = 0;
   chartInstant = true; if (chartLast) drawChart(chartLast); drawRates();
-  renderCmp(true);
+  renderCmp(true); renderPair();
 }
 function showAgent() { const a = agent(); $('agentShow').textContent = a.name ? t('agent_label') + ': ' + a.name : t('agent_add'); }
 function setLang(l) {
@@ -1333,8 +1651,10 @@ function setLang(l) {
   const nw = location.hash.match(/^#new=(.+)$/);
   if (nw) { S = { ...blankCase(), client: decodeURIComponent(nw[1]).slice(0, 80) }; history.replaceState(null, '', location.pathname); }
   bindForm(); bindActions(); bindCmp(); bindProposal(); fillForm(); renderChips();
+  bindPair();
   if (location.hash === '#compare') showView('cmp');
-  addEventListener('hashchange', () => { if (location.hash === '#compare' && view !== 'cmp') showView('cmp'); });
+  if (location.hash === '#pair') showView('pair');
+  addEventListener('hashchange', () => { if (location.hash === '#compare' && view !== 'cmp') showView('cmp'); if (location.hash === '#pair' && view !== 'pair') showView('pair'); });
   // another tab (or the home page) changed the case: follow it
   E.onChange(n => { S = n; fillForm(); update(); renderChips(); });
   setLang(window.PL ? PL.lang : 'en');
