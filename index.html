@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=9">
+<link rel="stylesheet" href="site.css?v=10">
 <style>
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,6vw,88px);align-items:center;padding:clamp(48px,7vw,96px) 0 clamp(40px,5vw,72px)}
@@ -104,6 +104,12 @@
 .rk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,7vw,96px);align-items:start}
 .rk-intro{position:sticky;top:calc(var(--hdr) + 32px)}
 .rk-intro p{color:var(--muted);font-size:17px;margin:18px 0 24px;max-width:24em}
+.rk-list h3{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.2vw,28px);color:var(--ink);margin:0 0 6px}
+.rk-list ul{margin:0;padding:0;list-style:none}
+.rk-list li{position:relative;padding:15px 0 15px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:16px;line-height:1.55}
+.rk-list li:last-child{border-bottom:1px solid var(--line)}
+.rk-list li:before{content:"!";position:absolute;left:0;top:16px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);font:700 12px/17px var(--sans);text-align:center}
+.rk-list li b{color:var(--ink);font-weight:600}
 .rk details{border-top:1px solid var(--line);padding:20px 0}
 .rk details:last-child{border-bottom:1px solid var(--line)}
 .rk summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:16px;font-family:var(--serif);font-size:22px;color:var(--ink)}
@@ -134,6 +140,30 @@
 .tk p.ins-src{margin-top:0;font-size:12.5px;line-height:1.6}
 .ins-src a{color:var(--hero-ink);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
 @media (max-width:800px){.ins-cards{grid-template-columns:1fr}}
+.fr{padding-top:clamp(56px,7vw,96px)}
+.fr-head h2{font-size:clamp(32px,3.6vw,50px);line-height:1.1;letter-spacing:-.015em}
+.fr-head p{color:var(--muted);font-size:16px;margin-top:14px;max-width:52em}
+.fr-cards{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,28px);margin-top:clamp(22px,3vw,34px)}
+.fr-card{border:1px solid var(--line);border-radius:4px;padding:clamp(18px,2.5vw,28px);background:var(--surface);min-width:0}
+.fr-card h3{font-size:clamp(22px,2.2vw,28px);line-height:1.2;color:var(--ink)}
+.fr-card .fr-sub{color:var(--faint);font-size:13px;margin-top:6px}
+.fr-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}
+.fr-stats div{border-top:2px solid var(--accent);padding-top:8px}
+.fr-stats strong{display:block;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.2;color:var(--ink);font-variant-numeric:tabular-nums}
+.fr-stats span{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}
+.fr-note{font-size:12px;color:var(--faint);margin:6px 0 0}
+.fr-tw{overflow-x:auto;margin-top:16px}
+.fr-card table{width:100%;border-collapse:collapse;font-size:13.5px}
+.fr-card th{text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);padding:8px 8px 8px 0;border-bottom:1px solid var(--line-strong)}
+.fr-card td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top}
+.fr-card td:first-child{color:var(--ink);font-weight:600}
+.fr-card td b{color:var(--pos);font-weight:700;white-space:nowrap}
+.fr-card td small{display:block;color:var(--faint);font-size:12px;font-weight:400}
+.fr-concl{margin-top:16px;padding:12px 14px;background:var(--sunk);border-left:3px solid var(--accent);font-size:14.5px;line-height:1.55;color:var(--text)}
+.fr-src{font-size:12.5px;line-height:1.6;color:var(--faint);margin-top:18px}
+.fr-src a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+@media (max-width:900px){.fr-cards{grid-template-columns:1fr}}
+@media (max-width:480px){.fr-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .reveal{animation:rise .8s cubic-bezier(.16,1,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}}
@@ -240,13 +270,7 @@
 <div class="wrap">
   <section class="sec" id="risks"><div class="rk">
     <div class="rk-intro"><h2 data-ih="rk_h">Look beyond<br>the headline return.</h2><p data-i="rk_p">Borrowing preserves cash at the start. It also creates obligations that policy growth may not cover.</p><a class="link-arrow" href="https://www.ia.org.hk/en/premium_financing/smart_tips.html" target="_blank" rel="noopener noreferrer" data-i="rk_link">Read the Insurance Authority guide</a></div>
-    <div>
-      <details open><summary><b>01</b><span data-i="r1_h">Interest rates can move</span></summary><p data-i="r1_p"></p></details>
-      <details><summary><b>02</b><span data-i="r2_h">Illustrated benefits can fall</span></summary><p data-i="r2_p"></p></details>
-      <details><summary><b>03</b><span data-i="r3_h">The bank may need more security</span></summary><p data-i="r3_p"></p></details>
-      <details><summary><b>04</b><span data-i="r4_h">A balloon payment needs a plan</span></summary><p data-i="r4_p"></p></details>
-      <details><summary><b>05</b><span data-i="r5_h">Policy rights and currency matter</span></summary><p data-i="r5_p"></p></details>
-    </div>
+    <div class="rk-list"><h3 data-i="rk_list_h">Key risks of premium financing</h3><ul data-ih="rk_list"></ul></div>
   </div></section>
 
   <section class="tk ins" id="insurers" aria-labelledby="insH">
@@ -256,6 +280,15 @@
       <article class="ins-card"><h3 data-ih="cl_h"></h3><p class="ins-sub" data-i="cl_sub"></p><ul data-ih="cl_li"></ul></article>
     </div>
     <p class="ins-src" data-ih="in_src"></p>
+  </section>
+
+  <section class="sec fr" id="fulfillment" aria-labelledby="frH">
+    <div class="fr-head"><h2 id="frH" data-i="fr_h">Fulfillment ratio analysis</h2><p data-ih="fr_p"></p></div>
+    <div class="fr-cards">
+      <article class="fr-card" data-ih="fr_fwd"></article>
+      <article class="fr-card" data-ih="fr_cl"></article>
+    </div>
+    <p class="fr-src" data-ih="fr_src"></p>
   </section>
 </div>
 </main>
@@ -270,7 +303,7 @@
 </footer>
 
 <script src="site.js?v=5"></script>
-<script src="engine.js?v=9"></script>
+<script src="engine.js?v=10"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -326,6 +359,13 @@ const I18N = {
 "rk_p": "Borrowing preserves cash at the start. It also creates obligations that policy growth may not cover.",
 "rk_link": "Read the Insurance Authority guide",
 "in_h": "Insurer profiles",
+"rk_list_h": "Key risks of premium financing",
+"rk_list": "<li><b>Interest rate</b>: a higher loan rate raises your interest cost and can turn the return negative.</li><li><b>Non-guaranteed dividends</b>: actual dividends may be lower than illustrated, cutting the cash value and the return.</li><li><b>Margin call</b>: if the policy value falls or rates rise, the bank may ask for more collateral or early repayment.</li><li><b>Loan repayment</b>: the loan must be repaid in full on surrender or at maturity, so plan the source of funds early.</li><li><b>Early surrender</b>: surrender values are low in the early years, so surrendering early can lose part of your capital.</li><li><b>Currency</b>: if the policy, the loan and your income are in different currencies, exchange-rate moves affect the real return.</li>",
+"fr_h": "Fulfillment ratio analysis",
+"fr_p": "The fulfillment ratio is the non-guaranteed dividend actually paid divided by the amount illustrated at sale (100% = as illustrated). Figures below come only from each insurer’s official 2025 disclosure under the Insurance Authority’s GL16.",
+"fr_fwd": "<h3>FWD Hong Kong</h3><p class=\"fr-sub\">Reporting year 2025 · 38 savings, whole-life and annuity plans with data</p><div class=\"fr-stats\"><div><strong>268</strong><span>published ratios</span></div><div><strong>38%</strong><span>at or above 100%</span></div><div><strong>93%</strong><span>median</span></div><div><strong>41–190%</strong><span>range</span></div></div><p class=\"fr-note\">Each figure counts every published ratio (by dividend type, currency and policy year).</p><div class=\"fr-tw\"><table><thead><tr><th>Product</th><th>Ratio (2025)</th><th>Policy years</th></tr></thead><tbody><tr><td>Wealth ICON Supreme</td><td>Annual dividends <b>100%</b><br>Special bonuses <b>100%</b></td><td>Years 3–5<small>issued 2020–2022</small></td></tr><tr><td>Wealth ICON</td><td>Annual dividends <b>93%–95%</b><br>Special bonuses <b>98%–100%</b></td><td>Years 5–7<small>issued 2018–2020</small></td></tr><tr><td>Glorious Fortune (Single Premium)</td><td>Annual dividends <b>99%–100%</b><br>Special bonuses <b>100%</b></td><td>Years 3–5<small>issued 2020–2022</small></td></tr><tr><td>Regal Fortune</td><td>Annual dividends <b>170%–190%</b><br>Special bonuses <b>111%–113%</b></td><td>Years 2–6<small>issued 2019–2023</small></td></tr></tbody></table></div><p class=\"fr-concl\">Newer flagship savings plans (Wealth ICON Supreme, Glorious Fortune) have paid about 100% of illustrated dividends, and Regal Fortune’s annual dividends ran well above illustration; some older plans were lower (lowest 41%).</p>",
+"fr_cl": "<h3>China Life (Overseas)</h3><p class=\"fr-sub\">Reporting year 2025 · 60 savings, whole-life and annuity plans with data</p><div class=\"fr-stats\"><div><strong>286</strong><span>published ratios</span></div><div><strong>10%</strong><span>at or above 100%</span></div><div><strong>76%</strong><span>median</span></div><div><strong>60–100%</strong><span>range</span></div></div><p class=\"fr-note\">Each figure counts every published ratio (by dividend type and policy year).</p><div class=\"fr-tw\"><table><thead><tr><th>Product</th><th>Ratio (2025)</th><th>Policy years</th></tr></thead><tbody><tr><td>年年享息儲蓄保險計劃</td><td>Annual dividends <b>99%–100%</b></td><td>Years 1–4<small>issued 2021–2024</small></td></tr><tr><td>裕盈保險計劃 II</td><td>Annual dividends <b>100%</b></td><td>Years 1–3<small>issued 2022–2024</small></td></tr><tr><td>豐饒傳承儲蓄保險計劃</td><td>Terminal dividends <b>100%</b></td><td>Years 3–5<small>issued 2020–2022</small></td></tr><tr><td>裕饒傳承儲蓄保險計劃 II</td><td>Terminal dividends <b>100%</b></td><td>Years 2–4<small>issued 2021–2023</small></td></tr></tbody></table></div><p class=\"fr-concl\">Newer savings series have paid about 100%, and every terminal dividend paid in 2025 was at 100%; annual dividends on older products were mostly 60–90%, giving an overall median of 76%.</p>",
+"fr_src": "Sources: FWD — <a href=\"https://www.fwd.com.hk/en/regulatory-disclosures/fulfillment-ratios/\" target=\"_blank\" rel=\"noopener noreferrer\">fulfillment ratio disclosures (reporting year 2025)</a>; FWD Life (Hong Kong) Limited’s separately published shelved products (<a href=\"https://www.fwdlife.hk/pdf/regulatory-disclosures/fulfillment-ratios.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">PDF</a>) are not included. China Life (Overseas) — <a href=\"https://www.chinalife.com.hk/zh-hk/products/dividend-philosophy-and-investment-strategy\" target=\"_blank\" rel=\"noopener noreferrer\">紅利及派息理念 / fulfillment ratios (2025 reporting year)</a>, <a href=\"https://www.chinalife.com.hk/sites/default/files/2026-07/2026_07_Fulfillment%20Ratio_TC.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">2026 guide</a>; product names as published in Chinese. Scope: savings, whole-life and annuity plans; critical illness, cancer, medical and rider products excluded. Data retrieved 3 Oct 2026. Past performance is not indicative of future performance; ratios are weighted averages and may not reflect an individual policy.",
 "in_p": "Key facts on the two insurers behind the plans discussed here. Ratings can change; check the latest with the insurer before advising a client.",
 "fwd_h": "FWD Hong Kong<small>富衛保險</small>",
 "fwd_sub": "FWD Life Insurance Company (Bermuda) Limited",
@@ -334,16 +374,6 @@ const I18N = {
 "cl_sub": "China Life Insurance (Overseas) Company Limited",
 "cl_li": "<li><b>Roots in 1933</b>, when China Insurance Company set up its life insurance department in Shanghai. Its Hong Kong Branch opened in 1984, and it took its current name in 2003.</li><li><b>Parent:</b> the only overseas wholly-owned subsidiary of China Life Insurance (Group) Company, a state-owned group ranked 42nd in the Fortune Global 500 (2026).</li><li><b>Size:</b> consolidated assets of HK$452.8 billion and revenue of HK$68.9 billion in 2025 (unaudited, as of 31 Dec 2025). The company calls itself the largest Chinese insurer and Chinese institutional investor in Hong Kong.</li><li><b>Ratings:</b> Moody’s insurance financial strength A1 (as of 29 Apr 2026); S&amp;P insurer financial strength A (as of 8 Feb 2026).</li><li><b>In Hong Kong:</b> based at China Life Centre, Hung Hom, with branches in Hong Kong and Macau, subsidiaries in Singapore and Indonesia, and China Life Trustees for MPF.</li>",
 "in_src": "Sources (checked 2 Oct 2026): FWD <a href=\"https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0707/11748313/sehk25051900948.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">HKEX listing document</a>, <a href=\"https://www.fwd.com/files/v3/assets/blt7159ee3244a0ea01/blt3d8e09caaaed9a51/69b67d9c1c39020a95f6d0bc/FY_2025_Fact_sheet_EN.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">FY2025 fact sheet</a>, <a href=\"https://www.media-outreach.com/news/hong-kong/2026/02/05/448331/fwd-hong-kong-posts-over-90-growth-in-new-business-fyp-in-the-first-three-quarters-of-20251/\" target=\"_blank\" rel=\"noopener noreferrer\">Feb 2026 press release</a>; China Life (Overseas) <a href=\"https://www.chinalife.com.hk/about-us/clo\" target=\"_blank\" rel=\"noopener noreferrer\">company profile</a>. For information only, not a recommendation.",
-"r1_h": "Interest rates can move",
-"r1_p": "A higher borrowing rate increases your cash payments. Try the downside case, or increase the loan rate while keeping policy growth unchanged.",
-"r2_h": "Illustrated benefits can fall",
-"r2_p": "Non-guaranteed bonuses may be lower than illustrated. Obtain the insurer’s guaranteed and non-guaranteed cash-value schedules; a smooth growth curve does not capture surrender charges.",
-"r3_h": "The bank may need more security",
-"r3_p": "Your loan terms may allow collateral top-ups or repayment on demand. The model does not simulate these events. Check how much liquid cash you could provide if asked.",
-"r4_h": "A balloon payment needs a plan",
-"r4_p": "Interest-only payments do not reduce principal. At the loan maturity, you need funds to repay the loan. Refinancing may be unavailable or more expensive.",
-"r5_h": "Policy rights and currency matter",
-"r5_p": "Assigning policy rights to a lender can restrict your choices. Different policy and loan currencies can add exchange-rate risk. Review the assignment and loan documents.",
 "hero_aria": "Illustrative upside, base and downside growth paths over 20 years",
 "pv_p": "These figures come from the case open in the P-Fin calculator. Change anything there and this page follows.",
 "pv_case": "Current case",
@@ -422,6 +452,13 @@ const I18N = {
 "rk_p": "借貸可在開始時保留現金，但亦會帶來保單增長未必足以應付的承擔。",
 "rk_link": "閱讀保險業監管局指引",
 "in_h": "保險公司資料",
+"rk_list_h": "保費融資的風險要點",
+"rk_list": "<li><b>利率</b>：貸款利率上升會增加利息支出，或令回報轉負。</li><li><b>紅利非保證</b>：實際紅利或低於計劃書所示，令現金價值及回報下降。</li><li><b>追加抵押</b>：保單價值下跌或利率上升時，銀行或要求補倉、增加抵押或提早還款。</li><li><b>還款安排</b>：退保或貸款到期時須一筆過償還貸款，應預早安排資金。</li><li><b>提早退保</b>：首數年退保價值偏低，提早退保或會損失部分本金。</li><li><b>貨幣</b>：保單、貸款與收入貨幣不同時，匯率變動會影響實際回報。</li>",
+"fr_h": "分紅實現率分析",
+"fr_p": "分紅實現率 = 實際派發的非保證紅利 ÷ 銷售時建議書所示金額（100% 即與演示相同）。以下數字只取自兩間公司按保監局 GL16 公布的 2025 年度官方資料。",
+"fr_fwd": "<h3>富衛（香港）</h3><p class=\"fr-sub\">2025 報告年度 · 38 款有數據的儲蓄、終身壽險及年金計劃</p><div class=\"fr-stats\"><div><strong>268</strong><span>已公布實現率</span></div><div><strong>38%</strong><span>達 100% 或以上</span></div><div><strong>93%</strong><span>中位數</span></div><div><strong>41–190%</strong><span>範圍</span></div></div><p class=\"fr-note\">以上統計包括每個已公布的實現率（按紅利類別、貨幣及保單年度計）。</p><div class=\"fr-tw\"><table><thead><tr><th>產品</th><th>實現率（2025）</th><th>保單年度</th></tr></thead><tbody><tr><td>智盈匯聚壽險計劃（優越版）</td><td>週年紅利 <b>100%</b><br>特別紅利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>智盈匯聚壽險計劃</td><td>週年紅利 <b>93%–95%</b><br>特別紅利 <b>98%–100%</b></td><td>第 5–7 年<small>2018–2020 年生效</small></td></tr><tr><td>創逸致富（躉繳保費）</td><td>週年紅利 <b>99%–100%</b><br>特別紅利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>寰悅致富</td><td>週年紅利 <b>170%–190%</b><br>特別紅利 <b>111%–113%</b></td><td>第 2–6 年<small>2019–2023 年生效</small></td></tr></tbody></table></div><p class=\"fr-concl\">新一代主力儲蓄計劃（如智盈匯聚（優越版）、創逸致富）實現率約 100%，寰悅致富週年紅利更遠高於演示；部分較舊產品則偏低（最低 41%）。</p>",
+"fr_cl": "<h3>中國人壽（海外）</h3><p class=\"fr-sub\">2025 申報年度 · 60 款有數據的儲蓄、終身壽險及年金計劃</p><div class=\"fr-stats\"><div><strong>286</strong><span>已公布實現率</span></div><div><strong>10%</strong><span>達 100% 或以上</span></div><div><strong>76%</strong><span>中位數</span></div><div><strong>60–100%</strong><span>範圍</span></div></div><p class=\"fr-note\">以上統計包括每個已公布的實現率（按紅利類別及保單年度計）。</p><div class=\"fr-tw\"><table><thead><tr><th>產品</th><th>實現率（2025）</th><th>保單年度</th></tr></thead><tbody><tr><td>年年享息儲蓄保險計劃</td><td>週年紅利 <b>99%–100%</b></td><td>第 1–4 年<small>2021–2024 年生效</small></td></tr><tr><td>裕盈保險計劃 II</td><td>週年紅利 <b>100%</b></td><td>第 1–3 年<small>2022–2024 年生效</small></td></tr><tr><td>豐饒傳承儲蓄保險計劃</td><td>終期紅利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>裕饒傳承儲蓄保險計劃 II</td><td>終期紅利 <b>100%</b></td><td>第 2–4 年<small>2021–2023 年生效</small></td></tr></tbody></table></div><p class=\"fr-concl\">近年推出的儲蓄系列實現率約 100%，2025 年所有已派終期紅利均達 100%；較舊產品週年紅利多介乎 60%–90%，整體中位數 76%。</p>",
+"fr_src": "資料來源：富衛 — <a href=\"https://www.fwd.com.hk/zh/regulatory-disclosures/fulfillment-ratios/\" target=\"_blank\" rel=\"noopener noreferrer\">分紅實現率（2025 報告年度）</a>；富衛人壽（香港）有限公司另行公布的已停售產品（<a href=\"https://www.fwdlife.hk/pdf/regulatory-disclosures/fulfillment-ratios.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">PDF</a>）不包括在內。中國人壽（海外）— <a href=\"https://www.chinalife.com.hk/zh-hk/products/dividend-philosophy-and-investment-strategy\" target=\"_blank\" rel=\"noopener noreferrer\">紅利及派息理念 / 分紅實現率（2025 申報年度）</a>、<a href=\"https://www.chinalife.com.hk/sites/default/files/2026-07/2026_07_Fulfillment%20Ratio_TC.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">2026 年版指南</a>。範圍：儲蓄、終身壽險及年金計劃，不包括危疾、癌症、醫療及附加保障。資料於 2026 年 10 月 3 日擷取。過往表現不代表將來表現；實現率為加權平均數，未必反映個別保單情況。",
 "in_p": "本頁討論的計劃所屬兩家保險公司的重點資料。評級或會改變，向客戶建議前請向保險公司查證最新資料。",
 "fwd_h": "富衛保險<small>FWD Hong Kong</small>",
 "fwd_sub": "富衛人壽保險（百慕達）有限公司",
@@ -430,16 +467,6 @@ const I18N = {
 "cl_sub": "中國人壽保險（海外）股份有限公司",
 "cl_li": "<li><b>歷史可追溯至 1933 年</b>：中國保險公司於上海成立人壽保險部；1984 年設立香港分公司，2003 年易名為現稱。</li><li><b>母公司</b>：中國人壽保險（集團）公司唯一的境外全資子公司；集團為國有金融機構，2026 年《財富》世界 500 強排名第 42 位。</li><li><b>規模</b>：2025 年綜合資產 4,528 億港元、綜合收入 689 億港元（未經審計，截至 2025 年 12 月 31 日）；公司自述為香港最大的中資保險公司及中資機構投資者。</li><li><b>評級</b>：穆迪保險財務實力評級 A1（截至 2026 年 4 月 29 日）；標普保險公司財務實力評級 A（截至 2026 年 2 月 8 日）。</li><li><b>香港據點</b>：總部位於紅磡中國人壽中心，設有香港及澳門分公司、新加坡及印尼子公司，以及負責強積金的中國人壽信託。</li>",
 "in_src": "資料來源（2026 年 10 月 2 日查閱）：富衛 <a href=\"https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0707/11748313/sehk25051900948.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">港交所上市文件</a>、<a href=\"https://www.fwd.com/files/v3/assets/blt7159ee3244a0ea01/blt3d8e09caaaed9a51/69b67d9c1c39020a95f6d0bc/FY_2025_Fact_sheet_EN.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">2025 年度資料概覽</a>、<a href=\"https://www.media-outreach.com/news/hong-kong/2026/02/05/448331/fwd-hong-kong-posts-over-90-growth-in-new-business-fyp-in-the-first-three-quarters-of-20251/\" target=\"_blank\" rel=\"noopener noreferrer\">2026 年 2 月新聞稿</a>；中國人壽（海外）<a href=\"https://www.chinalife.com.hk/about-us/clo\" target=\"_blank\" rel=\"noopener noreferrer\">公司簡介</a>。只供參考，並非推薦。",
-"r1_h": "利率可能變動",
-"r1_p": "借貸利率上升會增加你的現金支出。可試用下行情景，或在保單增長不變下調高貸款利率。",
-"r2_h": "說明利益可能下降",
-"r2_p": "非保證紅利可能低於建議書所示。請索取保險公司的保證及非保證現金價值表；平滑的增長曲線並未反映退保費用。",
-"r3_h": "銀行或要求更多抵押",
-"r3_p": "貸款條款可能容許銀行要求補倉或即時還款，本模型並未模擬這些情況。請評估如被要求時，你能動用多少流動資金。",
-"r4_h": "到期一筆過還款需要規劃",
-"r4_p": "只付利息不會減少本金。貸款到期時，你需要資金償還貸款；屆時未必能再融資，或成本更高。",
-"r5_h": "保單權益與貨幣同樣重要",
-"r5_p": "把保單權益轉讓予貸款機構，可能限制你的選擇。保單與貸款貨幣不同，亦會增加匯率風險。請細閱轉讓及貸款文件。",
 "hero_aria": "20 年內上行、基本及下行增長走勢示意",
 "pv_p": "以下數字來自保費融資計算機內正在使用的個案。在計算機作任何修改，此頁會即時跟隨。",
 "pv_case": "目前個案",
@@ -518,6 +545,13 @@ const I18N = {
 "rk_p": "借贷可在开始时保留现金，但亦会带来保单增长未必足以应付的承担。",
 "rk_link": "阅读保险业监管局指引",
 "in_h": "保险公司资料",
+"rk_list_h": "保费融资的风险要点",
+"rk_list": "<li><b>利率</b>：贷款利率上升会增加利息支出，或令回报转负。</li><li><b>红利非保证</b>：实际红利或低于计划书所示，令现金价值及回报下降。</li><li><b>追加抵押</b>：保单价值下跌或利率上升时，银行或要求补仓、增加抵押或提早还款。</li><li><b>还款安排</b>：退保或贷款到期时须一次性偿还贷款，应预早安排资金。</li><li><b>提早退保</b>：首数年退保价值偏低，提早退保或会损失部分本金。</li><li><b>货币</b>：保单、贷款与收入货币不同时，汇率变动会影响实际回报。</li>",
+"fr_h": "分红实现率分析",
+"fr_p": "分红实现率 = 实际派发的非保证红利 ÷ 销售时建议书所示金额（100% 即与演示相同）。以下数字只取自两家公司按保监局 GL16 公布的 2025 年度官方资料。",
+"fr_fwd": "<h3>富卫（香港）</h3><p class=\"fr-sub\">2025 报告年度 · 38 款有数据的储蓄、终身寿险及年金计划</p><div class=\"fr-stats\"><div><strong>268</strong><span>已公布实现率</span></div><div><strong>38%</strong><span>达 100% 或以上</span></div><div><strong>93%</strong><span>中位数</span></div><div><strong>41–190%</strong><span>范围</span></div></div><p class=\"fr-note\">以上统计包括每个已公布的实现率（按红利类别、货币及保单年度计）。</p><div class=\"fr-tw\"><table><thead><tr><th>产品</th><th>实现率（2025）</th><th>保单年度</th></tr></thead><tbody><tr><td>智盈汇聚寿险计划（优越版）</td><td>周年红利 <b>100%</b><br>特别红利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>智盈汇聚寿险计划</td><td>周年红利 <b>93%–95%</b><br>特别红利 <b>98%–100%</b></td><td>第 5–7 年<small>2018–2020 年生效</small></td></tr><tr><td>创逸致富（趸缴保费）</td><td>周年红利 <b>99%–100%</b><br>特别红利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>寰悦致富</td><td>周年红利 <b>170%–190%</b><br>特别红利 <b>111%–113%</b></td><td>第 2–6 年<small>2019–2023 年生效</small></td></tr></tbody></table></div><p class=\"fr-concl\">新一代主力储蓄计划（如智盈汇聚（优越版）、创逸致富）实现率约 100%，寰悦致富周年红利更远高于演示；部分较旧产品则偏低（最低 41%）。</p>",
+"fr_cl": "<h3>中国人寿（海外）</h3><p class=\"fr-sub\">2025 申报年度 · 60 款有数据的储蓄、终身寿险及年金计划</p><div class=\"fr-stats\"><div><strong>286</strong><span>已公布实现率</span></div><div><strong>10%</strong><span>达 100% 或以上</span></div><div><strong>76%</strong><span>中位数</span></div><div><strong>60–100%</strong><span>范围</span></div></div><p class=\"fr-note\">以上统计包括每个已公布的实现率（按红利类别及保单年度计）。</p><div class=\"fr-tw\"><table><thead><tr><th>产品</th><th>实现率（2025）</th><th>保单年度</th></tr></thead><tbody><tr><td>年年享息储蓄保险计划</td><td>周年红利 <b>99%–100%</b></td><td>第 1–4 年<small>2021–2024 年生效</small></td></tr><tr><td>裕盈保险计划 II</td><td>周年红利 <b>100%</b></td><td>第 1–3 年<small>2022–2024 年生效</small></td></tr><tr><td>丰饶传承储蓄保险计划</td><td>终期红利 <b>100%</b></td><td>第 3–5 年<small>2020–2022 年生效</small></td></tr><tr><td>裕饶传承储蓄保险计划 II</td><td>终期红利 <b>100%</b></td><td>第 2–4 年<small>2021–2023 年生效</small></td></tr></tbody></table></div><p class=\"fr-concl\">近年推出的储蓄系列实现率约 100%，2025 年所有已派终期红利均达 100%；较旧产品周年红利多介乎 60%–90%，整体中位数 76%。</p>",
+"fr_src": "资料来源：富卫 — <a href=\"https://www.fwd.com.hk/zh/regulatory-disclosures/fulfillment-ratios/\" target=\"_blank\" rel=\"noopener noreferrer\">分红实现率（2025 报告年度）</a>；富卫人寿（香港）有限公司另行公布的已停售产品（<a href=\"https://www.fwdlife.hk/pdf/regulatory-disclosures/fulfillment-ratios.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">PDF</a>）不包括在内。中国人寿（海外）— <a href=\"https://www.chinalife.com.hk/zh-hk/products/dividend-philosophy-and-investment-strategy\" target=\"_blank\" rel=\"noopener noreferrer\">红利及派息理念 / 分红实现率（2025 申报年度）</a>、<a href=\"https://www.chinalife.com.hk/sites/default/files/2026-07/2026_07_Fulfillment%20Ratio_TC.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">2026 年版指南</a>。范围：储蓄、终身寿险及年金计划，不包括危疾、癌症、医疗及附加保障。资料于 2026 年 10 月 3 日撷取。过往表现不代表将来表现；实现率为加权平均数，未必反映个别保单情况。",
 "in_p": "本页讨论的计划所属两家保险公司的重点资料。评级或会改变，向客户建议前请向保险公司查证最新资料。",
 "fwd_h": "富卫保险<small>FWD Hong Kong</small>",
 "fwd_sub": "富卫人寿保险（百慕达）有限公司",
@@ -526,16 +560,6 @@ const I18N = {
 "cl_sub": "中国人寿保险（海外）股份有限公司",
 "cl_li": "<li><b>历史可追溯至 1933 年</b>：中国保险公司于上海成立人寿保险部；1984 年设立香港分公司，2003 年更名为现称。</li><li><b>母公司</b>：中国人寿保险（集团）公司唯一的境外全资子公司；集团为国有金融机构，2026 年《财富》世界 500 强排名第 42 位。</li><li><b>规模</b>：2025 年综合资产 4,528 亿港元、综合收入 689 亿港元（未经审计，截至 2025 年 12 月 31 日）；公司自述为香港最大的中资保险公司及中资机构投资者。</li><li><b>评级</b>：穆迪保险财务实力评级 A1（截至 2026 年 4 月 29 日）；标普保险公司财务实力评级 A（截至 2026 年 2 月 8 日）。</li><li><b>香港据点</b>：总部位于红磡中国人寿中心，设有香港及澳门分公司、新加坡及印尼子公司，以及负责强积金的中国人寿信托。</li>",
 "in_src": "资料来源（2026 年 10 月 2 日查阅）：富卫 <a href=\"https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0707/11748313/sehk25051900948.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">港交所上市文件</a>、<a href=\"https://www.fwd.com/files/v3/assets/blt7159ee3244a0ea01/blt3d8e09caaaed9a51/69b67d9c1c39020a95f6d0bc/FY_2025_Fact_sheet_EN.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">2025 年度资料概览</a>、<a href=\"https://www.media-outreach.com/news/hong-kong/2026/02/05/448331/fwd-hong-kong-posts-over-90-growth-in-new-business-fyp-in-the-first-three-quarters-of-20251/\" target=\"_blank\" rel=\"noopener noreferrer\">2026 年 2 月新闻稿</a>；中国人寿（海外）<a href=\"https://www.chinalife.com.hk/about-us/clo\" target=\"_blank\" rel=\"noopener noreferrer\">公司简介</a>。仅供参考，并非推荐。",
-"r1_h": "利率可能变动",
-"r1_p": "借贷利率上升会增加你的现金支出。可试用下行情景，或在保单增长不变下调高贷款利率。",
-"r2_h": "说明利益可能下降",
-"r2_p": "非保证红利可能低于建议书所示。请索取保险公司的保证及非保证现金价值表；平滑的增长曲线并未反映退保费用。",
-"r3_h": "银行或要求更多抵押",
-"r3_p": "贷款条款可能容许银行要求追加抵押或即时还款，本模型并未模拟这些情况。请评估如被要求时，你能动用多少流动资金。",
-"r4_h": "到期一次性还款需要规划",
-"r4_p": "只付利息不会减少本金。贷款到期时，你需要资金偿还贷款；届时未必能再融资，或成本更高。",
-"r5_h": "保单权益与货币同样重要",
-"r5_p": "把保单权益转让予贷款机构，可能限制你的选择。保单与贷款货币不同，亦会增加汇率风险。请细阅转让及贷款文件。",
 "hero_aria": "20 年内上行、基本及下行增长走势示意",
 "pv_p": "以下数字来自保费融资计算器内正在使用的个案。在计算器作任何修改，此页会即时跟随。",
 "pv_case": "目前个案",
