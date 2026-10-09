@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=12">
+<link rel="stylesheet" href="site.css?v=13">
 <style>
 main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
 .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
@@ -233,6 +233,7 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 .avg-strip:empty{display:none}
 .avg-strip strong{color:var(--ink);font-weight:600;margin-right:4px}
 .avg-strip b{font-variant-numeric:tabular-nums;font-weight:700}.avg-strip b.pos{color:var(--pos)}.avg-strip b.neg{color:var(--neg)}
+.avg-strip span.on{color:var(--ink);font-weight:600}.avg-strip span.on b{text-decoration:underline;text-underline-offset:2px}
 .avg-note{margin-top:6px}
 .rh{margin:0 0 26px}.rh:last-child{margin-bottom:0}
 .rh h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);margin:4px 0 8px}
@@ -560,8 +561,8 @@ tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);lette
 </dialog>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="site.js?v=12"></script>
-<script src="engine.js?v=12"></script>
+<script src="site.js?v=13"></script>
+<script src="engine.js?v=13"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -895,7 +896,7 @@ function readCols() {
   TC = { grid: c('--line'), grid0: c('--line-strong'), axis: c('--faint'), ink: c('--ink'), muted: c('--muted'), surface: c('--surface'), pos: c('--pos'), posbg: c('--pos-bg'), neg: c('--neg'), negbg: c('--neg-bg') };
 }
 let printW = 0; // while printing, charts are drawn at one fixed width so phone and desktop PDFs match
-let chartPrev = null, chartAnim = 0, chartLast = null, chartInstant = false, chartSeen = !('IntersectionObserver' in window);
+let chartPrev = null, chartAnim = 0, chartLast = null, chartInstant = false, chartSeen = !('IntersectionObserver' in window), chartFocus = null;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function chartModel(r) {
   const start = { key: 's', label: t('start'), segs: [['cap', r.own], ['loan', r.L], ['disc', r.D]], top: r.P, need: r.P, roc: null,
@@ -928,7 +929,9 @@ function drawChart(r) {
   step(performance.now());
   $('legend').innerHTML = ['cap', 'loan', 'cost', 'gain', 'short'].map(k => `<span><i style="--c:${COL[k]}${k === 'short' ? ';background:repeating-linear-gradient(45deg,${COL.short} 0 2px,${TC.surface} 2px 4px);border:1.5px solid ${COL.short}' : ''}"></i>${t('s_' + k)}</span>`).join('')
     + (r.D > 0 ? `<span><i style="--c:${COL.disc}"></i>${t('s_disc')}</span>` : '');
-  $('avgStrip').innerHTML = r.rows.length ? `<strong>${esc(t('avg_ann'))}</strong>` + r.rows.map(x => `<span>${esc(t('year_n', { n: x.y }))} <b class="${x.roc >= 0 ? 'pos' : 'neg'}">${pctS(x.roc / x.y)}</b></span>`).join('') : '';
+  if (chartFocus != null && !r.rows.some(x => x.y === chartFocus)) chartFocus = null;
+  if (chartFocus == null && r.rows.length) { const be = r.rows.find(x => x.gain > 0); chartFocus = (be || r.rows[r.rows.length - 1]).y; }
+  $('avgStrip').innerHTML = r.rows.length ? `<strong>${esc(t('avg_ann'))}</strong>` + r.rows.map(x => `<span${x.y === chartFocus ? ' class="on"' : ''}>${esc(t('year_n', { n: x.y }))} <b class="${x.roc >= 0 ? 'pos' : 'neg'}">${pctS(x.roc / x.y)}</b></span>`).join('') : '';
 }
 function paintChart(frame, target, r) {
   const box = $('chart'), tip = $('tip');
@@ -962,9 +965,13 @@ function paintChart(frame, target, r) {
     h += `<rect class="frame" x="${x0 - 3}" y="${y(Math.max(b.top, b.need)) - 3}" width="${bw + 6}" height="${Math.max(0, base - y(Math.max(b.top, b.need)) + 3)}" rx="3" fill="transparent" stroke="none"/>`;
     const labTop = y(Math.max(b.top, b.need));
     h += `<text x="${cx}" y="${labTop - (tg.roc === null ? 10 : 30)}" text-anchor="middle" font-size="${narrow ? 12 : 14}" font-weight="600" fill="${TC.ink}">${wan(tg.top)}</text>`;
-    if (tg.roc !== null) { const txt = pctS(tg.avg), wpx = txt.length * 7 + 14, pos = tg.avg >= 0;
-      h += `<rect x="${cx - wpx / 2}" y="${labTop - 24}" width="${wpx}" height="18" rx="2" fill="${pos ? TC.posbg : TC.negbg}"/><text x="${cx}" y="${labTop - 11}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${pos ? TC.pos : TC.neg}">${txt}</text>`; }
-    h += `<text x="${cx}" y="${H - 12}" text-anchor="middle" font-size="12" fill="${TC.muted}">${esc(tg.label)}</text></g>`;
+    if (tg.roc !== null) {
+      const on = chartFocus === tg.y;
+      const txt = on ? (tg.label + ' ' + ((tg.avg >= 0 ? '+' : '−') + Math.abs(tg.avg * 100).toFixed(1) + '%')) : pctS(tg.avg);
+      const wpx = [...txt].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x2e80 ? 8 : 6.6), 0) + (on ? 16 : 14), pos = tg.avg >= 0;
+      h += `<rect x="${cx - wpx / 2}" y="${labTop - (on ? 28 : 24)}" width="${wpx}" height="${on ? 22 : 18}" rx="2" fill="${pos ? TC.posbg : TC.negbg}"${on ? ` stroke="${pos ? TC.pos : TC.neg}" stroke-width="1.2"` : ''}/><text x="${cx}" y="${labTop - (on ? 12 : 11)}" text-anchor="middle" font-size="${on ? 12.5 : 11.5}" font-weight="700" fill="${pos ? TC.pos : TC.neg}">${esc(txt)}</text>`;
+    }
+    h += `<text x="${cx}" y="${H - 12}" text-anchor="middle" font-size="12" fill="${chartFocus === tg.y ? TC.ink : TC.muted}" font-weight="${chartFocus === tg.y ? '700' : '400'}">${esc(tg.label)}</text></g>`;
   });
   h += `</svg>`;
   const keep = tip.hidden ? null : tip.dataset.i;
@@ -984,11 +991,20 @@ function paintChart(frame, target, r) {
   };
   const hide = () => { tip.hidden = true; svg.classList.remove('hovering'); svg.querySelectorAll('.bar').forEach(x => x.classList.remove('on')); };
   svg.querySelectorAll('.bar').forEach(g => {
-    g.addEventListener('pointermove', e => show(g, e)); g.addEventListener('pointerdown', e => show(g, e));
+    g.addEventListener('pointermove', e => show(g, e));
+    g.addEventListener('pointerdown', e => {
+      const i = +g.dataset.i, b = target[i];
+      if (b && b.y != null) { chartFocus = chartFocus === b.y ? b.y : b.y; paintChart(frame, target, r); }
+      show(g, e);
+    });
     g.addEventListener('focus', () => show(g)); g.addEventListener('blur', hide);
   });
   svg.addEventListener('pointerleave', hide);
-  if (keep !== null && keep !== undefined) { const g = svg.querySelector(`.bar[data-i="${keep}"]`); if (g) show(g); }
+  // keep the selected year highlighted after redraw
+  if (chartFocus != null) {
+    const gi = target.findIndex(b => b.y === chartFocus);
+    if (gi >= 0) { const g = svg.querySelector(`.bar[data-i="${gi}"]`); if (g) { svg.classList.add('hovering'); g.classList.add('on'); } }
+  } else if (keep !== null && keep !== undefined) { const g = svg.querySelector(`.bar[data-i="${keep}"]`); if (g) show(g); }
 }
 /* sliders + presets mirror the state */
 function syncSliders(r) {

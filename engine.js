@@ -176,7 +176,7 @@
   function paint(box, o, frame, xs, min, max) {
     const C = { grid: E.css('--line'), grid0: E.css('--line-strong'), axis: E.css('--faint'), ink: E.css('--ink'), surface: E.css('--surface'), gain: E.css('--c-gain'), loss: E.css('--c-short') };
     const W = Math.max(280, Math.round(E.printW || box.clientWidth || 720)), narrow = W < 560, labels = o.endLabels && !narrow;
-    const H = o.height || (narrow ? 280 : 340), padL = narrow ? 46 : 60, padR = labels ? 128 : 18, padT = 22, padB = 34;
+    const H = o.height || (narrow ? 280 : 340), padL = narrow ? 46 : 60, padR = labels ? 128 : 18, padT = (typeof o.focusLabel === 'function' ? 36 : 22), padB = 34;
     const x0 = xs[0], x1 = xs[xs.length - 1], span = x1 - x0 || 1;
     const X = v => xs.length === 1 ? (padL + W - padR) / 2 : padL + (v - x0) / span * (W - padL - padR);
     const Y = v => padT + (H - padT - padB) * (1 - (v - min) / (max - min));
@@ -199,7 +199,21 @@
       if (cx - w / 2 < lastEnd + 6 && i !== xs.length - 1) return;
       if (cx - w / 2 < lastEnd + 6) return;
       lastEnd = cx + w / 2; h += `<text x="${cx}" y="${H - 10}" text-anchor="middle" font-size="12" fill="${C.axis}">${E.esc(s)}</text>`; });
-    if (o.focusX !== undefined && o.focusX !== null) h += `<line x1="${X(o.focusX)}" x2="${X(o.focusX)}" y1="${padT}" y2="${H - padB}" stroke="${C.ink}" stroke-opacity=".35" stroke-dasharray="3 4"/>`;
+    if (o.focusX !== undefined && o.focusX !== null) {
+      const fx = X(o.focusX);
+      h += `<line x1="${fx}" x2="${fx}" y1="${padT}" y2="${H - padB}" stroke="${C.ink}" stroke-opacity=".35" stroke-dasharray="3 4"/>`;
+      // optional callout at the focused year (e.g. average annual return)
+      if (typeof o.focusLabel === 'function') {
+        const lab = o.focusLabel(o.focusX);
+        if (lab) {
+          const pos = !lab.neg, bg = pos ? E.css('--pos-bg') : E.css('--neg-bg'), fg = pos ? E.css('--pos') : E.css('--neg');
+          const tw = [...lab.text].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x2e80 ? 8.2 : 6.4), 0) + 16;
+          let lx = fx - tw / 2; lx = Math.max(padL, Math.min(W - padR - tw, lx));
+          const ly = Math.max(4, padT - 20);
+          h += `<g class="focus-lab"><rect x="${lx.toFixed(1)}" y="${ly}" width="${tw.toFixed(1)}" height="18" rx="2" fill="${bg}" stroke="${fg}" stroke-opacity=".35"/><text x="${(lx + tw / 2).toFixed(1)}" y="${ly + 13}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${fg}">${E.esc(lab.text)}</text></g>`;
+        }
+      }
+    }
     const dim = id => o.hi && o.hi !== id;
     frame.forEach(s => {
       const op = dim(s.id) ? .22 : 1, w = o.hi === s.id ? 3.2 : 2.2;

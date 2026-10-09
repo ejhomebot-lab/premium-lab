@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=12">
+<link rel="stylesheet" href="site.css?v=13">
 <style>
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,6vw,88px);align-items:center;padding:clamp(48px,7vw,96px) 0 clamp(40px,5vw,72px)}
@@ -240,7 +240,7 @@
     <div class="lessons">
       <article class="lesson"><span class="label" data-i="l1_k">At the start</span><h3 data-i="l1_h">You fund part. The bank funds part.</h3><p data-i="l1_p">Your contribution and a loan pay the premium. Policy rights may be assigned to the lender as security.</p>
         <div class="flow"><div><span data-i="f_you">You</span><strong>40%</strong></div><div><span data-i="f_loan">Loan</span><strong>60%</strong></div><div><span data-i="f_prem">Premium</span><strong>100%</strong></div></div></article>
-      <article class="lesson"><span class="label" data-i="l2_k">Along the way</span><h3 data-i="l2_h">Growth is possible. Interest is due.</h3><p data-i="l2_p">Policy value can grow while you pay borrowing costs. Non-guaranteed policy benefits and loan rates can change.</p>
+      <article class="lesson"><span class="label" data-i="l2_k">Along the way</span><h3 data-i="l2_h">Value grows. Interest is due.</h3><p data-i="l2_p">Policy value can grow while you pay borrowing costs. Non-guaranteed policy benefits and loan rates can change.</p>
         <div class="flow"><div><span data-i="f_policy">Policy</span><strong data-i="f_value">Value</strong></div><div><span data-i="f_bank">Bank</span><strong data-i="f_int">Interest</strong></div></div></article>
       <article class="lesson"><span class="label" data-i="l3_k">At the finish</span><h3 data-i="l3_h">The loan still needs an exit.</h3><p data-i="l3_p">An interest-only loan leaves the principal due at maturity. Plan how to repay it without relying on refinancing.</p>
         <div class="flow"><div><span data-i="f_pv">Policy value</span><strong data-i="f_debt">− debt</strong></div><div><span data-i="f_net">Net assets</span><strong data-i="f_paid">− cash paid</strong></div></div></article>
@@ -302,8 +302,8 @@
   <div class="gf-base" data-st="f_base">For education only. Illustrations are not guarantees or financial advice.</div>
 </footer>
 
-<script src="site.js?v=12"></script>
-<script src="engine.js?v=12"></script>
+<script src="site.js?v=13"></script>
+<script src="engine.js?v=13"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -339,7 +339,7 @@ const I18N = {
 "f_loan": "Loan",
 "f_prem": "Premium",
 "l2_k": "Along the way",
-"l2_h": "Growth is possible. Interest is due.",
+"l2_h": "Value grows. Interest is due.",
 "l2_p": "Policy value can grow while you pay borrowing costs. Non-guaranteed policy benefits and loan rates can change.",
 "f_policy": "Policy",
 "f_value": "Value",
@@ -399,7 +399,7 @@ const I18N = {
 "pv_try_h": "Mix plans and banks",
 "pv_try_p": "Add a second plan or bank offer in the calculator, then tick any mix to see them ranked side by side.",
 "pv_note": "Illustrative only. Figures follow the PortfoPlus-style method used in the calculator: an interest-only loan, repaid from the cash value in the year shown.",
-"inspect": "Inspect a year"
+"inspect": "Inspect a year", "pv_ann": "{y} {p}", "pv_ann_lbl": "Avg annual return"
 },
 "zh-Hant": {
 "doc_title": "PF · Premium Financing · 認識保費融資",
@@ -432,7 +432,7 @@ const I18N = {
 "f_loan": "貸款",
 "f_prem": "保費",
 "l2_k": "持有期間",
-"l2_h": "價值或會增長，利息必須支付。",
+"l2_h": "價值增長，利息必須支付。",
 "l2_p": "保單價值可能增長，但你同時要支付借貸成本。非保證利益和貸款利率均可能改變。",
 "f_policy": "保單",
 "f_value": "價值",
@@ -492,7 +492,8 @@ const I18N = {
 "pv_try_h": "自由配對計劃與銀行",
 "pv_try_p": "在計算機新增第二個計劃或銀行條件，再剔選任何配對，即可並排比較排名。",
 "pv_note": "僅供說明。數字按計算機所用的 PortfoPlus 方式計算：只付利息貸款，並於所示年份以現金價值償還。",
-"inspect": "查看年份"
+"inspect": "查看年份",
+"pv_ann": "{y} {p}", "pv_ann_lbl": "平均年回報"
 },
 "zh-Hans": {
 "doc_title": "PF · Premium Financing · 认识保费融资",
@@ -525,7 +526,7 @@ const I18N = {
 "f_loan": "贷款",
 "f_prem": "保费",
 "l2_k": "持有期间",
-"l2_h": "价值或会增长，利息必须支付。",
+"l2_h": "价值增长，利息必须支付。",
 "l2_p": "保单价值可能增长，但你同时要支付借贷成本。非保证利益和贷款利率均可能改变。",
 "f_policy": "保单",
 "f_value": "价值",
@@ -585,7 +586,8 @@ const I18N = {
 "pv_try_h": "自由配对计划与银行",
 "pv_try_p": "在计算器新增第二个计划或银行条件，再剔选任何配对，即可并排比较排名。",
 "pv_note": "仅供说明。数字按计算器所用的 PortfoPlus 方式计算：只付利息贷款，并于所示年份以现金价值偿还。",
-"inspect": "查看年份"
+"inspect": "查看年份",
+"pv_ann": "{y} {p}", "pv_ann_lbl": "平均年回报"
 }
 };
 let lang = window.PL ? PL.lang : 'en';
@@ -612,13 +614,18 @@ function renderPreview(instant) {
   const pts = (p.day1 > 0 ? [{ y: 0, val: p.day1, com: r.L + r.own + r.upfront }] : []).concat(r.rows.map(x => ({ y: x.y, val: x.val, com: r.L + x.paid })));
   if (!pts.some(q => q.y === focus)) focus = pts[pts.length - 1].y;
   const cv = E.css('--l-pol'), cc = E.css('--l-com');
+  const rowAt = y => r.rows.find(x => x.y === y);
+  const annOf = y => { const row = rowAt(y); return row && Number.isFinite(row.roc) ? row.roc / row.y : NaN; };
+  const fmtAnn = a => (a >= 0 ? '+' : '−') + Math.abs(a * 100).toFixed(1) + '%';
   E.lineChart($('pvChart'), {
     series: [{ id: 'val', color: cv, points: pts.map(q => ({ x: q.y, y: q.val })) }, { id: 'com', color: cc, points: pts.map(q => ({ x: q.y, y: q.com })) }],
     band: ['val', 'com'], fmtY: v => wan(v), fmtX: yr, focusX: focus, instant, height: 300, aria: t('pv_ch'), inspectLabel: t('inspect'),
+    focusLabel: y => { const a = annOf(y); if (!Number.isFinite(a)) return null; return { text: t('pv_ann', { y: yr(y), p: fmtAnn(a) }), neg: a < 0 }; },
     onInspect: y => { focus = y; renderPreview(true); }
   });
-  const f = pts.find(q => q.y === focus), net = f.val - f.com;
-  $('pvLegend').innerHTML = `<span style="--c:${cv}"><i></i>${E.esc(t('s_val'))} <b>${money(f.val)}</b></span><span style="--c:${cc}"><i></i>${E.esc(t('s_com'))} <b>${money(f.com)}</b></span><span class="net${net < 0 ? ' neg' : ''}">${E.esc(yr(focus))} · ${E.esc(t(net < 0 ? 's_short' : 's_gain'))} <b>${moneyS(net)}</b></span>`;
+  const f = pts.find(q => q.y === focus), net = f.val - f.com, ann = annOf(focus);
+  const annHtml = Number.isFinite(ann) ? `<span class="net${ann < 0 ? ' neg' : ''}">${E.esc(t('pv_ann_lbl'))} <b>${fmtAnn(ann)}</b></span>` : '';
+  $('pvLegend').innerHTML = `<span style="--c:${cv}"><i></i>${E.esc(t('s_val'))} <b>${money(f.val)}</b></span><span style="--c:${cc}"><i></i>${E.esc(t('s_com'))} <b>${money(f.com)}</b></span><span class="net${net < 0 ? ' neg' : ''}">${E.esc(yr(focus))} · ${E.esc(t(net < 0 ? 's_short' : 's_gain'))} <b>${moneyS(net)}</b></span>${annHtml}`;
   // ranking of the comparison picks, or an invitation to compare
   const picks = S.picks.map(([a, c]) => { const pp = E.plan(S, a), bb = E.bank(S, c); return { label: pn(pp, S.plans.indexOf(pp)) + ' · ' + bn(bb, S.banks.indexOf(bb)), color: E.css('--k' + ((S.plans.indexOf(pp) * S.banks.length + S.banks.indexOf(bb)) % 8 + 1)), r: E.hasYears(pp) ? E.compute(pp, bb, { fulfil: S.fulfil, shift: S.shift || 0 }) : null }; }).filter(x => x.r && x.r.rows.length);
   if (picks.length > 1) {
