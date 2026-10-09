@@ -1,4 +1,4 @@
-/* Premium Lab — shared header: language, theme and the mobile menu.
+/* PF · Premium Financing — shared header: language, theme and the mobile menu.
    Pages listen for `pl:lang` / `pl:theme` and re-render their own content. */
 (function () {
   'use strict';

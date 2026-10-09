@@ -1,4 +1,4 @@
-/* Premium Lab — one model for every page: the case (plans × banks), the maths, and a line chart.
+/* PF · Premium Financing — one model for every page: the case (plans × banks), the maths, and a line chart.
    PortfoPlus-style accounting, verified against its published screens:
      own cash = premium − loan − first-year discount
      return(N) = cash value(N) − loan − own cash − interest & fees paid to N

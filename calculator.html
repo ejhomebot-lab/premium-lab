@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>P-Fin calculator · Premium Lab</title>
+<title>P-Fin calculator · PF</title>
 <meta name="description" content="Build a premium financing illustration with a client in a minute: leverage, interest, returns, IRR, rate stress, bank offer comparison and a client-ready PDF.">
 <meta name="theme-color" content="#ffffff">
 <script>(function(){try{var d=document.documentElement,m=JSON.parse(localStorage.getItem('pl-theme')),g=JSON.parse(localStorage.getItem('pl-lang'));if(m==='dark'||m==='light')d.dataset.theme=m;if(g)d.lang=g}catch(e){}})()</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=11">
+<link rel="stylesheet" href="site.css?v=12">
 <style>
 main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
 .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
@@ -257,6 +257,13 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
   .lab{border:0;box-shadow:none;border-radius:0}
   .results{padding:0}
   .print-head{display:block;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:14px}
+  .print-brand{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--ink)}
+  .print-brand .mk{width:22px;height:22px;padding:0 3px 5px;display:grid;grid-template-columns:1fr 1fr;align-items:end;justify-items:center;background:var(--ink);color:#fff;border-radius:2px;position:relative;box-sizing:border-box}
+  .print-brand .mk::after{content:'';position:absolute;left:4px;right:4px;bottom:3px;height:1.2px;background:var(--accent)}
+  .print-brand .mk-l,.print-brand .mk-r{font-family:var(--serif);font-weight:600;font-size:9.5px;line-height:1;letter-spacing:-.06em;color:#fff}
+  .print-brand .mk-l{justify-self:end}.print-brand .mk-r{justify-self:start;opacity:.92}
+  .print-brand .wm{font-family:var(--serif);font-size:12px;letter-spacing:-.01em;display:inline-flex;align-items:baseline;gap:.3em}
+  .print-brand .wm b{font-weight:700}.print-brand .wm i{font-style:normal;color:var(--accent)}
   .print-head h2{margin:0;font-size:20px;font-weight:600}
   .print-head .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:11px;color:var(--text)}
   .print-head .meta b{display:block;font-size:13px}
@@ -310,7 +317,7 @@ tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);lette
 </head>
 <body>
 <header class="gh"><div class="gh-in">
-  <a class="gh-brand" href="index.html"><span class="mk">P</span><span class="wm">Premium Lab</span></a>
+  <a class="gh-brand" href="index.html" aria-label="PF · Premium Financing"><span class="mk" aria-hidden="true"><span class="mk-l">P</span><span class="mk-r">F</span></span><span class="wm"><b>PF</b><i>·</i><span>Premium Financing</span></span></a>
   <nav class="gh-nav" aria-label="Main">
     <a href="index.html#top" data-st="home">Overview</a>
     <a href="index.html#learn" data-st="learn">The essentials</a>
@@ -534,7 +541,7 @@ tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);lette
 </main>
 <footer class="gf">
   <div class="gf-in">
-    <div><div class="gf-brand">Premium Lab</div><p data-st="f_about">An independent guide to insurance premium financing, with a calculator for licensed agents.</p></div>
+    <div><div class="gf-brand" aria-label="PF · Premium Financing"><span class="mk" aria-hidden="true"><span class="mk-l">P</span><span class="mk-r">F</span></span><span class="wm"><b>PF</b><i>·</i><span>Premium Financing</span></span></div><p data-st="f_about">An independent guide to insurance premium financing, with a calculator for licensed agents.</p></div>
     <div><h4 data-st="f_learn">Learn</h4><a href="index.html#learn" data-st="learn">The essentials</a><a href="index.html#explore" data-st="lab">Your case</a><a href="index.html#risks" data-st="risks">The trade-offs</a></div>
     <div><h4 data-st="f_tools">For agents</h4><a href="calculator.html" data-st="calc">P-Fin calculator</a><h4 data-st="f_src" style="margin-top:20px">Sources</h4><a href="https://www.ia.org.hk/en/legislative_framework/Conduct_in_Focus_Issue_05_03.html" target="_blank" rel="noopener noreferrer" data-st="f_ia1">Insurance Authority: risks &amp; complexities</a><a href="https://www.ia.org.hk/en/premium_financing/smart_tips.html" target="_blank" rel="noopener noreferrer" data-st="f_ia2">Insurance Authority: smart tips</a></div>
   </div>
@@ -553,8 +560,8 @@ tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);lette
 </dialog>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="site.js?v=5"></script>
-<script src="engine.js?v=11"></script>
+<script src="site.js?v=12"></script>
+<script src="engine.js?v=12"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -1198,7 +1205,7 @@ function renderCmp(instant) {
       years.map((y, j) => { const x = at(c, y); return x ? `<td${mark(x.roc === best[j].roc && list.length > 1, cls(x.roc))}>${pctS(x.roc)}</td><td${mark(x.irr === best[j].irr && list.length > 1, cls(x.irr))}>${pct(x.irr)}</td>` : '<td>–</td><td>–</td>'; }).join('') +
       `<td>${Number.isFinite(lastRow(c).be) ? (lastRow(c).be * 100).toFixed(2) + '%' : '–'}</td></tr>`).join('') + '</tbody>' : '';
   const a = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
-  $('printHead2').innerHTML = `<h2>${t('cmp_h')}</h2><div class="meta"><div>${t('p_client')}<b>${E.esc(S.name || '—')}</b></div><div>${t('cmp_n')}<b>${list.length}</b></div><div>${t('p_agent')}<b>${E.esc(a.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
+  $('printHead2').innerHTML = `<div class="print-brand"><span class="mk" aria-hidden="true"><span class="mk-l">P</span><span class="mk-r">F</span></span><span class="wm"><b>PF</b><i>·</i><span>Premium Financing</span></span></div><h2>${t('cmp_h')}</h2><div class="meta"><div>${t('p_client')}<b>${E.esc(S.name || '—')}</b></div><div>${t('cmp_n')}<b>${list.length}</b></div><div>${t('p_agent')}<b>${E.esc(a.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
 }
 
 /* every bank offer, side by side and editable */
@@ -1501,7 +1508,7 @@ function renderPair() {
   const optHtml = sel => opts.map(o => `<option value="${E.esc(o.key)}"${o === sel ? ' selected' : ''}>${E.esc(o.label)}</option>`).join('');
   A.innerHTML = optHtml(a); B.innerHTML = (b ? '' : '<option value="" selected>—</option>') + optHtml(b);
   const ag = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
-  $('printHead3').innerHTML = `<h2>${t('pair_h')}</h2><div class="meta"><div>${t('pair_case', { k: 'A' })}<b>${E.esc(a ? a.label : '—')}</b></div><div>${t('pair_case', { k: 'B' })}<b>${E.esc(b ? b.label : '—')}</b></div><div>${t('p_agent')}<b>${E.esc(ag.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
+  $('printHead3').innerHTML = `<div class="print-brand"><span class="mk" aria-hidden="true"><span class="mk-l">P</span><span class="mk-r">F</span></span><span class="wm"><b>PF</b><i>·</i><span>Premium Financing</span></span></div><h2>${t('pair_h')}</h2><div class="meta"><div>${t('pair_case', { k: 'A' })}<b>${E.esc(a ? a.label : '—')}</b></div><div>${t('pair_case', { k: 'B' })}<b>${E.esc(b ? b.label : '—')}</b></div><div>${t('p_agent')}<b>${E.esc(ag.name || '—')}</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
   if (!b) { $('pairOut').innerHTML = `<p class="note pair-msg">${t('pair_none')}</p>`; return; }
   if (a.key === b.key) { $('pairOut').innerHTML = `<p class="note pair-msg">${t('pair_same')}</p>`; return; }
   const run = o => ({ ...o, cur: o.c.currency || 'HKD', r: E.hasYears(o.p) ? E.compute(o.p, o.b, { fulfil: Number.isFinite(o.c.fulfil) ? o.c.fulfil : 1 }) : null });
@@ -1563,7 +1570,7 @@ function bindPair() {
 function agent() { return store.get('pl-agent', { name: '', lic: '', contact: '' }); }
 function renderPrint(r, o) {
   const a = agent(), d = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang, { year: 'numeric', month: 'short', day: 'numeric' });
-  $('printHead').innerHTML = `<h2>${t('p_title')}</h2><div class="meta">
+  $('printHead').innerHTML = `<div class="print-brand"><span class="mk" aria-hidden="true"><span class="mk-l">P</span><span class="mk-r">F</span></span><span class="wm"><b>PF</b><i>·</i><span>Premium Financing</span></span></div><h2>${t('p_title')}</h2><div class="meta">
     <div>${t('p_client')}<b>${esc(S.name || '—')}</b></div><div>${t(r.prepaid ? 'prem_net' : 'premium')}<b>${money(r.prepaid ? r.P - r.D : r.P)}${r.prepaid ? ' · ' + esc(t('pp_badge', { n: r.payYears })) : ''}</b></div>
     <div>${t('h_bank')}<b>${esc(o.bank || '—')} · ${offerRate(o).toFixed(2)}%</b></div><div>${t('p_date')}<b>${d}</b></div></div>`;
   $('printFoot').innerHTML = (a.name ? `${t('p_agent')}: <b>${esc(a.name)}</b>${a.lic ? ' · ' + t('p_lic') + ' ' + esc(a.lic) : ''}${a.contact ? ' · ' + esc(a.contact) : ''}<br>` : '') + $('fine').textContent;
