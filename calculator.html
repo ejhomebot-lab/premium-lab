@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%230b1f35'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23c9a46c'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=13">
+<link rel="stylesheet" href="site.css?v=14">
 <style>
 main{padding-top:clamp(32px,4vw,56px);padding-bottom:24px}
 .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end}
@@ -250,6 +250,9 @@ dialog .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
 /* client-ready print / PDF */
 @media print{
   *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+  /* PDF: every year bar stays fully coloured — no selection dimming */
+  .chart svg.hovering .bar,.chart svg.hovering .bar:not(.on),.chart .bar{opacity:1!important}
+  .chart svg.hovering{/* keep structure */}
   @page{size:A4;margin:14mm}
   body{font-size:12px}
   .actions,.casebar,.settings,.toggle,.no-print,.toast,.top{display:none!important}
@@ -561,8 +564,8 @@ tr.pay td{color:var(--faint)}td.pay-c{text-align:center;color:var(--faint);lette
 </dialog>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="site.js?v=13"></script>
-<script src="engine.js?v=13"></script>
+<script src="site.js?v=14"></script>
+<script src="engine.js?v=14"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -1001,8 +1004,10 @@ function paintChart(frame, target, r) {
     g.addEventListener('focus', () => show(g)); g.addEventListener('blur', hide);
   });
   svg.addEventListener('pointerleave', hide);
-  // keep the selected year highlighted after redraw
-  if (chartFocus != null) {
+  // keep the selected year highlighted after redraw (screen only — PDF must not dim other years)
+  if (printW) {
+    /* printing: leave every bar at full opacity; still mark the focus year label via chartFocus pills */
+  } else if (chartFocus != null) {
     const gi = target.findIndex(b => b.y === chartFocus);
     if (gi >= 0) { const g = svg.querySelector(`.bar[data-i="${gi}"]`); if (g) { svg.classList.add('hovering'); g.classList.add('on'); } }
   } else if (keep !== null && keep !== undefined) { const g = svg.querySelector(`.bar[data-i="${keep}"]`); if (g) show(g); }
@@ -1645,6 +1650,8 @@ const PRINT_W = 760;
 function enterPrint() {
   if (printW === PRINT_W && chartSeen) return;
   printW = PRINT_W; E.printW = PRINT_W; chartSeen = true;
+  // drop any hover-dimming so every year prints at full colour
+  document.querySelectorAll('.chart svg.hovering').forEach(svg => { svg.classList.remove('hovering'); svg.querySelectorAll('.bar.on').forEach(b => b.classList.remove('on')); });
   chartInstant = true; if (chartLast) drawChart(chartLast); drawRates();
   renderCmp(true); renderPair();
 }
