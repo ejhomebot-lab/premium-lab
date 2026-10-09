@@ -912,6 +912,9 @@ function drawChart(r) {
   readCols();
   const target = chartModel(r), zero = target.map(b => ({ ...b, segs: b.segs.map(([k]) => [k, 0]), top: 0, need: 0 }));
   chartLast = r; cancelAnimationFrame(chartAnim);
+  // resolve the selected year before painting so print/PDF and screen agree
+  if (chartFocus != null && !r.rows.some(x => x.y === chartFocus)) chartFocus = null;
+  if (chartFocus == null && r.rows.length) { const be = r.rows.find(x => x.gain > 0); chartFocus = (be || r.rows[r.rows.length - 1]).y; }
   // Bars wait at the baseline until the chart scrolls into view, then rise once.
   if (!chartSeen) { chartPrev = null; paintChart(zero, target, r); return; }
   const grow = !(chartPrev && chartPrev.length === target.length), from = grow ? zero : chartPrev;
@@ -929,8 +932,6 @@ function drawChart(r) {
   step(performance.now());
   $('legend').innerHTML = ['cap', 'loan', 'cost', 'gain', 'short'].map(k => `<span><i style="--c:${COL[k]}${k === 'short' ? ';background:repeating-linear-gradient(45deg,${COL.short} 0 2px,${TC.surface} 2px 4px);border:1.5px solid ${COL.short}' : ''}"></i>${t('s_' + k)}</span>`).join('')
     + (r.D > 0 ? `<span><i style="--c:${COL.disc}"></i>${t('s_disc')}</span>` : '');
-  if (chartFocus != null && !r.rows.some(x => x.y === chartFocus)) chartFocus = null;
-  if (chartFocus == null && r.rows.length) { const be = r.rows.find(x => x.gain > 0); chartFocus = (be || r.rows[r.rows.length - 1]).y; }
   $('avgStrip').innerHTML = r.rows.length ? `<strong>${esc(t('avg_ann'))}</strong>` + r.rows.map(x => `<span${x.y === chartFocus ? ' class="on"' : ''}>${esc(t('year_n', { n: x.y }))} <b class="${x.roc >= 0 ? 'pos' : 'neg'}">${pctS(x.roc / x.y)}</b></span>`).join('') : '';
 }
 function paintChart(frame, target, r) {
